@@ -1,0 +1,51 @@
+{
+  "name": "apina",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "@types/express": "^4"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.0",
+    "@types/jest": "^24.0.15",
+    "@types/lodash": "^4.14.135",
+    "express": "^4.17.1",
+    "gulp": "^4.0.2",
+    "gulp-clean": "^0.4.0",
+    "gulp-typescript": "^5.0.1",
+    "jest": "^24.8.0",
+    "prettier": "^1.18.2",
+    "ts-jest": "^24.0.2",
+    "typescript": "^3.5.2"
+  },
+  "dependencies": {
+    "lodash": "^4.17.11"
+  },
+  "main": "dist/index",
+  "scripts": {
+    "build": "gulp",
+    "test": "jest"
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "/src/**/*.ts"
+    ],
+    "testMatch": [
+      "/src/**/*.test.ts"
+    ],
+    "transform": {
+      "^.+\\.ts$": "ts-jest"
+    },
+    "moduleFileExtensions": [
+      "ts",
+      "js"
+    ],
+    "testEnvironment": "node",
+    "globals": {
+      "ts-jest": {
+        "tsConfig": {
+          "incremental": true
+        }
+      }
+    }
+  }
+}

@@ -1,4 +1,4 @@
-import { Request, Response, Application, RequestHandler } from 'express'
+import { Request, Response, RequestHandler, Router } from 'express'
 import pick from 'lodash/pick'
 import omit from 'lodash/omit'
 import fromPairs from 'lodash/fromPairs'
@@ -17,31 +17,39 @@ type Middleware = RequestHandler
 interface Config {
   baseURL?: string
   makeRequest?: (method: string, path: string, query: any, body: any, params: any) => Promise<any>
-  app?: Application
 }
 
 type StringTupleElementTypes<T extends readonly string[]> = T extends ReadonlyArray<infer U> ? U : never
 
 export class APIDeclaration<RequestType = Request> {
-  private config: Config
-  public configure(config: Config) {
+  private config: Config | null = null
+  private router = Router()
+  public configure(config: Config | null) {
     this.config = config
   }
 
   public declareGetAPI(path: string) {
-    return declareAPI<RequestType>(this.config, 'get', path)
+    return declareAPI<RequestType>(this, 'get', path)
   }
 
   public declarePostAPI(path: string) {
-    return declareAPI<RequestType>(this.config, 'post', path)
+    return declareAPI<RequestType>(this, 'post', path)
   }
 
   public declarePutAPI(path: string) {
-    return declareAPI<RequestType>(this.config, 'put', path)
+    return declareAPI<RequestType>(this, 'put', path)
   }
 
   public declareDeleteAPI(path: string) {
-    return declareAPI<RequestType>(this.config, 'delete', path)
+    return declareAPI<RequestType>(this, 'delete', path)
+  }
+
+  public getExpressRouter() {
+    return this.router
+  }
+
+  public getConfig() {
+    return this.config
   }
 }
 
@@ -50,7 +58,12 @@ const paramMatchers = (params: readonly string[]) =>
     name: param,
     matcher: new RegExp(`(?<=^|/):${param}(?=$|/)`),
   }))
-function declareAPI<RequestType>(config: Config, method: 'get' | 'post' | 'put' | 'delete', path: string) {
+
+function declareAPI<RequestType>(
+  parent: APIDeclaration<RequestType>,
+  method: 'get' | 'post' | 'put' | 'delete',
+  path: string
+) {
   function params() {
     return <PT extends readonly string[]>(params: PT) => {
       const q = query(params)
@@ -149,8 +162,8 @@ function declareAPI<RequestType>(config: Config, method: 'get' | 'post' | 'put' 
               ...fromPairs(boolQuery.map(key => [key, (!!(args as any)[key]).toString()])),
             },
             reqBody = omit(args, [...params, ...query])
-
-          if (!config.makeRequest) throw new Error('Request adapter not configured')
+          const config = parent.getConfig()
+          if (!config || !config.makeRequest) throw new Error('Request adapter not configured')
 
           const pathWithParams = getURL(reqParams as any)
 
@@ -166,9 +179,8 @@ function declareAPI<RequestType>(config: Config, method: 'get' | 'post' | 'put' 
         }
 
         function implementWithMiddleware(middleware: Middleware[], impl: ImplFn) {
-          if (!config.app) throw new Error('App is required for implementation')
           ;(call as any).implementation = impl
-          config.app[method](path, ...middleware, async (req, res, next) => {
+          parent.getExpressRouter()[method](path, ...middleware, async (req, res, next) => {
             try {
               for (const bq of boolQuery) {
                 req.query[bq] = req.query[bq] === 'true'
@@ -184,6 +196,8 @@ function declareAPI<RequestType>(config: Config, method: 'get' | 'post' | 'put' 
         }
 
         function getURL(pathParams: ActualTypeMap<StringTupleElementTypes<ParamsType>, string>) {
+          const config = parent.getConfig()
+          if (!config) throw new Error('Papupata not configured')
           if (config.baseURL === undefined) throw new Error('Cannot get URL of a route with base URL not set up')
           return config.baseURL + applyPathParams(pathParams)
         }

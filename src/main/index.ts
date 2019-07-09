@@ -221,7 +221,7 @@ function declareAPI<RequestType>(
 
         function applyPathParams(reqParams: ActualTypeMap<StringTupleElementTypes<ParamsType>, string>) {
           const pathWithParams = paramMatchers(params).reduce((currPath, { matcher, name }) => {
-            return currPath.replace(matcher, (reqParams as any)[name])
+            return currPath.replace(matcher, encodeURIComponent((reqParams as any)[name]))
           }, path)
           return pathWithParams
         }

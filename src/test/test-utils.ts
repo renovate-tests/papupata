@@ -1,6 +1,7 @@
 import express from 'express'
 import { APIDeclaration } from '../main'
 import { RequestPromise } from 'request-promise'
+import bodyParser from 'body-parser'
 
 let pathId = 0
 
@@ -27,6 +28,7 @@ export function prepareTestServerFor(api: APIDeclaration<any>) {
 
 export function runTestServer() {
   const app = express()
+  app.use(bodyParser.json())
   const server = app.listen(0)
 
   const port = (server.address() as any).port as number

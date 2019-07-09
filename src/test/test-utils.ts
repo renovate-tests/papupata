@@ -8,11 +8,12 @@ export function getUniquePath() {
 }
 
 export function prepareTestServerFor(api: APIDeclaration<any>) {
-  let serverInstance: ReturnType<typeof runTestServerFor>
+  let serverInstance: ReturnType<typeof runTestServer>
 
   beforeAll(() => {
-    serverInstance = runTestServerFor(api)
+    serverInstance = runTestServer()
     api.configure({
+      app: serverInstance.app,
       baseURL: 'http://localhost:' + serverInstance.port,
     })
   })
@@ -23,9 +24,8 @@ export function prepareTestServerFor(api: APIDeclaration<any>) {
   }
 }
 
-export function runTestServerFor(api: APIDeclaration<any>) {
+export function runTestServer() {
   const app = express()
-  app.use(api.getExpressRouter())
   const server = app.listen(0)
 
   const port = (server.address() as any).port as number
@@ -34,5 +34,6 @@ export function runTestServerFor(api: APIDeclaration<any>) {
     stop() {
       server.close()
     },
+    app,
   }
 }

@@ -1,4 +1,4 @@
-import { Request, Response, RequestHandler, Router } from 'express'
+import { Request, Response, RequestHandler, IRouter, Application } from 'express'
 import pick from 'lodash/pick'
 import omit from 'lodash/omit'
 import fromPairs from 'lodash/fromPairs'
@@ -17,14 +17,16 @@ type Middleware = RequestHandler
 interface Config {
   baseURL?: string
   makeRequest?: (method: string, path: string, query: any, body: any, params: any) => Promise<any>
+  router?: IRouter<any>
+  app?: Application
 }
 
 type StringTupleElementTypes<T extends readonly string[]> = T extends ReadonlyArray<infer U> ? U : never
 
 export class APIDeclaration<RequestType = Request> {
   private config: Config | null = null
-  private router = Router()
   public configure(config: Config | null) {
+    if (config && config.router && config.app) throw new Error('Config should only have app or router, not both')
     this.config = config
   }
 
@@ -42,10 +44,6 @@ export class APIDeclaration<RequestType = Request> {
 
   public declareDeleteAPI(path: string) {
     return declareAPI<RequestType>(this, 'delete', path)
-  }
-
-  public getExpressRouter() {
-    return this.router
   }
 
   public getConfig() {
@@ -180,7 +178,11 @@ function declareAPI<RequestType>(
 
         function implementWithMiddleware(middleware: Middleware[], impl: ImplFn) {
           ;(call as any).implementation = impl
-          parent.getExpressRouter()[method](path, ...middleware, async (req, res, next) => {
+          const config = parent.getConfig()
+          if (!config) throw new Error('Papupata not configured')
+          const host = config.router || config.app
+          if (!host) throw new Error('Papupata: neither router nor app configured, cannot implement routes')
+          host[method](path, ...middleware, async (req, res, next) => {
             try {
               for (const bq of boolQuery) {
                 req.query[bq] = req.query[bq] === 'true'

@@ -1,5 +1,6 @@
 import express from 'express'
 import { APIDeclaration } from '../main'
+import { RequestPromise } from 'request-promise'
 
 let pathId = 0
 
@@ -36,4 +37,18 @@ export function runTestServer() {
     },
     app,
   }
+}
+
+export async function expect404(requestPromise: RequestPromise) {
+  const failure = await expectFailure(requestPromise as any)
+  expect(failure.response.statusCode).toBe(404)
+}
+
+export async function expectFailure(promise: Promise<any>): Promise<any> {
+  return promise.then(
+    res => {
+      throw new Error('Expected rejection; got ' + JSON.stringify(res))
+    },
+    err => err
+  )
 }

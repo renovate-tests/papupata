@@ -10,7 +10,7 @@ function clean() {
 }
 
 function ts() {
-  return gulp.src('src/*')
+  return gulp.src('src/**/*')
     .pipe(tsProject())
     .pipe(gulp.dest('dist'))
 }

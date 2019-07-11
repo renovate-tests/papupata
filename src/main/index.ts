@@ -160,7 +160,7 @@ function declareAPI<RequestType>(
               ...pick(args, optionalQuery),
               ...fromPairs(boolQuery.map(key => [key, (!!(args as any)[key]).toString()])),
             },
-            reqBody = omit(args, [...params, ...query])
+            reqBody = omit(args, [...params, ...query, ...boolQuery, ...optionalQuery])
           const config = parent.getConfig()
           if (!config || !config.makeRequest) throw new Error('Request adapter not configured')
 

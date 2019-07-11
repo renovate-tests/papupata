@@ -13,10 +13,11 @@ export type TypedRequest<RequestBaseType, Params, Query, Body> = Omit<RequestBas
 }
 
 type Middleware = RequestHandler
+export type MakeRequestAdapter = (method: string, url: string, query: any, body: any, params: any) => Promise<any>
 
 interface Config {
   baseURL?: string
-  makeRequest?: (method: string, path: string, query: any, body: any, params: any) => Promise<any>
+  makeRequest?: MakeRequestAdapter
   router?: IRouter<any>
   app?: Application
 }

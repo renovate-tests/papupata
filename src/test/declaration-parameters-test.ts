@@ -72,7 +72,7 @@ describe('declaration-parameters-test', function() {
       .params(['p1', 'p2'] as const)
       .query(['q1', 'q2'] as const)
       .optionalQuery(['oq1', 'oq2'] as const)
-      .queryBool(['bq1', 'bq2' as const])
+      .queryBool(['bq1', 'bq2'] as const)
       .body<{ b1: string; b2: boolean }>()
       .response<string>()
 

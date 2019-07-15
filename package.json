@@ -1,6 +1,16 @@
 {
   "name": "papupata",
   "version": "0.0.1",
+  "description": "Typescript-typed REST requests and API implementations",
+  "homepage": "https://baronagroup.github.io/papupata",
+  "repository": {
+    "type": "git",
+    "url": "BaronaGroup/papupata"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Tapani Haka"
+  },
   "peerDependencies": {
     "@types/express": "^4"
   },
@@ -17,6 +27,7 @@
     "gulp-clean": "0.4.0",
     "gulp-typescript": "5.0.1",
     "jest": "24.8.0",
+    "npm-release": "^1.0.0",
     "prettier": "1.18.2",
     "request": "2.88.0",
     "request-promise": "4.2.4",
@@ -31,7 +42,9 @@
   "types": "dist/main/index.d.ts",
   "scripts": {
     "build": "gulp",
-    "test": "jest"
+    "test": "jest",
+    "prepare": "npm run build",
+    "release": "npm test && npm-release"
   },
   "jest": {
     "collectCoverageFrom": [

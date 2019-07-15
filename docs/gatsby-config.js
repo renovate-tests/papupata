@@ -1,6 +1,7 @@
 'use strict'
 
 module.exports = {
+  pathPrefix: '/papupata',
   siteMetadata: {
     title: 'Papupata Documentation',
     description: 'Documentation for the typescript library papupata, for utilizing types for AJAX requests.',

@@ -4,7 +4,7 @@ import IndexLayout from '../layouts'
 import Page from './Page'
 import Container from './Container'
 import { Purpose, Usage, Parameters, MethodReturnType, Parameter, Examples, Example } from './api-components'
-import IncompleteApiDeclarationLink from './IncompleteApiDeclarationLink'
+import { IncompleteApiDeclarationLink } from './links'
 
 export default function DeclareAPIPage({ method }: { method: string }) {
   return (

@@ -63,6 +63,14 @@ export const MethodReturnType: React.FC = ({ children }) => {
   )
 }
 
+export const Caveats: React.FC = ({ children }) => {
+  return (
+    <Section>
+      <SectionHeading>Caveats</SectionHeading>
+      {children}
+    </Section>
+  )
+}
 export const Examples: React.FC<{ children: any }> = ({ children }) => {
   return (
     <Section>

@@ -19,8 +19,6 @@ const Method: React.FC = ({ children }) => {
   return <span>{children}()</span>
 }
 
-const Field = styled.span``
-
 const Type = styled.span`
   font-style: italic;
 `
@@ -85,9 +83,6 @@ export default function NavMenu() {
           </NavEntry>
           <NavEntry link="/api/DeclaredAPI/implementWithMiddleware">
             <Method>implementWithMiddleware</Method>
-          </NavEntry>
-          <NavEntry link="/api/DeclaredAPI/implementation">
-            <Field>implementation</Field>
           </NavEntry>
           <NavEntry link="/api/DeclaredAPI/ResponseType">
             <Type>ResponseType</Type>

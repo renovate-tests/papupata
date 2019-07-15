@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import { Link } from 'gatsby'
 import styled from 'styled-components'
 import { Location } from '@reach/router'
@@ -9,12 +9,13 @@ interface Props {
 }
 
 const NavLink = styled(Link)`
-  ${({ current }: { current: boolean }) =>
-    current &&
-    `
+  ${({ current }: { current: string }) =>
+    current === 'true'
+      ? `
   
   font-weight: bold;
-  `};
+  `
+      : ''};
 `
 
 export default function NavEntry({ link, children }: Props) {
@@ -22,7 +23,7 @@ export default function NavEntry({ link, children }: Props) {
     <div>
       <Location>
         {({ location }) => (
-          <NavLink current={location.pathname === link} to={link}>
+          <NavLink current={location.pathname === link ? 'true' : 'false'} to={link}>
             {children}
           </NavLink>
         )}

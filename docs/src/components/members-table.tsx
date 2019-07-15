@@ -12,11 +12,11 @@ const RequiredColumn = styled.td``
 
 const MemberContext = createContext({ context: '' })
 
-const NameColumn: React.FC<{ name: string }> = ({ name }) => {
+const NameColumn: React.FC<{ name: string }> = ({ name, children }) => {
   const { context } = useContext(MemberContext)
   return (
     <NameColumnBase>
-      <Link to={`/api/${context}/${name}`}>{name}</Link>
+      <Link to={`/api/${context}/${name}`}>{children || name}</Link>
     </NameColumnBase>
   )
 }
@@ -40,10 +40,16 @@ export const Members: React.FC<{ context: string; includeRequiredColumn?: boolea
     </Section>
   )
 }
-export const MethodMember: React.FC<{ name: string; dataType: any; required?: any }> = ({ children, name, dataType, required }) => {
+export const MethodMember: React.FC<{ name: string; dataType: any; required?: any; displayName?: any }> = ({
+  children,
+  name,
+  dataType,
+  required,
+  displayName
+}) => {
   return (
     <Row>
-      <NameColumn name={name} />
+      <NameColumn name={name}>{displayName}</NameColumn>
       <TypeColumn>method</TypeColumn>
       <DataTypeColumn>{dataType}</DataTypeColumn>
       <DescriptionColumn>{children}</DescriptionColumn>
@@ -60,6 +66,17 @@ export const PropertyMember: React.FC<{ name: string; dataType: any; required?: 
       <DataTypeColumn>{dataType}</DataTypeColumn>
       <DescriptionColumn>{children}</DescriptionColumn>
       {required !== undefined && <RequiredColumn>{required === true ? 'Yes' : required === false ? 'No' : required}</RequiredColumn>}
+    </Row>
+  )
+}
+
+export const ExposedTypeMember: React.FC<{ name: string }> = ({ children, name }) => {
+  return (
+    <Row>
+      <NameColumnBase>{name}</NameColumnBase>
+      <TypeColumn>property</TypeColumn>
+      <DataTypeColumn>n/a</DataTypeColumn>
+      <DescriptionColumn>{children}. Type type itself must be accessed using the typeof operator.</DescriptionColumn>
     </Row>
   )
 }

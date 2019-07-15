@@ -123,7 +123,3 @@ export default function Configure() {
     </IndexLayout>
   )
 }
-/*baseURL?: string
-  makeRequest?: MakeRequestAdapter
-  router?: IRouter<any>
-  app?: Application*/

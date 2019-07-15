@@ -11,9 +11,9 @@ Typescript typed API requests.
 
 Until 1.0 is reached, minor version updates can be breaking, patches should not. From then on, semver will be used.
 
-## Usage
+## Documentation
 
-See https://papupata.mutedchaos.com
+See https://baronagroup.github.io/papupata/
 
 ## Development
 

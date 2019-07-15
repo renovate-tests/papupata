@@ -16,10 +16,28 @@ const IndexPage = () => (
         <ul>
           <li>Node 10+ (if using papupata to implement APIs; this requirement can be removed fairly easily if there is demand to do so)</li>
           <li>Typescript 5.4+</li>
+          <li>Express (again only if implementing APIs)</li>
         </ul>
         <h2>Installing papupata</h2>
-        <Code language="bash">npm i papupata</Code>
-        <ToDo>Basic instructions are yet to be done.</ToDo>
+        <Code language="bash">
+          {`
+              npm i papupata
+              npm i -D @types/express
+          `}
+        </Code>
+        <h2>Implementing something simple</h2>
+        <p>Setting everything up for doing requests from the browser involves the following steps:</p>
+        <ul>
+          <li>Declaring the APIs</li>
+          <li>Configuring papupata on the server</li>
+          <li>Implementing the APIs on the server</li>
+          <li>Configuring papupata on the browser</li>
+          <li>Making the API calls</li>
+        </ul>
+        <ToDo>
+          Basic instructions are yet to be done. See <a href="https://github.com/BaronaGroup/papupata/tree/master/example">example app</a>{' '}
+          and API reference for how all of this can be done.
+        </ToDo>
       </Container>
     </Page>
   </IndexLayout>

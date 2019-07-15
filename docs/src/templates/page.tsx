@@ -49,7 +49,6 @@ export const query = graphql`
         description
         author {
           name
-          url
         }
       }
     }

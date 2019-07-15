@@ -133,27 +133,28 @@ function declareAPI<RequestType>(
     boolQuery: BoolQueryType,
     _bodyPlaceholder: BodyType
   ) {
+    type CallArgs = BodyType &
+      ActualTypeMap<StringTupleElementTypes<ParamsType>, string> &
+      ActualTypeMap<StringTupleElementTypes<QueryType>, string> &
+      ActualOptionalTypeMap<StringTupleElementTypes<OptionalQueryType>, string> &
+      ActualTypeMap<StringTupleElementTypes<BoolQueryType>, boolean>
+
     return {
       response<ResponseType, ResponseTypeOnServer = ResponseType>() {
+        type ActualRequestType = TypedRequest<
+          RequestType,
+          ActualTypeMap<StringTupleElementTypes<ParamsType>, string>,
+          ActualTypeMap<StringTupleElementTypes<QueryType>, string> &
+            ActualOptionalTypeMap<StringTupleElementTypes<OptionalQueryType>, string> &
+            ActualTypeMap<StringTupleElementTypes<BoolQueryType>, boolean>,
+          BodyType
+        >
         type ImplFn = (
-          req: TypedRequest<
-            RequestType,
-            ActualTypeMap<StringTupleElementTypes<ParamsType>, string>,
-            ActualTypeMap<StringTupleElementTypes<QueryType>, string> &
-              ActualOptionalTypeMap<StringTupleElementTypes<OptionalQueryType>, string> &
-              ActualTypeMap<StringTupleElementTypes<BoolQueryType>, boolean>,
-            BodyType
-          >,
+          req: ActualRequestType,
           res: Response
         ) => Promise<ResponseType | ResponseTypeOnServer> | ResponseType | ResponseTypeOnServer
 
-        function call(
-          args: BodyType &
-            ActualTypeMap<StringTupleElementTypes<ParamsType>, string> &
-            ActualTypeMap<StringTupleElementTypes<QueryType>, string> &
-            ActualOptionalTypeMap<StringTupleElementTypes<OptionalQueryType>, string> &
-            ActualTypeMap<StringTupleElementTypes<BoolQueryType>, boolean>
-        ): Promise<ResponseType> {
+        function call(args: CallArgs): Promise<ResponseType> {
           const reqParams = pick(args, params),
             reqQuery = {
               ...pick(args, query),
@@ -207,17 +208,16 @@ function declareAPI<RequestType>(
 
         // Typescript is fine without this explicit typing here, but idea's autocomplete does not work without it
         return call as {
-          (
-            args: BodyType &
-              ActualTypeMap<StringTupleElementTypes<ParamsType>, string> &
-              ActualTypeMap<StringTupleElementTypes<QueryType>, string> &
-              ActualOptionalTypeMap<StringTupleElementTypes<OptionalQueryType>, string> &
-              ActualTypeMap<StringTupleElementTypes<BoolQueryType>, boolean>
-          ): Promise<ResponseType>
+          (args: CallArgs): Promise<ResponseType>
           implement: (impl: ImplFn) => void
           implementation?: ImplFn
           implementWithMiddleware: (middleware: Middleware[], impl: ImplFn) => void
           getURL: (pathParams: ActualTypeMap<StringTupleElementTypes<ParamsType>, string>) => string
+          ResponseType: ResponseType
+          ServerResponseType: ResponseTypeOnServer
+          BodyType: BodyType
+          CallArgsType: CallArgs
+          RequestType: ActualRequestType
         }
 
         function applyPathParams(reqParams: ActualTypeMap<StringTupleElementTypes<ParamsType>, string>) {

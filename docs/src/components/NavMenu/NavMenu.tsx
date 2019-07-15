@@ -15,6 +15,16 @@ const Indent = styled.div`
   margin-left: 20px;
 `
 
+const Method: React.FC = ({ children }) => {
+  return <span>{children}()</span>
+}
+
+const Field = styled.span``
+
+const Type = styled.span`
+  font-style: italic;
+`
+
 export default function NavMenu() {
   return (
     <Container>
@@ -25,13 +35,78 @@ export default function NavMenu() {
       <Indent>
         <NavEntry link="/api/APIDeclaration">class APIDeclaration</NavEntry>
         <Indent>
-          <NavEntry link="/api/APIDeclaration/configure">configure()</NavEntry>
-          <NavEntry link="/api/APIDeclaration/declareDeleteAPI">declareDeleteAPI()</NavEntry>
-          <NavEntry link="/api/APIDeclaration/declareGetAPI">declareGetAPI()</NavEntry>
-          <NavEntry link="/api/APIDeclaration/declarePostAPI">declarePostAPI()</NavEntry>
-          <NavEntry link="/api/APIDeclaration/declarePutAPI">declarePutAPI()</NavEntry>
-
+          <NavEntry link="/api/APIDeclaration/configure">
+            <Method>configure</Method>
+          </NavEntry>
+          <NavEntry link="/api/APIDeclaration/declareDeleteAPI">
+            <Method>declareDeleteAPI</Method>
+          </NavEntry>
+          <NavEntry link="/api/APIDeclaration/declareGetAPI">
+            <Method>declareGetAPI</Method>
+          </NavEntry>
+          <NavEntry link="/api/APIDeclaration/declarePostAPI">
+            <Method>declarePostAPI</Method>
+          </NavEntry>
+          <NavEntry link="/api/APIDeclaration/declarePutAPI">
+            <Method>declarePutAPI</Method>
+          </NavEntry>
         </Indent>
+        <NavEntry link="/api/IncompleteAPIDeclaration">IncompleteAPIDeclaration</NavEntry>
+        <Indent>
+          <NavEntry link="/api/IncompleteAPIDeclaration/params">
+            <Method>params</Method>
+          </NavEntry>
+          <NavEntry link="/api/IncompleteAPIDeclaration/query">
+            <Method>query</Method>
+          </NavEntry>
+          <NavEntry link="/api/IncompleteAPIDeclaration/optionalQuery">
+            <Method>optionalQuery</Method>
+          </NavEntry>
+          <NavEntry link="/api/IncompleteAPIDeclaration/queryBool">
+            <Method>queryBool</Method>
+          </NavEntry>
+          <NavEntry link="/api/IncompleteAPIDeclaration/body">
+            <Method>body</Method>
+          </NavEntry>
+          <NavEntry link="/api/IncompleteAPIDeclaration/response">
+            <Method>response</Method>
+          </NavEntry>
+        </Indent>
+        <NavEntry link="/api/DeclaredAPI">DeclaredAPI</NavEntry>
+        <Indent>
+          <NavEntry link="/api/DeclaredAPI/invoke">
+            <Method></Method>
+          </NavEntry>
+          <NavEntry link="/api/DeclaredAPI/getURL">
+            <Method>getURL</Method>
+          </NavEntry>
+          <NavEntry link="/api/DeclaredAPI/implement">
+            <Method>implement</Method>
+          </NavEntry>
+          <NavEntry link="/api/DeclaredAPI/implementWithMiddleware">
+            <Method>implementWithMiddleware</Method>
+          </NavEntry>
+          <NavEntry link="/api/DeclaredAPI/implementation">
+            <Field>implementation</Field>
+          </NavEntry>
+          <NavEntry link="/api/DeclaredAPI/ResponseType">
+            <Type>ResponseType</Type>
+          </NavEntry>
+          <NavEntry link="/api/DeclaredAPI/ServerResponseType">
+            <Type>ServerResponseType</Type>
+          </NavEntry>
+          <NavEntry link="/api/DeclaredAPI/BodyType">
+            <Type>BodyType</Type>
+          </NavEntry>
+          <NavEntry link="/api/DeclaredAPI/CallArgsType">
+            <Type>CallArgsType</Type>
+          </NavEntry>
+          <NavEntry link="/api/DeclaredAPI/RequestType">
+            <Type>RequestType</Type>
+          </NavEntry>
+        </Indent>
+        <NavEntry link="/api/fetchAdapter">fetchAdapter</NavEntry>
+        <NavEntry link="/api/requestPromiseAdapter">requestPromiseAdapter</NavEntry>
       </Indent>
     </Container>
   )

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'gatsby'
+import { Link, StaticQuery, graphql } from 'gatsby'
 import styled from 'styled-components'
 import { Location } from '@reach/router'
 
@@ -21,13 +21,24 @@ const NavLink = styled(Link)`
 export default function NavEntry({ link, children }: Props) {
   return (
     <div>
-      <Location>
-        {({ location }) => (
-          <NavLink current={location.pathname === link ? 'true' : 'false'} to={link}>
-            {children}
-          </NavLink>
+      <StaticQuery
+        query={graphql`
+          query GetPathPRefix {
+            site {
+              pathPrefix
+            }
+          }
+        `}
+        render={({ site: { pathPrefix } }: { site: { pathPrefix: string } }) => (
+          <Location>
+            {({ location }) => (
+              <NavLink current={[pathPrefix + link, link].includes(location.pathname) ? 'true' : 'false'} to={link}>
+                {children}
+              </NavLink>
+            )}
+          </Location>
         )}
-      </Location>
+      />
     </div>
   )
 }

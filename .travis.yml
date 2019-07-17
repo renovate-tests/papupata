@@ -6,6 +6,7 @@ before_script:
   - npm run build
   - cd docs
   - npm i
+  - cd ..
 
 script:
   - npm test

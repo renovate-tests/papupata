@@ -23,6 +23,9 @@ const Type = styled.span`
   font-style: italic;
 `
 
+const Property = styled.span`
+`
+
 export default function NavMenu() {
   return (
     <Container>
@@ -73,13 +76,16 @@ export default function NavMenu() {
         <NavEntry link="/api/DeclaredAPI">DeclaredAPI</NavEntry>
         <Indent>
           <NavEntry link="/api/DeclaredAPI/invoke">
-            <Method></Method>
+            <Method>invoke</Method>
           </NavEntry>
           <NavEntry link="/api/DeclaredAPI/getURL">
             <Method>getURL</Method>
           </NavEntry>
           <NavEntry link="/api/DeclaredAPI/implement">
             <Method>implement</Method>
+          </NavEntry>
+          <NavEntry link="/api/DeclaredAPI/implementation">
+            <Property>implementation</Property>
           </NavEntry>
           <NavEntry link="/api/DeclaredAPI/implementWithMiddleware">
             <Method>implementWithMiddleware</Method>

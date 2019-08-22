@@ -62,7 +62,7 @@ export default function Configure() {
               <Link to="/api/requestPromiseAdapter">one for request-promise</Link>.
             </p>
           </PropertyMember>
-          <PropertyMember name="application" dataType="Express application" required={'Conditionally *3'}>
+          <PropertyMember name="app" dataType="Express application" required={'Conditionally *3'}>
             Express application, on which the declared APIs will be attached. If you make sure all the api declarations are invoked as the
             routing is being set up then using the application is fine, but if there is a chance that routes will be added later then the
             router is the better option.

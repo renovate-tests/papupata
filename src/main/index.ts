@@ -2,6 +2,7 @@ import { Request, Response, RequestHandler, IRouter, Application } from 'express
 import pick from 'lodash/pick'
 import omit from 'lodash/omit'
 import fromPairs from 'lodash/fromPairs'
+import qs from 'qs'
 
 // This type is used in failure cases to give a better error message, technically it could just be replaced with "never"
 type DeclareRoutePartsAsConstArraysPlease = { 'must-be-const': never }
@@ -199,11 +200,18 @@ function declareAPI<RequestType>(
           })
         }
 
-        function getURL(pathParams: ActualTypeMap<StringTupleElementTypes<ParamsType>, string>) {
+        function getURL(
+          pathParamsAndQueryParams:
+            | ActualTypeMap<StringTupleElementTypes<ParamsType>, string>
+            | (ActualTypeMap<StringTupleElementTypes<ParamsType>, string> &
+                ActualTypeMap<StringTupleElementTypes<QueryType>, string> &
+                ActualOptionalTypeMap<StringTupleElementTypes<OptionalQueryType>, string> &
+                ActualTypeMap<StringTupleElementTypes<BoolQueryType>, boolean>)
+        ) {
           const config = parent.getConfig()
           if (!config) throw new Error('Papupata not configured')
           if (config.baseURL === undefined) throw new Error('Cannot get URL of a route with base URL not set up')
-          return config.baseURL + applyPathParams(pathParams)
+          return config.baseURL + applyPathParams(pathParamsAndQueryParams)
         }
 
         // Typescript is fine without this explicit typing here, but idea's autocomplete does not work without it
@@ -212,7 +220,14 @@ function declareAPI<RequestType>(
           implement: (impl: ImplFn) => void
           implementation?: ImplFn
           implementWithMiddleware: (middleware: Middleware[], impl: ImplFn) => void
-          getURL: (pathParams: ActualTypeMap<StringTupleElementTypes<ParamsType>, string>) => string
+          getURL: (
+            pathParams:
+              | ActualTypeMap<StringTupleElementTypes<ParamsType>, string>
+              | (ActualTypeMap<StringTupleElementTypes<ParamsType>, string> &
+                  ActualTypeMap<StringTupleElementTypes<QueryType>, string> &
+                  ActualOptionalTypeMap<StringTupleElementTypes<OptionalQueryType>, string> &
+                  ActualTypeMap<StringTupleElementTypes<BoolQueryType>, boolean>)
+          ) => string
           ResponseType: ResponseType
           ServerResponseType: ResponseTypeOnServer
           BodyType: BodyType
@@ -224,7 +239,13 @@ function declareAPI<RequestType>(
           const pathWithParams = paramMatchers(params).reduce((currPath, { matcher, name }) => {
             return currPath.replace(matcher, encodeURIComponent((reqParams as any)[name]))
           }, path)
-          return pathWithParams
+
+          const queryParams = omit(reqParams, [...params])
+          if (Object.keys(queryParams).length) {
+            return pathWithParams + '?' + qs.stringify(queryParams)
+          } else {
+            return pathWithParams
+          }
         }
       },
     }

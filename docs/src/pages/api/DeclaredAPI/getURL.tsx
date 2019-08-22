@@ -20,16 +20,16 @@ export default function GetURL() {
             As path parameters are considered to be a part of the URL, their values must be provided to the getAPI call and they are
             injected in to the URL.
           </p>
+          <p>Query parameters are optionally included, too.</p>
         </Usage>
         <Parameters>
-          <Parameter name="pathParams" dataType="Object">
-            Path parameters value for the API
+          <Parameter name="pathAndQueryParams" dataType="Object">
+            Path parameters value for the API, or combination of path and query parameter values.
           </Parameter>
         </Parameters>
         <MethodReturnType>string</MethodReturnType>
-        <Caveats>Although query parameters are represented in an URL, this function does not handle those.</Caveats>
         <Examples>
-          <Example>
+          <Example label="Path only">
             {`
             import { APIDeclaration } from 'papupata'
             const api = new APIDeclaration()
@@ -40,6 +40,34 @@ export default function GetURL() {
 
             const URL = myAPI.getURL({param: 'value'})
             // URL is now https://example.com/do-stuff/value
+          `}
+          </Example>
+          <Example label="Path and query (query omitted)">
+            {`
+            import { APIDeclaration } from 'papupata'
+            const api = new APIDeclaration()
+            api.configure({baseURL: 'https://example.com'})
+            const myAPI = api.declarePostAPI('/do-stuff/:param')
+              .params(['param'] as const)
+              .query(['qval'] as const)
+              .response<string>()
+
+            const URL = myAPI.getURL({param: 'value'})
+            // URL is now https://example.com/do-stuff/value
+          `}
+          </Example>{' '}
+          <Example label="Path and query (query present)">
+            {`
+            import { APIDeclaration } from 'papupata'
+            const api = new APIDeclaration()
+            api.configure({baseURL: 'https://example.com'})
+            const myAPI = api.declarePostAPI('/do-stuff/:param')
+              .params(['param'] as const)
+              .query(['qval'] as const)
+              .response<string>()
+
+            const URL = myAPI.getURL({param: 'value', qval: 'hello'})
+            // URL is now https://example.com/do-stuff/value?qval=hello
           `}
           </Example>
         </Examples>

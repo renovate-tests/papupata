@@ -56,7 +56,7 @@ export class APIDeclaration<RequestType = Request> {
 const paramMatchers = (params: readonly string[]) =>
   params.map(param => ({
     name: param,
-    matcher: new RegExp(`(?<=^|/):${param}(?=$|/)`),
+    matcher: new RegExp(`(^|/):${param}($|/)`),
   }))
 
 function declareAPI<RequestType>(
@@ -237,7 +237,9 @@ function declareAPI<RequestType>(
 
         function applyPathParams(reqParams: ActualTypeMap<StringTupleElementTypes<ParamsType>, string>) {
           const pathWithParams = paramMatchers(params).reduce((currPath, { matcher, name }) => {
-            return currPath.replace(matcher, encodeURIComponent((reqParams as any)[name]))
+            return currPath.replace(matcher, (_, before, after) => {
+              return `${before}${encodeURIComponent((reqParams as any)[name])}${after}`
+            })
           }, path)
 
           const queryParams = omit(reqParams, [...params])

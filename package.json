@@ -32,7 +32,7 @@
     "request": "2.88.0",
     "request-promise": "4.2.4",
     "ts-jest": "24.1.0",
-    "typescript": "3.6.2"
+    "typescript": "3.6.3"
   },
   "dependencies": {
     "lodash": "^4.17.11",

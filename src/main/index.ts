@@ -27,6 +27,7 @@ type StringTupleElementTypes<T extends readonly string[]> = T extends ReadonlyAr
 
 export class APIDeclaration<RequestType = Request> {
   private config: Config | null = null
+  public __apis: Array<{unmock(): void}> = []
   public configure(config: Config | null) {
     if (config && config.router && config.app) throw new Error('Config should only have app or router, not both')
     this.config = config
@@ -51,6 +52,13 @@ export class APIDeclaration<RequestType = Request> {
   public getConfig() {
     return this.config
   }
+
+  public unmockAll() {
+    for (const api of this.__apis) {
+      api.unmock()
+    }
+  }
+
 }
 
 const paramMatchers = (params: readonly string[]) =>
@@ -155,7 +163,15 @@ function declareAPI<RequestType>(
           res: Response
         ) => Promise<ResponseType | ResponseTypeOnServer> | ResponseType | ResponseTypeOnServer
 
+        type MockFn = (args: CallArgs) => ResponseType | Promise<ResponseType>
+        type Mock = ResponseType | ((args: CallArgs) => ResponseType | Promise<ResponseType>)
+
+        let mockImpl: MockFn | null = null
+
         function call(args: CallArgs): Promise<ResponseType> {
+          if (mockImpl) {
+            return Promise.resolve(mockImpl(args))
+          }
           const reqParams = pick(args, params),
             reqQuery = {
               ...pick(args, query),
@@ -171,9 +187,27 @@ function declareAPI<RequestType>(
           return config.makeRequest(method, pathWithParams, reqQuery, reqBody, reqParams)
         }
 
+        function unmock() {
+          mockImpl = null
+        }
+
+        function mock(mockFnOrValue: Mock) {
+          mockImpl = typeof mockFnOrValue === 'function' ? (mockFnOrValue as any) : () => mockFnOrValue
+        }
+
+        function mockOnce(mockFnOrValue: Mock) {
+          mockImpl = args => {
+            unmock()
+            return typeof mockFnOrValue === 'function' ? (mockFnOrValue as any)(args) : mockFnOrValue
+          }
+        }
+
         call.implement = implement
         call.implementWithMiddleware = implementWithMiddleware
         call.getURL = getURL
+        call.unmock = unmock
+        call.mock = mock
+        call.mockOnce = mockOnce
 
         function implement(impl: ImplFn) {
           return implementWithMiddleware([], impl)
@@ -214,6 +248,8 @@ function declareAPI<RequestType>(
           return config.baseURL + applyPathParams(pathParamsAndQueryParams)
         }
 
+        parent.__apis.push(call)
+
         // Typescript is fine without this explicit typing here, but idea's autocomplete does not work without it
         return call as {
           (args: CallArgs): Promise<ResponseType>
@@ -233,6 +269,9 @@ function declareAPI<RequestType>(
           BodyType: BodyType
           CallArgsType: CallArgs
           RequestType: ActualRequestType
+          mockOnce: (fn: Mock) => void
+          mock: (fn: Mock) => void
+          unmock: () => void
         }
 
         function applyPathParams(reqParams: ActualTypeMap<StringTupleElementTypes<ParamsType>, string>) {

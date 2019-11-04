@@ -18,6 +18,16 @@ export const Purpose: React.FC = ({ children }) => {
     </Section>
   )
 }
+
+export const AvailableFrom = ({ version }: { version: '1.1.0' }) => {
+  return (
+    <Section>
+      <SectionHeading>Availability</SectionHeading>
+      This functionality is available from papupata version {version} onwards.
+    </Section>
+  )
+}
+
 export const Usage: React.FC = ({ children }) => {
   return (
     <Section>
@@ -30,16 +40,20 @@ export const Parameters: React.FC = ({ children }) => {
   return (
     <Section>
       <SectionHeading>Parameters</SectionHeading>
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Type</th>
-            <th>Description</th>
-          </tr>
-        </thead>
-        <tbody>{children}</tbody>
-      </table>
+      {children ? (
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>{children}</tbody>
+        </table>
+      ) : (
+        <p>There are no parameters.</p>
+      )}
     </Section>
   )
 }

@@ -51,6 +51,9 @@ export default function NavMenu() {
           <NavEntry link="/api/APIDeclaration/declarePutAPI">
             <Method>declarePutAPI</Method>
           </NavEntry>
+          <NavEntry link="/api/APIDeclaration/unmockAll">
+            <Method>unmockAll</Method>
+          </NavEntry>
         </Indent>
         <NavEntry link="/api/IncompleteAPIDeclaration">IncompleteAPIDeclaration</NavEntry>
         <Indent>
@@ -89,6 +92,15 @@ export default function NavMenu() {
           </NavEntry>
           <NavEntry link="/api/DeclaredAPI/implementWithMiddleware">
             <Method>implementWithMiddleware</Method>
+          </NavEntry>
+          <NavEntry link="/api/DeclaredAPI/mock">
+            <Method>mock</Method>
+          </NavEntry>
+          <NavEntry link="/api/DeclaredAPI/mockOnce">
+            <Method>mockOnce</Method>
+          </NavEntry>
+          <NavEntry link="/api/DeclaredAPI/unmock">
+            <Method>unmock</Method>
           </NavEntry>
           <NavEntry link="/api/DeclaredAPI/ResponseType">
             <Type>ResponseType</Type>

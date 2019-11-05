@@ -1,3 +1,6 @@
+1.2.0
+- Added "route" parameter to makeRequest
+
 1.1.0
 - Added mock, mockOnce and unmock
 

@@ -9,7 +9,8 @@ import {
   MethodReturnType,
   Examples,
   Example,
-  ExampleCommon
+  ExampleCommon,
+  AvailableFromTag,
 } from '../../../components/api-components'
 import { Members, PropertyMember } from '../../../components/members-table'
 import { Link } from 'gatsby'
@@ -44,12 +45,12 @@ export default function Configure() {
           </PropertyMember>
           <PropertyMember name="makeRequest" dataType="Function" required={'Conditionally *2'}>
             <p>This function is used internally for calling APIs. The function is as follows:</p>
-            <Parameters>
+            <Parameters includeAvailableFrom={true}>
               <Parameter name="method" dataType="string" />
               <Parameter name="url" dataType="string" />
               <Parameter name="query" dataType="object" />
               <Parameter name="body" dataType="object" />
-              <Parameter name="params" dataType="object">
+              <Parameter name="params" dataType="object" availableFrom='1.2.0'>
                 Do note that params are already baked into the URL, there is no need for the function to do that.
               </Parameter>
               <Parameter name="route" dataType="object/function">

@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 import React from 'react'
 import { Code } from './Code'
+import { IncludeAvailableFromContext } from './IncludeAvailableFromContext'
 
 export const Section = styled.section``
 export const SectionHeading = styled.h4``
@@ -19,7 +20,8 @@ export const Purpose: React.FC = ({ children }) => {
   )
 }
 
-export const AvailableFrom = ({ version }: { version: '1.1.0' }) => {
+export type ValidVersions = '1.1.0' | '1.2.0'
+export const AvailableFrom = ({ version }: { version: ValidVersions }) => {
   return (
     <Section>
       <SectionHeading>Availability</SectionHeading>
@@ -36,34 +38,44 @@ export const Usage: React.FC = ({ children }) => {
     </Section>
   )
 }
-export const Parameters: React.FC = ({ children }) => {
+export const Parameters: React.FC<{ includeAvailableFrom?: boolean }> = ({ children, includeAvailableFrom }) => {
   return (
     <Section>
-      <SectionHeading>Parameters</SectionHeading>
-      {children ? (
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Type</th>
-              <th>Description</th>
-            </tr>
-          </thead>
-          <tbody>{children}</tbody>
-        </table>
-      ) : (
-        <p>There are no parameters.</p>
-      )}
+      <IncludeAvailableFromContext.Provider value={!!includeAvailableFrom}>
+        <SectionHeading>Parameters</SectionHeading>
+        {children ? (
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Description</th>
+                {includeAvailableFrom && <th>Introduced in</th>}
+              </tr>
+            </thead>
+            <tbody>{children}</tbody>
+          </table>
+        ) : (
+          <p>There are no parameters.</p>
+        )}
+      </IncludeAvailableFromContext.Provider>
     </Section>
   )
 }
 
-export const Parameter: React.FC<{ name: string; dataType: any }> = ({ children, name, dataType }) => {
+export const Parameter: React.FC<{ name: string; dataType: any; availableFrom?: ValidVersions }> = ({
+  children,
+  name,
+  dataType,
+  availableFrom = '1.0.0'
+}) => {
+  const includeAvailableFrom = React.useContext(IncludeAvailableFromContext)
   return (
     <tr>
       <td>{name}</td>
       <td>{dataType}</td>
       <td>{children}</td>
+      {includeAvailableFrom && <td>{availableFrom}</td>}
     </tr>
   )
 }

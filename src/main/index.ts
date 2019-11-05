@@ -14,7 +14,7 @@ export type TypedRequest<RequestBaseType, Params, Query, Body> = Omit<RequestBas
 }
 
 type Middleware = RequestHandler
-export type MakeRequestAdapter = (method: string, url: string, query: any, body: any, params: any) => Promise<any>
+export type MakeRequestAdapter = (method: string, url: string, query: any, body: any, params: any, route: any) => Promise<any>
 
 interface Config {
   baseURL?: string
@@ -184,7 +184,7 @@ function declareAPI<RequestType>(
 
           const pathWithParams = getURL(reqParams as any)
 
-          return config.makeRequest(method, pathWithParams, reqQuery, reqBody, reqParams)
+          return config.makeRequest(method, pathWithParams, reqQuery, reqBody, reqParams, call)
         }
 
         function unmock() {

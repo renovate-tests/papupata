@@ -52,6 +52,10 @@ export default function Configure() {
               <Parameter name="params" dataType="object">
                 Do note that params are already baked into the URL, there is no need for the function to do that.
               </Parameter>
+              <Parameter name="route" dataType="object/function">
+                This is the object/function for route being invoked. For most uses this should be completely unnecessary, but this can be
+                used to allow for special behavior for particular routes.
+              </Parameter>
             </Parameters>
             <MethodReturnType>
               Promise{'<any>'}; the promise, on a successful request, should resolve with the response type of the declared request.

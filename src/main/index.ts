@@ -14,7 +14,14 @@ export type TypedRequest<RequestBaseType, Params, Query, Body> = Omit<RequestBas
 }
 
 type Middleware = RequestHandler
-export type MakeRequestAdapter = (method: string, url: string, query: any, body: any, params: any, route: any) => Promise<any>
+export type MakeRequestAdapter = (
+  method: string,
+  url: string,
+  query: any,
+  body: any,
+  params: any,
+  route: any
+) => Promise<any>
 
 interface Config {
   baseURL?: string
@@ -27,7 +34,7 @@ type StringTupleElementTypes<T extends readonly string[]> = T extends ReadonlyAr
 
 export class APIDeclaration<RequestType = Request> {
   private config: Config | null = null
-  public __apis: Array<{unmock(): void}> = []
+  public __apis: Array<{ unmock(): void }> = []
   public configure(config: Config | null) {
     if (config && config.router && config.app) throw new Error('Config should only have app or router, not both')
     this.config = config
@@ -58,7 +65,6 @@ export class APIDeclaration<RequestType = Request> {
       api.unmock()
     }
   }
-
 }
 
 const paramMatchers = (params: readonly string[]) =>
@@ -142,13 +148,13 @@ function declareAPI<RequestType>(
     boolQuery: BoolQueryType,
     _bodyPlaceholder: BodyType
   ) {
-    type CallArgs = BodyType &
-      ActualTypeMap<StringTupleElementTypes<ParamsType>, string> &
+    type CallArgsWithoutBody = ActualTypeMap<StringTupleElementTypes<ParamsType>, string> &
       ActualTypeMap<StringTupleElementTypes<QueryType>, string> &
       ActualOptionalTypeMap<StringTupleElementTypes<OptionalQueryType>, string> &
       ActualTypeMap<StringTupleElementTypes<BoolQueryType>, boolean>
-    
-    type CallArgParam = {} extends CallArgs ? ([] | [CallArgs]) : [CallArgs]
+    type CallArgs = BodyType & CallArgsWithoutBody
+
+    type CallArgParam = {} extends CallArgs ? [] | [CallArgs] : [CallArgs] | [BodyType, CallArgsWithoutBody]
 
     return {
       response<ResponseType, ResponseTypeOnServer = ResponseType>() {
@@ -171,7 +177,8 @@ function declareAPI<RequestType>(
         let mockImpl: MockFn | null = null
 
         function call(...argsArr: CallArgParam): Promise<ResponseType> {
-          const args = argsArr[0] || ({} as any)
+          const separateBody = argsArr.length === 2 || typeof argsArr[0] !== 'object'
+          const args = argsArr[separateBody ? 1 : 0] || ({} as any)
           if (mockImpl) {
             return Promise.resolve(mockImpl(args))
           }
@@ -181,7 +188,7 @@ function declareAPI<RequestType>(
               ...pick(args, optionalQuery),
               ...fromPairs(boolQuery.map(key => [key, (!!(args as any)[key]).toString()])),
             },
-            reqBody = omit(args, [...params, ...query, ...boolQuery, ...optionalQuery])
+            reqBody = separateBody ? argsArr[0] : omit(args, [...params, ...query, ...boolQuery, ...optionalQuery])
           const config = parent.getConfig()
           if (!config || !config.makeRequest) throw new Error('Request adapter not configured')
 

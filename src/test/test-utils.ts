@@ -28,6 +28,7 @@ export function prepareTestServerFor(api: APIDeclaration<any>) {
 
 export function runTestServer() {
   const app = express()
+  app.use(bodyParser.text())
   app.use(bodyParser.json())
   const server = app.listen(0)
 

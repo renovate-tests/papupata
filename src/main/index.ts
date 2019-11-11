@@ -147,6 +147,8 @@ function declareAPI<RequestType>(
       ActualTypeMap<StringTupleElementTypes<QueryType>, string> &
       ActualOptionalTypeMap<StringTupleElementTypes<OptionalQueryType>, string> &
       ActualTypeMap<StringTupleElementTypes<BoolQueryType>, boolean>
+    
+    type CallArgParam = {} extends CallArgs ? ([] | [CallArgs]) : [CallArgs]
 
     return {
       response<ResponseType, ResponseTypeOnServer = ResponseType>() {
@@ -168,7 +170,8 @@ function declareAPI<RequestType>(
 
         let mockImpl: MockFn | null = null
 
-        function call(args: CallArgs): Promise<ResponseType> {
+        function call(...argsArr: CallArgParam): Promise<ResponseType> {
+          const args = argsArr[0] || ({} as any)
           if (mockImpl) {
             return Promise.resolve(mockImpl(args))
           }
@@ -252,7 +255,7 @@ function declareAPI<RequestType>(
 
         // Typescript is fine without this explicit typing here, but idea's autocomplete does not work without it
         return call as {
-          (args: CallArgs): Promise<ResponseType>
+          (...argsArr: CallArgParam): Promise<ResponseType>
           implement: (impl: ImplFn) => void
           implementation?: ImplFn
           implementWithMiddleware: (middleware: Middleware[], impl: ImplFn) => void

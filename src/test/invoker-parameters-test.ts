@@ -19,6 +19,21 @@ describe('invoker-parameters-test', function() {
     testServer.stop()
   })
 
+  it('no parameters -- can be called with no args', async function() {
+    const api = API.declareGetAPI('/void').response<string>()
+
+    testServer.app.get('/void', (_req, res) => res.send('Test'))
+    const resp = await api()
+    expect(resp).toBe('Test')
+  })
+
+  it('no parameters -- can be called with empty object', async function() {
+    const api = API.declareGetAPI('/void').response<string>()
+
+    testServer.app.get('/void', (req, res) => res.send('Test' + req.body.abc))
+    const resp = await api({})
+    expect(resp).toBe('Test')
+  })
   it('query parameters', async function() {
     const api = API.declareGetAPI('/query')
       .query(['name', 'job'] as const)

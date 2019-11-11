@@ -49,9 +49,7 @@ describe('invoker-parameters-test', function() {
       .queryBool(['a', 'b'] as const)
       .response<string>()
 
-    testServer.app.get('/boolquery', (req, res) =>
-      res.send(`Values ${req.query.a}, ${req.query.b}`)
-    )
+    testServer.app.get('/boolquery', (req, res) => res.send(`Values ${req.query.a}, ${req.query.b}`))
 
     const resp = await api({ a: true, b: false })
     expect(resp).toBe('Values true, false')
@@ -90,6 +88,33 @@ describe('invoker-parameters-test', function() {
 
     const resp = await api({ name: 'Bob', age: 53 })
     expect(resp).toBe('Hello, Bob, age 53')
+  })
+
+  it('non-object body, sole arg', async function() {
+    const api = API.declarePostAPI('/nonobjbody')
+      .body<string>()
+      .response<string>()
+
+    testServer.app.post('/nonobjbody', (req, res) => {
+      res.send(`Hello, ${req.body}`)
+    })
+
+    const resp = await api('my love!')
+    expect(resp).toBe('Hello, my love!')
+  })
+
+  it('non-object body, other args', async function() {
+    const api = API.declarePostAPI('/nonobjbody2')
+      .query(['q'] as const)
+      .body<string>()
+      .response<string>()
+
+    testServer.app.post('/nonobjbody2', (req, res) => {
+      res.send(`Hello, ${req.body} ${req.query.q}`)
+    })
+
+    const resp = await api('my', { q: 'love!' })
+    expect(resp).toBe('Hello, my love!')
   })
 
   it('combination of all', async function() {

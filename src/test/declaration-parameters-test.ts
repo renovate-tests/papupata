@@ -66,6 +66,17 @@ describe('declaration-parameters-test', function() {
     const resp = await requestPromise.post(url, { json: { name: 'Bob', age: 53 } })
     expect(resp).toBe('Hello, Bob, age 53')
   })
+  it('non-object body', async function() {
+    const api = API.declarePostAPI('/body/non-object')
+      .body<string>()
+      .response<string>()
+    api.implement(req => `[${req.body}]`)
+
+    const url = api.getURL({})
+    expect(url).toMatch(/http:\/\/localhost:\d+\/body/)
+    const resp = await requestPromise.post(url, { body: 'kevin', headers: { 'Content-Type': 'text/plain' } })
+    expect(resp).toBe('[kevin]')
+  })
 
   it('combination of all', async function() {
     const comboAPI = API.declarePutAPI('/combo/:p1/:p2')

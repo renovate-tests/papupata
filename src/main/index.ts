@@ -14,46 +14,47 @@ export type TypedRequest<RequestBaseType, Params, Query, Body> = Omit<RequestBas
 }
 
 type Middleware = RequestHandler
-export type MakeRequestAdapter = (
+export type MakeRequestAdapter<RequestOptions = void> = (
   method: string,
   url: string,
   query: any,
   body: any,
   params: any,
-  route: any
+  route: any,
+  requestOptions?: RequestOptions
 ) => Promise<any>
 
-interface Config {
+interface Config<RequestOptions = void> {
   baseURL?: string
-  makeRequest?: MakeRequestAdapter
+  makeRequest?: MakeRequestAdapter<RequestOptions>
   router?: IRouter<any>
   app?: Application
 }
 
 type StringTupleElementTypes<T extends readonly string[]> = T extends ReadonlyArray<infer U> ? U : never
 
-export class APIDeclaration<RequestType = Request> {
-  private config: Config | null = null
+export class APIDeclarationWithOptions<RequestType = Request, RouteOptions = {}, RequestOptions = {}> {
+  private config: Config<RequestOptions> | null = null
   public __apis: Array<{ unmock(): void }> = []
-  public configure(config: Config | null) {
+  public configure(config: Config<RequestOptions> | null) {
     if (config && config.router && config.app) throw new Error('Config should only have app or router, not both')
     this.config = config
   }
 
-  public declareGetAPI(path: string) {
-    return declareAPI<RequestType>(this, 'get', path)
+  public declareGetAPI(path: string, routeOptions?: RouteOptions) {
+    return declareAPI<RequestType, RouteOptions, RequestOptions>(this, 'get', path, routeOptions)
   }
 
-  public declarePostAPI(path: string) {
-    return declareAPI<RequestType>(this, 'post', path)
+  public declarePostAPI(path: string, routeOptions?: RouteOptions) {
+    return declareAPI<RequestType, RouteOptions, RequestOptions>(this, 'post', path, routeOptions)
   }
 
-  public declarePutAPI(path: string) {
-    return declareAPI<RequestType>(this, 'put', path)
+  public declarePutAPI(path: string, routeOptions?: RouteOptions) {
+    return declareAPI<RequestType, RouteOptions, RequestOptions>(this, 'put', path, routeOptions)
   }
 
-  public declareDeleteAPI(path: string) {
-    return declareAPI<RequestType>(this, 'delete', path)
+  public declareDeleteAPI(path: string, routeOptions?: RouteOptions) {
+    return declareAPI<RequestType, RouteOptions, RequestOptions>(this, 'delete', path, routeOptions)
   }
 
   public getConfig() {
@@ -67,16 +68,19 @@ export class APIDeclaration<RequestType = Request> {
   }
 }
 
+export class APIDeclaration<RequestType = Request> extends APIDeclarationWithOptions<RequestType, void, void> {}
+
 const paramMatchers = (params: readonly string[]) =>
   params.map(param => ({
     name: param,
     matcher: new RegExp(`(^|/):${param}($|/)`),
   }))
 
-function declareAPI<RequestType>(
-  parent: APIDeclaration<RequestType>,
+function declareAPI<RequestType, RouteOptions, RequestOptions>(
+  parent: APIDeclarationWithOptions<RequestType, RouteOptions, RequestOptions>,
   method: 'get' | 'post' | 'put' | 'delete',
-  path: string
+  path: string,
+  routeOptions?: RouteOptions
 ) {
   function params() {
     return <PT extends readonly string[]>(params: PT) => {
@@ -154,7 +158,13 @@ function declareAPI<RequestType>(
       ActualTypeMap<StringTupleElementTypes<BoolQueryType>, boolean>
     type CallArgs = BodyType & CallArgsWithoutBody
 
-    type CallArgParam = {} extends CallArgs ? [] | [CallArgs] : [CallArgs] | [BodyType, CallArgsWithoutBody]
+    type CallArgParam = {} extends CallArgs
+      ? [] | [CallArgs] | [CallArgs, RequestOptions]
+      :
+          | [CallArgs]
+          | [CallArgs, RequestOptions]
+          | [BodyType, CallArgsWithoutBody]
+          | [BodyType, CallArgsWithoutBody, RequestOptions]
 
     return {
       response<ResponseType, ResponseTypeOnServer = ResponseType>() {
@@ -177,8 +187,15 @@ function declareAPI<RequestType>(
         let mockImpl: MockFn | null = null
 
         function call(...argsArr: CallArgParam): Promise<ResponseType> {
-          const separateBody = argsArr.length === 2 || typeof argsArr[0] !== 'object'
-          const args = argsArr[separateBody ? 1 : 0] || ({} as any)
+          const separateBody =
+            typeof argsArr[0] !== 'object' ||
+            argsArr.length > 2 ||
+            (argsArr.length === 2 && isValidAsNonBodyRequestData(argsArr[1]))
+
+          const hasOtherArgs = separateBody && isValidAsNonBodyRequestData(argsArr[1]),
+            args = hasOtherArgs ? argsArr[1] : separateBody ? {} : (argsArr[0] as any)
+
+          const requestOptions = separateBody && hasOtherArgs ? argsArr[2] : (argsArr[1] as any)
           if (mockImpl) {
             return Promise.resolve(mockImpl(args))
           }
@@ -194,7 +211,13 @@ function declareAPI<RequestType>(
 
           const pathWithParams = getURL(reqParams as any)
 
-          return config.makeRequest(method, pathWithParams, reqQuery, reqBody, reqParams, call)
+          return config.makeRequest(method, pathWithParams, reqQuery, reqBody, reqParams, call, requestOptions)
+        }
+
+        function isValidAsNonBodyRequestData(obj: any) {
+          if (typeof obj !== 'object') return false
+          const validKeys = [...query, ...optionalQuery, ...boolQuery, ...params]
+          return Object.keys(obj).every(key => validKeys.includes(key))
         }
 
         function unmock() {
@@ -218,6 +241,7 @@ function declareAPI<RequestType>(
         call.unmock = unmock
         call.mock = mock
         call.mockOnce = mockOnce
+        call.options = routeOptions
 
         function implement(impl: ImplFn) {
           return implementWithMiddleware([], impl)
@@ -282,6 +306,7 @@ function declareAPI<RequestType>(
           mockOnce: (fn: Mock) => void
           mock: (fn: Mock) => void
           unmock: () => void
+          options?: RouteOptions
         }
 
         function applyPathParams(reqParams: ActualTypeMap<StringTupleElementTypes<ParamsType>, string>) {

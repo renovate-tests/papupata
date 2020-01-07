@@ -18,7 +18,7 @@ export default function createRequestAdapter(bodyType: 'json' | 'form'): MakeReq
         }
       })
     )
-    if (response.headers['content-type'] === 'application/json') {
+    if (response.headers['content-type'].includes('application/json')) {
       return JSON.parse(response.body)
     } else {
       return response.body

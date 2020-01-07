@@ -167,7 +167,9 @@ function declareAPI<RequestType, RouteOptions, RequestOptions>(
           | [BodyType, CallArgsWithoutBody, RequestOptions]
 
     return {
-      response<ResponseType, ResponseTypeOnServer = ResponseType>() {
+      response<ResponseType, ResponseTypeOnServer = ResponseType>(
+        mapper?: (payload: ResponseTypeOnServer) => ResponseType | Promise<ResponseType>
+      ) {
         type ActualRequestType = TypedRequest<
           RequestType,
           ActualTypeMap<StringTupleElementTypes<ParamsType>, string>,
@@ -176,10 +178,7 @@ function declareAPI<RequestType, RouteOptions, RequestOptions>(
             ActualTypeMap<StringTupleElementTypes<BoolQueryType>, boolean>,
           BodyType
         >
-        type ImplFn = (
-          req: ActualRequestType,
-          res: Response
-        ) => Promise<ResponseType | ResponseTypeOnServer> | ResponseType | ResponseTypeOnServer
+        type ImplFn = (req: ActualRequestType, res: Response) => Promise<ResponseTypeOnServer> | ResponseTypeOnServer
 
         type MockFn = (args: CallArgs) => ResponseType | Promise<ResponseType>
         type Mock = ResponseType | ((args: CallArgs) => ResponseType | Promise<ResponseType>)
@@ -258,7 +257,8 @@ function declareAPI<RequestType, RouteOptions, RequestOptions>(
               for (const bq of boolQuery) {
                 req.query[bq] = req.query[bq] === 'true'
               }
-              const value = await impl(req as any, res)
+              const unmappedValue = await impl(req as any, res)
+              const value = mapper ? await mapper(unmappedValue) : unmappedValue
               if (value !== undefined) {
                 res.send(value)
               }

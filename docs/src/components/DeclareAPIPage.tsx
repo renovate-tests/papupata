@@ -21,6 +21,11 @@ export default function DeclareAPIPage({ method }: { method: string }) {
           <Parameter name="path" dataType="string">
             Path to the API under the base URL of the APIDeclaration.
           </Parameter>
+          <Parameter name='routeOptions' dataType='varies'>
+            Options to the route. Type type is specified by the RouteOptions type parameter of the API declaration.
+
+            They have no inherent meaning in papupata, they are simply stored to be used by the application.
+          </Parameter>
         </Parameters>
         <MethodReturnType>
           <IncompleteApiDeclarationLink />

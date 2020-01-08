@@ -15,7 +15,7 @@ const IndexPage = () => (
         <p>Ensure your codebase meets the following requirements:</p>
         <ul>
           <li>Node 10+ (if using papupata to implement APIs; this requirement can be removed fairly easily if there is demand to do so)</li>
-          <li>Typescript 5.4+</li>
+          <li>Typescript 3.4+</li>
           <li>Express (again only if implementing APIs)</li>
         </ul>
         <h2>Installing papupata</h2>

@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import React from 'react'
+import React, { ReactNode } from 'react'
 import { Code } from './Code'
 import { IncludeAvailableFromContext } from './IncludeAvailableFromContext'
 
@@ -38,11 +38,11 @@ export const Usage: React.FC = ({ children }) => {
     </Section>
   )
 }
-export const Parameters: React.FC<{ includeAvailableFrom?: boolean }> = ({ children, includeAvailableFrom }) => {
+export const Parameters: React.FC<{ includeAvailableFrom?: boolean, label?: string }> = ({ children, includeAvailableFrom, label }) => {
   return (
     <Section>
       <IncludeAvailableFromContext.Provider value={!!includeAvailableFrom}>
-        <SectionHeading>Parameters</SectionHeading>
+        <SectionHeading>Parameters{label && ': ' + label}</SectionHeading>
         {children ? (
           <table>
             <thead>
@@ -121,5 +121,53 @@ export const ExampleCommon: React.FC<{ children: any }> = ({ children }) => {
       <SubHeading>Common to examples below:</SubHeading>
       {children}
     </ExampleCommonContainer>
+  )
+}
+
+export const TypeParameters: React.FC<{ children: ReactNode; includeAvailableFrom?: boolean }> = ({children, includeAvailableFrom}) => {
+  return (
+    <Section>
+      <SectionHeading>Type parameeters</SectionHeading>
+      <IncludeAvailableFromContext.Provider value={!!includeAvailableFrom}>
+        <SectionHeading>Parameters</SectionHeading>
+        {children ? (
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Default value</th>
+                <th>Description</th>
+                {includeAvailableFrom ? <th>Introduced in</th> : ''}
+              </tr>
+            </thead>
+            <tbody>{children}</tbody>
+          </table>
+        ) : (
+          <p>There are no parameters.</p>
+        )}
+      </IncludeAvailableFromContext.Provider>
+    </Section>
+  )
+}
+
+const Row = styled.tr``
+const NameColumn = styled.td``
+const DefaultValueColumn = styled.td``
+const DescriptionColumn = styled.td``
+const AvailableFromColumn = styled.td``
+
+export const TypeParameter: React.FC<{ name: string; defaultValue?: string, availableFrom?: string }> = ({
+  children,
+  name,
+  defaultValue,availableFrom = 'none'
+}) => {
+  const includeAvailableFrom = React.useContext(IncludeAvailableFromContext)
+  return (
+    <Row>
+      <NameColumn>{name}</NameColumn>
+      <DefaultValueColumn>{defaultValue}</DefaultValueColumn>
+      <DescriptionColumn>{children}</DescriptionColumn>
+      {includeAvailableFrom ? <AvailableFromColumn>{availableFrom}</AvailableFromColumn> : ''}
+    </Row>
   )
 }

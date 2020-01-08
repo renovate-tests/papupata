@@ -3,6 +3,11 @@ import Page from '../../../components/Page'
 import Container from '../../../components/Container'
 import { Purpose, Usage, Parameter, Parameters, MethodReturnType, Examples, Example, Caveats } from '../../../components/api-components'
 
+const requestOptionsDescription = `Options passed to the request. These have no inherent meaning in papupata, but can be used by
+the makeRequest function defined by the application. The type of this parameter is set by the RequestOptions type parameter
+of the API declaration.
+`
+
 export default function Invoke() {
   return (
     <IndexLayout>
@@ -14,13 +19,23 @@ export default function Invoke() {
         </Container>
         <Purpose>Calls the declared API</Purpose>
         <Usage>
-          All query parameters (including body) are passed as a single object. The invocation mechanisms spreads them out to the declared
-          containers automatically.
+          In the simplest for mall query parameters (including body) are passed as a single object. The invocation mechanisms spreads them out to the declared
+          containers automatically. There are overload for different uses, however, listed below.
         </Usage>
-        <Parameters>
+        <Parameters label='All parameters in one'>
           <Parameter name="params" dataType="Object">
             All parameters to the API
           </Parameter>
+          <Parameter name={'requestOptions'} dataType={'varies'}>{requestOptionsDescription}</Parameter>
+        </Parameters>
+        <Parameters label='Separate body'>
+          <Parameter name="body" dataType="Varies">
+            Body to be sent to the API. The data type is specified by the route.
+          </Parameter>
+          <Parameter name="params" dataType="Object">
+            All parameters to the API, excluding body
+          </Parameter>
+          <Parameter name={'requestOptions'} dataType={'varies'}>{requestOptionsDescription}</Parameter>
         </Parameters>
         <MethodReturnType>{'Promise<ResponseType>'}</MethodReturnType>
         <Caveats>
@@ -49,12 +64,12 @@ export default function Invoke() {
                 {param} = req.params,
                 {key} = req.body
               return [param, q, key].join()
-            })            
+            })
           `}
           </Example>
           <Example label="Usage in invocation">
             {`
-            const response = await myAPI({param: 'abc', q: 'def', key: 'ghi'})            
+            const response = await myAPI({param: 'abc', q: 'def', key: 'ghi'})
             // Response in the example will be abc,def,ghi
           `}
           </Example>

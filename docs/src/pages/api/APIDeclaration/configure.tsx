@@ -2,15 +2,14 @@ import IndexLayout from '../../../layouts'
 import Page from '../../../components/Page'
 import Container from '../../../components/Container'
 import {
-  Purpose,
-  Usage,
-  Parameter,
-  Parameters,
-  MethodReturnType,
-  Examples,
   Example,
   ExampleCommon,
-  AvailableFromTag,
+  Examples,
+  MethodReturnType,
+  Parameter,
+  Parameters,
+  Purpose,
+  Usage,
 } from '../../../components/api-components'
 import { Members, PropertyMember } from '../../../components/members-table'
 import { Link } from 'gatsby'
@@ -55,7 +54,11 @@ export default function Configure() {
               </Parameter>
               <Parameter name="route" dataType="object/function">
                 This is the object/function for route being invoked. For most uses this should be completely unnecessary, but this can be
-                used to allow for special behavior for particular routes.
+                used to allow for special behavior for particular routes. If options have been defined on the route, you can access them from
+                route.options.
+              </Parameter>
+              <Parameter name='requestOptions' dataType='varies'>
+                If request options are used, then they are passed as this parameter.
               </Parameter>
             </Parameters>
             <MethodReturnType>
@@ -104,7 +107,7 @@ export default function Configure() {
           <Example label="Server with router">
             {`
             import express, {Router} from 'express'
-            import {api} from './api'          
+            import {api} from './api'
             const app = express()
             const router = new Router()
             app.use(router)

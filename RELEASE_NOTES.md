@@ -1,4 +1,4 @@
-1.3.0 (planned)
+  1.3.0
 
 - Support for invoking APIs without parameters without even the empty object
 - Support for invoking APIs with non-object bodies

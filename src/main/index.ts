@@ -33,7 +33,7 @@ interface Config<RequestOptions = void> {
 
 type StringTupleElementTypes<T extends readonly string[]> = T extends ReadonlyArray<infer U> ? U : never
 
-export class APIDeclarationWithOptions<RequestType = Request, RouteOptions = {}, RequestOptions = {}> {
+export class APIDeclaration<RequestType = Request, RouteOptions = void, RequestOptions = void> {
   private config: Config<RequestOptions> | null = null
   public __apis: Array<{ unmock(): void }> = []
   public configure(config: Config<RequestOptions> | null) {
@@ -68,8 +68,6 @@ export class APIDeclarationWithOptions<RequestType = Request, RouteOptions = {},
   }
 }
 
-export class APIDeclaration<RequestType = Request> extends APIDeclarationWithOptions<RequestType, void, void> {}
-
 const paramMatchers = (params: readonly string[]) =>
   params.map(param => ({
     name: param,
@@ -77,7 +75,7 @@ const paramMatchers = (params: readonly string[]) =>
   }))
 
 function declareAPI<RequestType, RouteOptions, RequestOptions>(
-  parent: APIDeclarationWithOptions<RequestType, RouteOptions, RequestOptions>,
+  parent: APIDeclaration<RequestType, RouteOptions, RequestOptions>,
   method: 'get' | 'post' | 'put' | 'delete',
   path: string,
   routeOptions?: RouteOptions

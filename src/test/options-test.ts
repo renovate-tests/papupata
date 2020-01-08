@@ -1,4 +1,4 @@
-import { APIDeclarationWithOptions } from '../main'
+import { APIDeclaration } from '../main'
 import { Request } from 'express'
 
 describe('options-test', function() {
@@ -7,7 +7,7 @@ describe('options-test', function() {
       interface RouteOptions {
         isCool: boolean
       }
-      const apiDeclaration = new APIDeclarationWithOptions<Request, RouteOptions>()
+      const apiDeclaration = new APIDeclaration<Request, RouteOptions>()
 
       const api = apiDeclaration.declareGetAPI('/', { isCool: true }).response<boolean>()
 
@@ -19,7 +19,7 @@ describe('options-test', function() {
     interface RequestOptions {
       specialValue: string
     }
-    const apiDeclaration = new APIDeclarationWithOptions<Request, void, RequestOptions>()
+    const apiDeclaration = new APIDeclaration<Request, void, RequestOptions>()
     apiDeclaration.configure({
       baseURL: '',
       makeRequest: (method, url, query, body, params, _route, requestOpts) =>

@@ -40,7 +40,7 @@ describe('router-test', function() {
       baseURL: `http://localhost:${testServer.port}`,
       makeRequest: createRequestAdapter('json'),
       router,
-      routerAt: routerPath
+      routerAt: routerPath,
     })
     const testAPI = API.declareGetAPI('/subdir/updog').response<string>()
 
@@ -48,5 +48,23 @@ describe('router-test', function() {
 
     const resp = await testAPI()
     expect(resp).toEqual('hello')
+  })
+
+  it('when routerAt is used, routes being implemented must be within its context', function() {
+    const routerPath = '/another'
+    const router = Router()
+    testServer.app.use(routerPath, router)
+    const API = new APIDeclaration()
+    API.configure({
+      baseURL: `http://localhost:${testServer.port}`,
+      makeRequest: createRequestAdapter('json'),
+      router,
+      routerAt: routerPath,
+    })
+    const testAPI = API.declareGetAPI('/notcorrect/updog').response<string>()
+
+    expect(() => testAPI.implement(() => 'hello')).toThrow(
+      'Papupata: when routerAt is provided, all routes must be its children.'
+    )
   })
 })

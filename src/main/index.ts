@@ -62,6 +62,10 @@ export class APIDeclaration<RequestType = Request, RouteOptions = void, RequestO
     return this.config
   }
 
+  public getDeclaredAPIs() {
+    return [...this.__apis]
+  }
+
   public unmockAll() {
     for (const api of this.__apis) {
       api.unmock()

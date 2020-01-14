@@ -178,7 +178,7 @@ function declareAPI<RequestType, RouteOptions, RequestOptions>(
         >
         type ImplFn = (req: ActualRequestType, res: Response) => Promise<ResponseTypeOnServer> | ResponseTypeOnServer
 
-        type MockFn = (args: CallArgs) => ResponseType | Promise<ResponseType>
+        type MockFn = (args: CallArgs, body?: BodyType) => ResponseType | Promise<ResponseType>
         type Mock = ResponseType | ((args: CallArgs) => ResponseType | Promise<ResponseType>)
 
         let mockImpl: MockFn | null = null
@@ -193,9 +193,7 @@ function declareAPI<RequestType, RouteOptions, RequestOptions>(
             args = hasOtherArgs ? argsArr[1] : separateBody ? {} : (argsArr[0] as any)
 
           const requestOptions = separateBody && hasOtherArgs ? argsArr[2] : (argsArr[1] as any)
-          if (mockImpl) {
-            return Promise.resolve(mockImpl(args))
-          }
+
           const reqParams = pick(args, params),
             reqQuery = {
               ...pick(args, query),
@@ -203,6 +201,19 @@ function declareAPI<RequestType, RouteOptions, RequestOptions>(
               ...fromPairs(boolQuery.map(key => [key, (!!(args as any)[key]).toString()])),
             },
             reqBody = separateBody ? argsArr[0] : omit(args, [...params, ...query, ...boolQuery, ...optionalQuery])
+
+          if (mockImpl) {
+            if (separateBody) {
+              if (typeof reqBody === 'object') {
+                return Promise.resolve(mockImpl({ ...args, ...reqBody }, reqBody as any))
+              } else {
+                return Promise.resolve(mockImpl(args, reqBody as any))
+              }
+            } else {
+              return Promise.resolve(mockImpl(args, reqBody as any))
+            }
+          }
+
           const config = parent.getConfig()
           if (!config || !config.makeRequest) throw new Error('Request adapter not configured')
 

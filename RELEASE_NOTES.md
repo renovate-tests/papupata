@@ -1,3 +1,8 @@
+  1.3.1 
+- Mock function had no access to separate bodies; objects are now combined into
+  the main argument, bodies are also available as the second argument regardless
+  of if they were separate or not
+  
   1.3.0
 
 - Support for invoking APIs without parameters without even the empty object

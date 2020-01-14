@@ -79,6 +79,15 @@ export default function Configure() {
             Express router, on which the declared APIs will be attached. The main advantage of using a router over app is that APIs can be
             added after the whole application has been configured, assuming no middleware is added to the router itself after the routes.
           </PropertyMember>
+          <PropertyMember name="routerAt" dataType="string">
+            <p>It often makes sense to declare APIs on top a common base URL. In practice though you might have a router
+              set up for a specific path, for example to add common middleware.</p>
+            <p>
+              By setting routerAt, you explicitly indicate that the provided router will be at the given path. All routes
+              on an API declaration with routerAt MUST have the routerAt as the start of their path.
+            </p>
+
+          </PropertyMember>
         </Members>
         <div>*1: For invoking APIs or calling the getURL method on them</div>
         <div>*2: For invoking APIs</div>

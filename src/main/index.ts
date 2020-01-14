@@ -28,6 +28,7 @@ interface Config<RequestOptions = void> {
   baseURL?: string
   makeRequest?: MakeRequestAdapter<RequestOptions>
   router?: IRouter<any>
+  routerAt?: string
   app?: Application
 }
 
@@ -261,20 +262,29 @@ function declareAPI<RequestType, RouteOptions, RequestOptions>(
           if (!config) throw new Error('Papupata not configured')
           const host = config.router || config.app
           if (!host) throw new Error('Papupata: neither router nor app configured, cannot implement routes')
-          host[method](path, ...middleware, async (req, res, next) => {
-            try {
-              for (const bq of boolQuery) {
-                req.query[bq] = req.query[bq] === 'true'
+          if (config.routerAt && !path.startsWith(config.routerAt)) {
+            throw new Error('Papupata: when routerAt is provided, all routes must be its children.')
+          }
+          const strippedPath = config.routerAt ? path.substring(config.routerAt.length): path
+
+          host[method](
+            strippedPath,
+            ...middleware,
+            async (req, res, next) => {
+              try {
+                for (const bq of boolQuery) {
+                  req.query[bq] = req.query[bq] === 'true'
+                }
+                const unmappedValue = await impl(req as any, res)
+                const value = mapper ? await mapper(unmappedValue) : unmappedValue
+                if (value !== undefined) {
+                  res.send(value)
+                }
+              } catch (err) {
+                next(err)
               }
-              const unmappedValue = await impl(req as any, res)
-              const value = mapper ? await mapper(unmappedValue) : unmappedValue
-              if (value !== undefined) {
-                res.send(value)
-              }
-            } catch (err) {
-              next(err)
             }
-          })
+          )
         }
 
         function getURL(

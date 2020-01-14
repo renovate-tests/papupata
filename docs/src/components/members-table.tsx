@@ -1,16 +1,24 @@
 import { Section, SectionHeading } from './api-components'
-import React, { createContext, useContext } from 'react'
+import React, { createContext, ReactNode, useContext } from 'react'
 import styled from 'styled-components'
 import { Link } from 'gatsby'
+import { IncludeAvailableFromContext } from './IncludeAvailableFromContext'
 
 const Row = styled.tr``
 const NameColumnBase = styled.td``
 const TypeColumn = styled.td``
 const DataTypeColumn = styled.td``
 const DescriptionColumn = styled.td``
-const RequiredColumn = styled.td``
+const RequiredColumnStyles = styled.td``
+const AvailableFromColumn = styled.td``
 
-const MemberContext = createContext({ context: '' })
+function RequiredColumn({ children }: { children: ReactNode }) {
+  const { includeRequiredColumn } = useContext(MemberContext)
+  if (!includeRequiredColumn && children) throw new Error('Being asked to show required cell, yet it does not exist')
+  return includeRequiredColumn ? <RequiredColumnStyles>{children}</RequiredColumnStyles> : null
+}
+
+const MemberContext = createContext({ context: '', includeRequiredColumn: false })
 
 const NameColumn: React.FC<{ name: string }> = ({ name, children }) => {
   const { context } = useContext(MemberContext)
@@ -21,51 +29,71 @@ const NameColumn: React.FC<{ name: string }> = ({ name, children }) => {
   )
 }
 
-export const Members: React.FC<{ context: string; includeRequiredColumn?: boolean }> = ({ children, context, includeRequiredColumn }) => {
+export const Members: React.FC<{ context: string; includeRequiredColumn?: boolean; includeAvailableFrom?: boolean }> = ({
+  children,
+  context,
+  includeRequiredColumn,
+  includeAvailableFrom
+}) => {
   return (
     <Section>
-      <MemberContext.Provider value={{ context }}>
-        <SectionHeading>Members</SectionHeading>
-        <table>
-          <thead>
-            <th>Name</th>
-            <th>Type</th>
-            <th>Data type/return type</th>
-            <th>Description</th>
-            {includeRequiredColumn && <th>Required</th>}
-          </thead>
-          <tbody>{children}</tbody>
-        </table>
+      <MemberContext.Provider value={{ context, includeRequiredColumn: !!includeRequiredColumn }}>
+        <IncludeAvailableFromContext.Provider value={!!includeAvailableFrom}>
+          <SectionHeading>Members</SectionHeading>
+          <table>
+            <thead>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Data type/return type</th>
+              <th>Description</th>
+              {includeRequiredColumn && <th>Required</th>}
+              {includeAvailableFrom && <th>Introduced in</th>}
+            </thead>
+            <tbody>{children}</tbody>
+          </table>
+        </IncludeAvailableFromContext.Provider>
       </MemberContext.Provider>
     </Section>
   )
 }
-export const MethodMember: React.FC<{ name: string; dataType: any; required?: any; displayName?: any }> = ({
+export const MethodMember: React.FC<{ name: string; dataType: any; required?: any; displayName?: any; availableFrom?: string }> = ({
   children,
   name,
   dataType,
   required,
-  displayName
+  displayName,
+  availableFrom
 }) => {
+  const includeAvailableFrom = React.useContext(IncludeAvailableFromContext)
   return (
     <Row>
       <NameColumn name={name}>{displayName}</NameColumn>
       <TypeColumn>method</TypeColumn>
       <DataTypeColumn>{dataType}</DataTypeColumn>
       <DescriptionColumn>{children}</DescriptionColumn>
-      {required !== undefined && <RequiredColumn>{required === true ? 'Yes' : required === false ? 'No' : required}</RequiredColumn>}
+      <RequiredColumn>{required === true ? 'Yes' : required === false ? 'No' : required}</RequiredColumn>
+      {includeAvailableFrom ? <AvailableFromColumn>{availableFrom}</AvailableFromColumn> : ''}
     </Row>
   )
 }
 
-export const PropertyMember: React.FC<{ name: string; dataType: any; required?: any }> = ({ children, name, dataType, required }) => {
+export const PropertyMember: React.FC<{ name: string; dataType: any; required?: any; availableFrom?: string }> = ({
+  children,
+  name,
+  dataType,
+  required,
+  availableFrom
+}) => {
+  const includeAvailableFrom = React.useContext(IncludeAvailableFromContext)
+
   return (
     <Row>
       <NameColumnBase>{name}</NameColumnBase>
       <TypeColumn>property</TypeColumn>
       <DataTypeColumn>{dataType}</DataTypeColumn>
       <DescriptionColumn>{children}</DescriptionColumn>
-      {required !== undefined && <RequiredColumn>{required === true ? 'Yes' : required === false ? 'No' : required}</RequiredColumn>}
+      <RequiredColumn>{required === true ? 'Yes' : required === false ? 'No' : required}</RequiredColumn>
+      {includeAvailableFrom ? <AvailableFromColumn>{availableFrom}</AvailableFromColumn> : ''}
     </Row>
   )
 }
@@ -80,4 +108,3 @@ export const ExposedTypeMember: React.FC<{ name: string }> = ({ children, name }
     </Row>
   )
 }
-

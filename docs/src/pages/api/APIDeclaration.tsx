@@ -34,18 +34,18 @@ export default function APIDeclaration() {
           </p>
         </Usage>
         <TypeParameters>
-          <TypeParameter name='RequestType' defaultValue='Request (express)' availableFrom='Always'>
-            This type parameter is used to set up the type for the request object for implementing the routes with express.
-            The default value should be fine for simple cases, but if you have a custom request type you can use it instead.
+          <TypeParameter name="RequestType" defaultValue="Request (express)" availableFrom="Always">
+            This type parameter is used to set up the type for the request object for implementing the routes with express. The default
+            value should be fine for simple cases, but if you have a custom request type you can use it instead.
           </TypeParameter>
-          <TypeParameter name='RouteOptions' defaultValue='void' availableFrom='1.3.0'>
+          <TypeParameter name="RouteOptions" defaultValue="void" availableFrom="1.3.0">
             If you want to pass options to your route definitions, then this type defines the type for them.
           </TypeParameter>
-          <TypeParameter name='RequestOptions' defaultValue='void' availableFrom='1.3.0'>
+          <TypeParameter name="RequestOptions" defaultValue="void" availableFrom="1.3.0">
             If you want to pass options when making requests, then this type defines the type for them.
           </TypeParameter>
         </TypeParameters>
-        <Members context="APIDeclaration">
+        <Members context="APIDeclaration" includeAvailableFrom={true}>
           <MethodMember name="configure" dataType="void">
             Configures papupata to allow implementing and/or calling the declared APIs.
           </MethodMember>
@@ -53,6 +53,12 @@ export default function APIDeclaration() {
           <DeclareAPI method="get" />
           <DeclareAPI method="post" />
           <DeclareAPI method="put" />
+          <MethodMember name={'unmockAll'} dataType={'void'} availableFrom={'1.1.0'}>
+            Undoes all mocks on the APIs of this API declaration
+          </MethodMember>
+          <MethodMember name={'getDeclaredAPIs'} dataType={'DeclaredAPI[]'} availableFrom={'1.4.0'}>
+            Returns an array of all APIs declared on this API declaration.
+          </MethodMember>
         </Members>
       </Page>
     </IndexLayout>

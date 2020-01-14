@@ -37,7 +37,7 @@ export default function Configure() {
         </Parameters>
         <MethodReturnType>Nothing</MethodReturnType>
         <h3 id="config">config object</h3>
-        <Members includeRequiredColumn={true} context="APIDeclaration/configure">
+        <Members includeRequiredColumn={true} context="APIDeclaration/configure" includeAvailableFrom={true}>
           <PropertyMember name="baseURL" dataType="string" required={'Conditionally *1'}>
             Base URL used for all API invocations. This can be an empty string, in which case the calls on the browser are made relative to
             the root of the current host.
@@ -79,7 +79,7 @@ export default function Configure() {
             Express router, on which the declared APIs will be attached. The main advantage of using a router over app is that APIs can be
             added after the whole application has been configured, assuming no middleware is added to the router itself after the routes.
           </PropertyMember>
-          <PropertyMember name="routerAt" dataType="string">
+          <PropertyMember name="routerAt" dataType="string" availableFrom='1.4.0'>
             <p>It often makes sense to declare APIs on top a common base URL. In practice though you might have a router
               set up for a specific path, for example to add common middleware.</p>
             <p>

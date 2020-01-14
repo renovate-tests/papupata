@@ -1,5 +1,6 @@
   1.4.0
 - Added support for routerAt in configuration
+- Added getDeclaredAPIs to API Declaration
 
   1.3.0
 

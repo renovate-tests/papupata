@@ -38,7 +38,7 @@ interface Config<RequestOptions = void, RouteOptions = void, RequestType = Reque
   routerAt?: string
   app?: Application
   treatUndefinedAs204?: boolean
-  inherentMiddleware: Array<PapupataMiddleware<RequestType, RouteOptions>>
+  inherentMiddleware?: Array<PapupataMiddleware<RequestType, RouteOptions>>
 }
 
 type StringTupleElementTypes<T extends readonly string[]> = T extends ReadonlyArray<infer U> ? U : never

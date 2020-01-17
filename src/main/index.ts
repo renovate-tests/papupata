@@ -13,6 +13,13 @@ export type TypedRequest<RequestBaseType, Params, Query, Body> = Omit<RequestBas
   body: Body
 }
 
+type PapupataMiddleware<RequestType, RouteOptions> = (
+  req: RequestType,
+  res: Response,
+  route: { options: RouteOptions },
+  next: () => Promise<any>
+) => Promise<any>
+
 type Middleware = RequestHandler
 export type MakeRequestAdapter<RequestOptions = void> = (
   method: string,
@@ -24,21 +31,22 @@ export type MakeRequestAdapter<RequestOptions = void> = (
   requestOptions?: RequestOptions
 ) => Promise<any>
 
-interface Config<RequestOptions = void> {
+interface Config<RequestOptions = void, RouteOptions = void, RequestType = Request> {
   baseURL?: string
   makeRequest?: MakeRequestAdapter<RequestOptions>
   router?: IRouter<any>
   routerAt?: string
   app?: Application
   treatUndefinedAs204?: boolean
+  inherentMiddleware: Array<PapupataMiddleware<RequestType, RouteOptions>>
 }
 
 type StringTupleElementTypes<T extends readonly string[]> = T extends ReadonlyArray<infer U> ? U : never
 
 export class APIDeclaration<RequestType = Request, RouteOptions = void, RequestOptions = void> {
-  private config: Config<RequestOptions> | null = null
+  private config: Config<RequestOptions, RouteOptions, RequestType> | null = null
   public __apis: Array<{ unmock(): void }> = []
-  public configure(config: Config<RequestOptions> | null) {
+  public configure(config: Config<RequestOptions, RouteOptions, RequestType> | null) {
     if (config && config.router && config.app) throw new Error('Config should only have app or router, not both')
     this.config = config
   }
@@ -277,8 +285,16 @@ function declareAPI<RequestType, RouteOptions, RequestOptions>(
               for (const bq of boolQuery) {
                 req.query[bq] = req.query[bq] === 'true'
               }
-              const unmappedValue = await impl(req as any, res)
-              const value = mapper ? await mapper(unmappedValue) : unmappedValue
+              async function getImplVal() {
+                const unmappedValue = await impl(req as any, res)
+                return mapper ? await mapper(unmappedValue) : unmappedValue
+              }
+              const value = await runHandlerChain(
+                config.inherentMiddleware ? [...config.inherentMiddleware, getImplVal] : [getImplVal],
+                req,
+                res,
+                call
+              )
               if (value !== undefined) {
                 res.send(value)
               } else if (config.treatUndefinedAs204) {
@@ -357,4 +373,15 @@ type ActualTypeMap<TKeys extends string, TValues> = {
 
 type ActualOptionalTypeMap<TKeys extends string, TValues> = {
   [key in TKeys]?: string extends TKeys ? DeclareRoutePartsAsConstArraysPlease : TValues
+}
+
+async function runHandlerChain(
+  handlers: Array<PapupataMiddleware<any, any>>,
+  req: any,
+  res: any,
+  route: any
+): Promise<any> {
+  const [first, ...rest] = handlers
+  if (!first) return undefined
+  return first(req, res, route, () => runHandlerChain(rest, req, res, route))
 }

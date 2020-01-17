@@ -30,6 +30,7 @@ interface Config<RequestOptions = void> {
   router?: IRouter<any>
   routerAt?: string
   app?: Application
+  treatUndefinedAs204?: boolean
 }
 
 type StringTupleElementTypes<T extends readonly string[]> = T extends ReadonlyArray<infer U> ? U : never
@@ -280,6 +281,9 @@ function declareAPI<RequestType, RouteOptions, RequestOptions>(
               const value = mapper ? await mapper(unmappedValue) : unmappedValue
               if (value !== undefined) {
                 res.send(value)
+              } else if (config.treatUndefinedAs204) {
+                res.status(204)
+                res.send()
               }
             } catch (err) {
               next(err)

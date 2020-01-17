@@ -269,26 +269,22 @@ function declareAPI<RequestType, RouteOptions, RequestOptions>(
           if (config.routerAt && !path.startsWith(config.routerAt)) {
             throw new Error('Papupata: when routerAt is provided, all routes must be its children.')
           }
-          const strippedPath = config.routerAt ? path.substring(config.routerAt.length): path
+          const strippedPath = config.routerAt ? path.substring(config.routerAt.length) : path
 
-          host[method](
-            strippedPath,
-            ...middleware,
-            async (req, res, next) => {
-              try {
-                for (const bq of boolQuery) {
-                  req.query[bq] = req.query[bq] === 'true'
-                }
-                const unmappedValue = await impl(req as any, res)
-                const value = mapper ? await mapper(unmappedValue) : unmappedValue
-                if (value !== undefined) {
-                  res.send(value)
-                }
-              } catch (err) {
-                next(err)
+          host[method](strippedPath, ...middleware, async (req, res, next) => {
+            try {
+              for (const bq of boolQuery) {
+                req.query[bq] = req.query[bq] === 'true'
               }
+              const unmappedValue = await impl(req as any, res)
+              const value = mapper ? await mapper(unmappedValue) : unmappedValue
+              if (value !== undefined) {
+                res.send(value)
+              }
+            } catch (err) {
+              next(err)
             }
-          )
+          })
         }
 
         function getURL(

@@ -264,6 +264,12 @@ function declareAPI<RequestType, RouteOptions, RequestOptions>(
         call.mock = mock
         call.mockOnce = mockOnce
         call.options = routeOptions
+        call.apiUrlParameters = {
+          params,
+          query,
+          optionalQuery,
+          boolQuery,
+        }
 
         function implement(impl: ImplFn) {
           return implementWithMiddleware([], impl)
@@ -346,6 +352,12 @@ function declareAPI<RequestType, RouteOptions, RequestOptions>(
           mock: (fn: Mock) => void
           unmock: () => void
           options?: RouteOptions
+          apiUrlParameters: {
+            params: ParamsType,
+            query: QueryType,
+            optionalQuery: OptionalQueryType,
+            boolQuery: BoolQueryType,
+          }
         }
 
         function applyPathParams(reqParams: ActualTypeMap<StringTupleElementTypes<ParamsType>, string>) {

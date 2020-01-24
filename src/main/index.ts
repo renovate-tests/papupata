@@ -195,7 +195,12 @@ function declareAPI<RequestType, RouteOptions, RequestOptions>(
         type MockFn = (args: CallArgs, body?: BodyType) => ResponseType | Promise<ResponseType>
         type Mock = ResponseType | ((args: CallArgs) => ResponseType | Promise<ResponseType>)
 
-        let mockImpl: MockFn | null = null
+        interface ActiveMock {
+          mockFn: MockFn
+          includeBodySeparately?: boolean
+        }
+
+        let mockImpl: ActiveMock | null = null
 
         function call(...argsArr: CallArgParam): Promise<ResponseType> {
           const separateBody =
@@ -217,14 +222,17 @@ function declareAPI<RequestType, RouteOptions, RequestOptions>(
             reqBody = separateBody ? argsArr[0] : omit(args, [...params, ...query, ...boolQuery, ...optionalQuery])
 
           if (mockImpl) {
+            if (!mockImpl.includeBodySeparately) {
+              return Promise.resolve(mockImpl.mockFn(args))
+            }
             if (separateBody) {
               if (typeof reqBody === 'object') {
-                return Promise.resolve(mockImpl({ ...args, ...reqBody }, reqBody as any))
+                return Promise.resolve(mockImpl.mockFn({ ...args, ...reqBody }, reqBody as any))
               } else {
-                return Promise.resolve(mockImpl(args, reqBody as any))
+                return Promise.resolve(mockImpl.mockFn(args, reqBody as any))
               }
             } else {
-              return Promise.resolve(mockImpl(args, reqBody as any))
+              return Promise.resolve(mockImpl.mockFn(args, reqBody as any))
             }
           }
 
@@ -246,14 +254,20 @@ function declareAPI<RequestType, RouteOptions, RequestOptions>(
           mockImpl = null
         }
 
-        function mock(mockFnOrValue: Mock) {
-          mockImpl = typeof mockFnOrValue === 'function' ? (mockFnOrValue as any) : () => mockFnOrValue
+        function mock(mockFnOrValue: Mock, options: Omit<ActiveMock, 'mockFn'> = {}) {
+          mockImpl = {
+            ...options,
+            mockFn: typeof mockFnOrValue === 'function' ? (mockFnOrValue as any) : () => mockFnOrValue,
+          }
         }
 
-        function mockOnce(mockFnOrValue: Mock) {
-          mockImpl = args => {
-            unmock()
-            return typeof mockFnOrValue === 'function' ? (mockFnOrValue as any)(args) : mockFnOrValue
+        function mockOnce(mockFnOrValue: Mock, options: Omit<ActiveMock, 'mockFn'> = {}) {
+          mockImpl = {
+            ...options,
+            mockFn: args => {
+              unmock()
+              return typeof mockFnOrValue === 'function' ? (mockFnOrValue as any)(args) : mockFnOrValue
+            },
           }
         }
 
@@ -353,10 +367,10 @@ function declareAPI<RequestType, RouteOptions, RequestOptions>(
           unmock: () => void
           options?: RouteOptions
           apiUrlParameters: {
-            params: ParamsType,
-            query: QueryType,
-            optionalQuery: OptionalQueryType,
-            boolQuery: BoolQueryType,
+            params: ParamsType
+            query: QueryType
+            optionalQuery: OptionalQueryType
+            boolQuery: BoolQueryType
           }
         }
 

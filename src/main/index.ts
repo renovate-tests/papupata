@@ -63,6 +63,10 @@ export class APIDeclaration<RequestType = Request, RouteOptions = void, RequestO
     return declareAPI<RequestType, RouteOptions, RequestOptions>(this, 'put', path, routeOptions)
   }
 
+  public declarePatchAPI(path: string, routeOptions?: RouteOptions) {
+    return declareAPI<RequestType, RouteOptions, RequestOptions>(this, 'patch', path, routeOptions)
+  }
+
   public declareDeleteAPI(path: string, routeOptions?: RouteOptions) {
     return declareAPI<RequestType, RouteOptions, RequestOptions>(this, 'delete', path, routeOptions)
   }
@@ -90,7 +94,7 @@ const paramMatchers = (params: readonly string[]) =>
 
 function declareAPI<RequestType, RouteOptions, RequestOptions>(
   parent: APIDeclaration<RequestType, RouteOptions, RequestOptions>,
-  method: 'get' | 'post' | 'put' | 'delete',
+  method: 'get' | 'post' | 'put' | 'delete' | 'patch',
   path: string,
   routeOptions?: RouteOptions
 ) {

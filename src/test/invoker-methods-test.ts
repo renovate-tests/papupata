@@ -37,6 +37,12 @@ describe('invoker-methods-test', function() {
     expect(await api({})).toBe('Hello from post')
   })
 
+  it('patch', async function() {
+    testServer.app.patch('/patch', (_req, res) => res.send('Hello from patch'))
+    const api = API.declarePatchAPI('/patch').response<string>()
+    expect(await api({})).toBe('Hello from patch')
+  })
+
   it('delete', async function() {
     testServer.app.delete('/delete', (_req, res) => res.send('Hello from delete'))
     const api = API.declareDeleteAPI('/delete').response<string>()

@@ -145,8 +145,8 @@ function declareAPI<RequestType, RouteOptions, RequestOptions>(
     OQT extends readonly string[],
     BQT extends readonly string[]
   >(params: PT, query: QT, optionalQuery: OQT, boolQuery: BQT) {
-    return <BT>() => {
-      const resp = responder(params, query, optionalQuery, boolQuery, (null as any) as BT)
+    return <BT, BTInput = BT>() => {
+      const resp = responder(params, query, optionalQuery, boolQuery, (null as any) as BT, null as any as BTInput)
       return { ...resp }
     }
   }
@@ -160,27 +160,28 @@ function declareAPI<RequestType, RouteOptions, RequestOptions>(
     QueryType extends readonly string[],
     OptionalQueryType extends readonly string[],
     BoolQueryType extends readonly string[],
-    BodyType
+    BodyType, BodyInputType
   >(
     params: ParamsType,
     query: QueryType,
     optionalQuery: OptionalQueryType,
     boolQuery: BoolQueryType,
-    _bodyPlaceholder: BodyType
+    _bodyPlaceholder: BodyType,
+    _bodyPlaceholder2: BodyInputType
   ) {
     type CallArgsWithoutBody = ActualTypeMap<StringTupleElementTypes<ParamsType>, string> &
       ActualTypeMap<StringTupleElementTypes<QueryType>, string> &
       ActualOptionalTypeMap<StringTupleElementTypes<OptionalQueryType>, string> &
       ActualTypeMap<StringTupleElementTypes<BoolQueryType>, boolean>
-    type CallArgs = BodyType & CallArgsWithoutBody
+    type CallArgs = BodyInputType & CallArgsWithoutBody
 
     type CallArgParam = {} extends CallArgs
       ? [] | [CallArgs] | [CallArgs, RequestOptions]
       :
           | [CallArgs]
           | [CallArgs, RequestOptions]
-          | [BodyType, CallArgsWithoutBody]
-          | [BodyType, CallArgsWithoutBody, RequestOptions]
+          | [BodyInputType, CallArgsWithoutBody]
+          | [BodyInputType, CallArgsWithoutBody, RequestOptions]
 
     return {
       response<ResponseType, ResponseTypeOnServer = ResponseType>(

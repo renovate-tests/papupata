@@ -1,0 +1,53 @@
+import { Config } from './config'
+import { Request } from 'express'
+import { declareAPI } from './declareAPI'
+
+export interface IAPIDeclaration<RequestType, RouteOptions, RequestOptions> {
+  getConfig(): Config<RequestType, RouteOptions, RequestOptions> | null
+  __apis: Array<{ unmock(): void }>
+}
+
+export class APIDeclaration<RequestType = Request, RouteOptions = void, RequestOptions = void>
+  implements IAPIDeclaration<RequestType, RouteOptions, RequestOptions> {
+  private config: Config<RequestType, RouteOptions, RequestOptions> | null = null
+  public __apis: Array<{ unmock(): void }> = []
+  
+  public configure(config: Config<RequestType, RouteOptions, RequestOptions> | null) {
+    if (config && config.router && config.app) throw new Error('Config should only have app or router, not both')
+    this.config = config
+  }
+
+  public declareGetAPI(path: string, routeOptions?: RouteOptions) {
+    return declareAPI<RequestType, RouteOptions, RequestOptions>(this, 'get', path, routeOptions)
+  }
+
+  public declarePostAPI(path: string, routeOptions?: RouteOptions) {
+    return declareAPI<RequestType, RouteOptions, RequestOptions>(this, 'post', path, routeOptions)
+  }
+
+  public declarePutAPI(path: string, routeOptions?: RouteOptions) {
+    return declareAPI<RequestType, RouteOptions, RequestOptions>(this, 'put', path, routeOptions)
+  }
+
+  public declarePatchAPI(path: string, routeOptions?: RouteOptions) {
+    return declareAPI<RequestType, RouteOptions, RequestOptions>(this, 'patch', path, routeOptions)
+  }
+
+  public declareDeleteAPI(path: string, routeOptions?: RouteOptions) {
+    return declareAPI<RequestType, RouteOptions, RequestOptions>(this, 'delete', path, routeOptions)
+  }
+
+  public getConfig() {
+    return this.config
+  }
+
+  public getDeclaredAPIs() {
+    return [...this.__apis]
+  }
+
+  public unmockAll() {
+    for (const api of this.__apis) {
+      api.unmock()
+    }
+  }
+}

@@ -28,7 +28,7 @@ export function responder<
   _bodyPlaceholder2: BodyInputType,
   method: Method,
   path: string,
-  parent: IAPIDeclaration<RequestOptions, RouteOptions, RequestType>,
+  parent: IAPIDeclaration<RequestType, RouteOptions, RequestOptions>,
   routeOptions: RouteOptions
 ) {
   type CallArgsWithoutBody = ActualTypeMap<StringTupleElementTypes<ParamsType>, string> &

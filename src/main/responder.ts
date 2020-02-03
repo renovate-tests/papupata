@@ -1,5 +1,5 @@
 import { ActualOptionalTypeMap, ActualTypeMap, Method, StringTupleElementTypes } from './types'
-import {  TypedRequest } from './index'
+import { TypedRequest } from './index'
 import { RequestHandler, Response } from 'express'
 import pick from 'lodash/pick'
 import fromPairs from 'lodash/fromPairs'
@@ -140,6 +140,7 @@ export function responder<
 
       call.implement = implement
       call.implementWithMiddleware = implementWithMiddleware
+      call.implementAsNotImplemented = implementAsNotImplemented
       call.getURL = getURL
       call.unmock = unmock
       call.mock = mock
@@ -152,12 +153,18 @@ export function responder<
         boolQuery,
       }
 
+      const config = parent.getConfig()
+      if (config?.autoImplementAllAPIs && (config.router || config.app)) {
+        implementAsNotImplemented()
+      }
+
       function implement(impl: ImplFn) {
         return implementWithMiddleware([], impl)
       }
 
       function implementWithMiddleware(middleware: RequestHandler[], impl: ImplFn) {
         ;(call as any).implementation = impl
+        ;(call as any).implementationMiddleware = middleware
         const config = parent.getConfig()
         if (!config) throw new Error('Papupata not configured')
         const host = config.router || config.app
@@ -194,6 +201,13 @@ export function responder<
         })
       }
 
+      function implementAsNotImplemented() {
+        implement((_req, res) => {
+          res.status(501)
+          return 'Not implemented' as any
+        })
+      }
+
       function getURL(
         pathParamsAndQueryParams:
           | ActualTypeMap<StringTupleElementTypes<ParamsType>, string>
@@ -208,13 +222,15 @@ export function responder<
         return config.baseURL + applyPathParams(pathParamsAndQueryParams)
       }
 
-      parent.__apis.push(call)
+      parent.__apis.push(call as typeof call & { implementation: any; implementationMiddleware: any })
 
       // Typescript is fine without this explicit typing here, but idea's autocomplete does not work without it
       return call as {
         (...argsArr: CallArgParam): Promise<ResponseType>
         implement: (impl: ImplFn) => void
+        implementAsNotImplemented: () => void
         implementation?: ImplFn
+        implementationMiddleware?: any[]
         implementWithMiddleware: (middleware: RequestHandler[], impl: ImplFn) => void
         getURL: (
           pathParams:

@@ -2,19 +2,34 @@ import { Config } from './config'
 import { Request } from 'express'
 import { declareAPI } from './declareAPI'
 
+interface API {
+  unmock(): void
+  implementation: any
+  implementWithMiddleware: any
+  implementationMiddleware: any
+  implementAsNotImplemented: () => void
+}
+
 export interface IAPIDeclaration<RequestType, RouteOptions, RequestOptions> {
   getConfig(): Config<RequestType, RouteOptions, RequestOptions> | null
-  __apis: Array<{ unmock(): void }>
+  __apis: Array<API>
 }
 
 export class APIDeclaration<RequestType = Request, RouteOptions = void, RequestOptions = void>
   implements IAPIDeclaration<RequestType, RouteOptions, RequestOptions> {
   private config: Config<RequestType, RouteOptions, RequestOptions> | null = null
-  public __apis: Array<{ unmock(): void }> = []
-  
+  public __apis: Array<API> = []
+
   public configure(config: Config<RequestType, RouteOptions, RequestOptions> | null) {
     if (config && config.router && config.app) throw new Error('Config should only have app or router, not both')
+    const needsAutoImplement =
+      config &&
+      config.autoImplementAllAPIs &&
+      (!this.config || config.router !== this.config.router || config.app !== this.config.app)
     this.config = config
+    if (needsAutoImplement) {
+      this.implementAllAPIs()
+    }
   }
 
   public declareGetAPI(path: string, routeOptions?: RouteOptions) {
@@ -35,6 +50,17 @@ export class APIDeclaration<RequestType = Request, RouteOptions = void, RequestO
 
   public declareDeleteAPI(path: string, routeOptions?: RouteOptions) {
     return declareAPI<RequestType, RouteOptions, RequestOptions>(this, 'delete', path, routeOptions)
+  }
+
+  public implementAllAPIs() {
+    for (const api of this.__apis) {
+      const implementation = api.implementation
+      if (implementation) {
+        api.implementWithMiddleware(api.implementationMiddleware, api.implementation)
+      } else {
+        api.implementAsNotImplemented()
+      }
+    }
   }
 
   public getConfig() {

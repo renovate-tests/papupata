@@ -25,4 +25,5 @@ export interface Config<RequestType = void, RouteOptions = void, RequestOptions 
   app?: Application
   treatUndefinedAs204?: boolean
   inherentMiddleware?: Array<PapupataMiddleware<RequestType, RouteOptions>>
+  autoImplementAllAPIs?: boolean
 }

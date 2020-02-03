@@ -1,6 +1,6 @@
 import { Method } from './types'
 import { responder } from './responder'
-import { IAPIDeclaration } from './APIDeclaration'
+import { IAPIDeclaration } from './index'
 
 export function declareAPI<RequestType, RouteOptions, RequestOptions>(
   parent: IAPIDeclaration<RequestType, RouteOptions, RequestOptions>,

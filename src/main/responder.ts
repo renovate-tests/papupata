@@ -1,5 +1,5 @@
 import { ActualOptionalTypeMap, ActualTypeMap, Method, StringTupleElementTypes } from './types'
-import { TypedRequest } from './index'
+import { IAPIDeclaration, TypedRequest } from './index'
 import { RequestHandler, Response } from 'express'
 import pick from 'lodash/pick'
 import fromPairs from 'lodash/fromPairs'
@@ -7,7 +7,6 @@ import omit from 'lodash/omit'
 import qs from 'qs'
 import { paramMatchers } from './utils/paramMatchers'
 import { runHandlerChain } from './utils/runHandlerChain'
-import { IAPIDeclaration } from './APIDeclaration'
 
 export function responder<
   ParamsType extends readonly string[],

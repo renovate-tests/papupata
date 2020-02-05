@@ -10,6 +10,7 @@ export type TypedRequest<RequestBaseType, Params, Query, Body> = Omit<RequestBas
 
 export type MakeRequestAdapter<RequestOptions = void> = MakeRequestAdapterImpl<RequestOptions>
 
+
 interface API {
   unmock(): void
   implementation: any
@@ -33,9 +34,7 @@ export class APIDeclaration<RequestType = Request, RouteOptions = void, RequestO
     const needsAutoImplement =
       config &&
       config.autoImplementAllAPIs &&
-      (!this.config || config.router !== this.config.router || config.app !== this.config.app) &&
-      (config.router || config.app)
-
+      (!this.config || config.router !== this.config.router || config.app !== this.config.app)
     this.config = config
     if (needsAutoImplement) {
       this.implementAllAPIs()

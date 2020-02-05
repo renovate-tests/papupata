@@ -19,18 +19,6 @@ describe('auto-implement-all-apis-test', function() {
       const resp = await expectFailure(api({ today: new Date('2020-01-31T08:54:30.000Z') }))
       expect(resp.message).toBe('501 - "Not implemented"')
     })
-
-    it('implements asap if app/router was not present', async function() {
-      const baseConfig = API.getConfig()
-      API.configure({ ...baseConfig, app: undefined, router: undefined })
-      const api = API.declarePostAPI('/case2')
-        .body()
-        .response<string>()
-
-      API.configure(baseConfig)
-      const resp = await expectFailure(api({ today: new Date('2020-01-31T08:54:30.000Z') }))
-      expect(resp.message).toBe('501 - "Not implemented"')
-    })
   })
 
   describe('autoImplementAllAPIs disabled', function() {
@@ -49,18 +37,5 @@ describe('auto-implement-all-apis-test', function() {
       const resp = await expectFailure(api({ today: new Date('2020-01-31T08:54:30.000Z') }))
       expect(resp.statusCode).toBe(404)
     })
-
-    it('does not implement asap if app/router was not present', async function() {
-      const baseConfig = API.getConfig()
-      API.configure({ ...baseConfig, app: undefined, router: undefined })
-      const api = API.declarePostAPI('/case2')
-        .body()
-        .response<string>()
-
-      API.configure(baseConfig)
-      const resp = await expectFailure(api({ today: new Date('2020-01-31T08:54:30.000Z') }))
-      expect(resp.statusCode).toBe(404)
-    })
-
   })
 })

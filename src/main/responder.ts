@@ -89,7 +89,9 @@ export function responder<
 
         if (mockImpl) {
           if (!mockImpl.includeBodySeparately) {
-            return Promise.resolve(mockImpl.mockFn(args))
+            return Promise.resolve(
+              separateBody ? mockImpl.mockFn({ ...args, ...(reqBody || {}) }) : mockImpl.mockFn(args)
+            )
           }
           if (separateBody) {
             if (typeof reqBody === 'object') {

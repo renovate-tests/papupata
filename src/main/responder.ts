@@ -147,6 +147,8 @@ export function responder<
       call.mock = mock
       call.mockOnce = mockOnce
       call.options = routeOptions
+      call.apiDeclaration = parent
+      call.method = method
       call.apiUrlParameters = {
         params,
         query,
@@ -256,6 +258,8 @@ export function responder<
           optionalQuery: OptionalQueryType
           boolQuery: BoolQueryType
         }
+        method: Method,
+        apiDeclaration: any
       }
 
       function applyPathParams(reqParams: ActualTypeMap<StringTupleElementTypes<ParamsType>, string>) {

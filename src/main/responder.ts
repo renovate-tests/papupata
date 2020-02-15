@@ -147,6 +147,7 @@ export function responder<
 
       call.implement = implement
       call.implementWithMiddleware = implementWithMiddleware
+      call.implementWithMiddleware2 = implementWithMiddleware2
       call.implementWithExpressMiddleware = implementWithMiddleware
       call.implementWithPapupataMiddleware = implementWithPapupataMiddleware
       call.getURL = getURL

@@ -55,3 +55,7 @@ export async function expectFailure(promise: Promise<any>): Promise<any> {
     err => err
   )
 }
+
+export function delay(ms: number) {
+  return new Promise(resolve => setTimeout(resolve, ms))
+}

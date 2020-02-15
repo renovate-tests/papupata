@@ -8,6 +8,7 @@ import qs from 'qs'
 import { paramMatchers } from './utils/paramMatchers'
 import { runHandlerChain } from './utils/runHandlerChain'
 import runExpressMiddleware from './runExpressMiddleware'
+import { PapupataMiddleware } from './config'
 
 export function responder<
   ParamsType extends readonly string[],
@@ -61,6 +62,10 @@ export function responder<
 
       type MockFn = (args: CallArgs, body?: BodyType) => ResponseType | Promise<ResponseType>
       type Mock = ResponseType | ((args: CallArgs) => ResponseType | Promise<ResponseType>)
+      type MiddlewareContainer = {
+        express?: RequestHandler[]
+        papupata?: Array<PapupataMiddleware<RequestType, RouteOptions>>
+      }
 
       interface ActiveMock {
         mockFn: MockFn
@@ -142,6 +147,8 @@ export function responder<
 
       call.implement = implement
       call.implementWithMiddleware = implementWithMiddleware
+      call.implementWithExpressMiddleware = implementWithMiddleware
+      call.implementWithPapupataMiddleware = implementWithPapupataMiddleware
       call.getURL = getURL
       call.unmock = unmock
       call.mock = mock
@@ -156,7 +163,7 @@ export function responder<
         boolQuery,
       }
       call.implementation = undefined as any
-      call.implementationMiddleware = [] as any[]
+      call.implementationMiddleware = {} as MiddlewareContainer
 
       let expressHost: undefined | Application | Router
       const config = parent.getConfig()
@@ -165,10 +172,22 @@ export function responder<
       }
 
       function implement(impl: ImplFn | null) {
-        return implementWithMiddleware([], impl)
+        return implementWithMiddleware2({}, impl)
       }
 
+      /** @deprecated */
       function implementWithMiddleware(middleware: RequestHandler[], impl: ImplFn | null) {
+        return implementWithMiddleware2({ express: middleware }, impl)
+      }
+
+      function implementWithPapupataMiddleware(
+        middleware: NonNullable<MiddlewareContainer['papupata']>,
+        impl: ImplFn | null
+      ) {
+        return implementWithMiddleware2({ papupata: middleware }, impl)
+      }
+
+      function implementWithMiddleware2(middleware: MiddlewareContainer, impl: ImplFn | null) {
         call.implementation = impl
         call.implementationMiddleware = middleware
         const config = parent.getConfig()
@@ -190,7 +209,10 @@ export function responder<
           const impl = call.implementation
 
           try {
-            await runExpressMiddleware(call.implementationMiddleware, req, res)            
+            const { express: expressMiddleware } = call.implementationMiddleware
+            if (expressMiddleware) {
+              await runExpressMiddleware(expressMiddleware, req, res)
+            }
           } catch (error) {
             return next(error)
           }
@@ -213,7 +235,7 @@ export function responder<
               return mapper ? await mapper(unmappedValue) : unmappedValue
             }
             const value = await runHandlerChain(
-              config.inherentMiddleware ? [...config.inherentMiddleware, getImplVal] : [getImplVal],
+              [...(config.inherentMiddleware || []), ...(call.implementationMiddleware.papupata || []), getImplVal],
               req,
               res,
               call
@@ -252,8 +274,18 @@ export function responder<
         (...argsArr: CallArgParam): Promise<ResponseType>
         implement: (impl: ImplFn | null) => void
         implementation?: ImplFn
-        implementationMiddleware?: any[]
+        implementationMiddleware?: MiddlewareContainer
+        /** @deprecated */
         implementWithMiddleware: (middleware: RequestHandler[], impl: ImplFn) => void
+        implementWithMiddleware2: (
+          middleware: { express: RequestHandler[]; papupata?: Array<PapupataMiddleware<RequestType, RouteOptions>> },
+          impl: ImplFn
+        ) => void
+        implementWithExpressMiddleware: (middleware: RequestHandler[], impl: ImplFn) => void
+        implementWithPapupataMiddleware: (
+          middleware: Array<PapupataMiddleware<RequestType, RouteOptions>>,
+          impl: ImplFn
+        ) => void
         getURL: (
           pathParams:
             | ActualTypeMap<StringTupleElementTypes<ParamsType>, string>

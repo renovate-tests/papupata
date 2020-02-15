@@ -1,4 +1,4 @@
-import { Application, IRouter, Response } from 'express'
+import { Application, Router, Response } from 'express'
 
 export type PapupataMiddleware<RequestType, RouteOptions> = (
   req: RequestType,
@@ -20,7 +20,7 @@ export type MakeRequestAdapter<RequestOptions = void> = (
 export interface Config<RequestType = void, RouteOptions = void, RequestOptions = void> {
   baseURL?: string
   makeRequest?: MakeRequestAdapter<RequestOptions>
-  router?: IRouter<any>
+  router?: Router
   routerAt?: string
   app?: Application
   treatUndefinedAs204?: boolean

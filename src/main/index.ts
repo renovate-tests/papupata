@@ -15,7 +15,7 @@ interface API {
   implementation: any
   implementWithMiddleware: any
   implementationMiddleware: any
-  implementAsNotImplemented: () => void
+  implement(implementation: any): any
 }
 
 export interface IAPIDeclaration<RequestType, RouteOptions, RequestOptions> {
@@ -68,7 +68,7 @@ export class APIDeclaration<RequestType = Request, RouteOptions = void, RequestO
       if (implementation) {
         api.implementWithMiddleware(api.implementationMiddleware, api.implementation)
       } else {
-        api.implementAsNotImplemented()
+        api.implement(null)
       }
     }
   }

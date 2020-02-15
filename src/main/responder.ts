@@ -1,12 +1,13 @@
 import { ActualOptionalTypeMap, ActualTypeMap, Method, StringTupleElementTypes } from './types'
 import { IAPIDeclaration, TypedRequest } from './index'
-import { RequestHandler, Response } from 'express'
+import { RequestHandler, Response, Application, Router } from 'express'
 import pick from 'lodash/pick'
 import fromPairs from 'lodash/fromPairs'
 import omit from 'lodash/omit'
 import qs from 'qs'
 import { paramMatchers } from './utils/paramMatchers'
 import { runHandlerChain } from './utils/runHandlerChain'
+import runExpressMiddleware from './runExpressMiddleware'
 
 export function responder<
   ParamsType extends readonly string[],
@@ -141,7 +142,6 @@ export function responder<
 
       call.implement = implement
       call.implementWithMiddleware = implementWithMiddleware
-      call.implementAsNotImplemented = implementAsNotImplemented
       call.getURL = getURL
       call.unmock = unmock
       call.mock = mock
@@ -155,29 +155,55 @@ export function responder<
         optionalQuery,
         boolQuery,
       }
+      call.implementation = undefined as any
+      call.implementationMiddleware = [] as any[]
 
+      let expressHost: undefined | Application | Router
       const config = parent.getConfig()
       if (config?.autoImplementAllAPIs && (config.router || config.app)) {
-        implementAsNotImplemented()
+        implement(null)
       }
 
-      function implement(impl: ImplFn) {
+      function implement(impl: ImplFn | null) {
         return implementWithMiddleware([], impl)
       }
 
-      function implementWithMiddleware(middleware: RequestHandler[], impl: ImplFn) {
-        ;(call as any).implementation = impl
-        ;(call as any).implementationMiddleware = middleware
+      function implementWithMiddleware(middleware: RequestHandler[], impl: ImplFn | null) {
+        call.implementation = impl
+        call.implementationMiddleware = middleware
         const config = parent.getConfig()
         if (!config) throw new Error('Papupata not configured')
         const host = config.router || config.app
-        if (!host) throw new Error('Papupata: neither router nor app configured, cannot implement routes')
+        if (!host) {
+          if (config.autoImplementAllAPIs) return
+          throw new Error('Papupata: neither router nor app configured, cannot implement routes')
+        }
         if (config.routerAt && !path.startsWith(config.routerAt)) {
           throw new Error('Papupata: when routerAt is provided, all routes must be its children.')
         }
+        if (expressHost === host) {
+          return
+        }
         const strippedPath = config.routerAt ? path.substring(config.routerAt.length) : path
 
-        host[method](strippedPath, ...middleware, async (req, res, next) => {
+        host[method](strippedPath, async (req, res, next) => {
+          const impl = call.implementation
+
+          try {
+            await runExpressMiddleware(call.implementationMiddleware, req, res)            
+          } catch (error) {
+            return next(error)
+          }
+
+          if (!impl) {
+            if (parent.getConfig()?.autoImplementAllAPIs) {
+              res.status(501)
+              res.send('Not implemented')
+            } else {
+              return next()
+            }
+            return
+          }
           try {
             for (const bq of boolQuery) {
               req.query[bq] = req.query[bq] === 'true'
@@ -202,13 +228,7 @@ export function responder<
             next(err)
           }
         })
-      }
-
-      function implementAsNotImplemented() {
-        implement((_req, res) => {
-          res.status(501)
-          return 'Not implemented' as any
-        })
+        expressHost = host
       }
 
       function getURL(
@@ -225,13 +245,12 @@ export function responder<
         return config.baseURL + applyPathParams(pathParamsAndQueryParams)
       }
 
-      parent.__apis.push(call as typeof call & { implementation: any; implementationMiddleware: any })
+      parent.__apis.push(call)
 
       // Typescript is fine without this explicit typing here, but idea's autocomplete does not work without it
       return call as {
         (...argsArr: CallArgParam): Promise<ResponseType>
-        implement: (impl: ImplFn) => void
-        implementAsNotImplemented: () => void
+        implement: (impl: ImplFn | null) => void
         implementation?: ImplFn
         implementationMiddleware?: any[]
         implementWithMiddleware: (middleware: RequestHandler[], impl: ImplFn) => void
@@ -258,7 +277,7 @@ export function responder<
           optionalQuery: OptionalQueryType
           boolQuery: BoolQueryType
         }
-        method: Method,
+        method: Method
         apiDeclaration: any
       }
 

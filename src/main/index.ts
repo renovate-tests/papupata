@@ -13,7 +13,7 @@ export type MakeRequestAdapter<RequestOptions = void> = MakeRequestAdapterImpl<R
 interface API {
   unmock(): void
   implementation: any
-  implementWithMiddleware2: any
+  implementWithMiddleware: any
   implementationMiddleware: any
   implement(implementation: any): any
 }
@@ -66,7 +66,7 @@ export class APIDeclaration<RequestType = Request, RouteOptions = void, RequestO
     for (const api of this.__apis) {
       const implementation = api.implementation
       if (implementation) {
-        api.implementWithMiddleware2(api.implementationMiddleware, api.implementation)
+        api.implementWithMiddleware(api.implementationMiddleware, api.implementation)
       } else {
         api.implement(null)
       }

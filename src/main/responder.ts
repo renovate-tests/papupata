@@ -147,7 +147,6 @@ export function responder<
 
       call.implement = implement
       call.implementWithMiddleware = implementWithMiddleware
-      call.implementWithMiddleware2 = implementWithMiddleware2
       call.implementWithExpressMiddleware = implementWithMiddleware
       call.implementWithPapupataMiddleware = implementWithPapupataMiddleware
       call.getURL = getURL
@@ -173,24 +172,19 @@ export function responder<
       }
 
       function implement(impl: ImplFn | null) {
-        return implementWithMiddleware2({}, impl)
-      }
-
-      /** @deprecated */
-      function implementWithMiddleware(middleware: RequestHandler[], impl: ImplFn | null) {
-        return implementWithMiddleware2({ express: middleware }, impl)
+        return implementWithMiddleware({}, impl)
       }
 
       function implementWithPapupataMiddleware(
         middleware: NonNullable<MiddlewareContainer['papupata']>,
         impl: ImplFn | null
       ) {
-        return implementWithMiddleware2({ papupata: middleware }, impl)
+        return implementWithMiddleware({ papupata: middleware }, impl)
       }
 
-      function implementWithMiddleware2(middleware: MiddlewareContainer, impl: ImplFn | null) {
+      function implementWithMiddleware(middleware: RequestHandler[] | MiddlewareContainer, impl: ImplFn | null) {
         call.implementation = impl
-        call.implementationMiddleware = middleware
+        call.implementationMiddleware = Array.isArray(middleware) ? { express: middleware } : middleware
         const config = parent.getConfig()
         if (!config) throw new Error('Papupata not configured')
         const host = config.router || config.app
@@ -244,6 +238,7 @@ export function responder<
             if (value !== undefined) {
               res.send(value)
             } else if (config.treatUndefinedAs204) {
+              // TODO: only do so if there is no explicit status
               res.status(204)
               res.send()
             }
@@ -277,9 +272,10 @@ export function responder<
         implementation?: ImplFn
         implementationMiddleware?: MiddlewareContainer
         /** @deprecated */
-        implementWithMiddleware: (middleware: RequestHandler[], impl: ImplFn) => void
-        implementWithMiddleware2: (
-          middleware: { express: RequestHandler[]; papupata?: Array<PapupataMiddleware<RequestType, RouteOptions>> },
+        implementWithMiddleware: (
+          middleware:
+            | RequestHandler[]
+            | { express: RequestHandler[]; papupata?: Array<PapupataMiddleware<RequestType, RouteOptions>> },
           impl: ImplFn
         ) => void
         implementWithExpressMiddleware: (middleware: RequestHandler[], impl: ImplFn) => void

@@ -48,6 +48,9 @@ export default function NavMenu() {
           <NavEntry link="/api/APIDeclaration/declarePostAPI">
             <Method>declarePostAPI</Method>
           </NavEntry>
+          <NavEntry link="/api/APIDeclaration/declarePatchAPI">
+            <Method>declarePatchAPI</Method>
+          </NavEntry>
           <NavEntry link="/api/APIDeclaration/declarePutAPI">
             <Method>declarePutAPI</Method>
           </NavEntry>

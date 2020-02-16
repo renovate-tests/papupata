@@ -66,6 +66,20 @@ describe('auto-implement-all-apis-test', function() {
         expect(resp).toBe('hello')
       })
     })
+
+    it('declaration order overrides implementation order', async function() {
+      // This test demonstrates what is typically unwanted behavior
+      const specificAPI = API.declareGetAPI('/order/specific').response<string>()
+      const parametrizedAPI = API.declareGetAPI('/order/:var')
+        .params(['var'] as const)
+        .response<string>()
+
+      parametrizedAPI.implement(req => req.params.var)
+      specificAPI.implement(() => 'token value')
+
+      const resp = await specificAPI()
+      expect(resp).toEqual('token value') // specific was declared before parametrized
+    })
   })
 
   describe('autoImplementAllAPIs disabled', function() {
@@ -95,6 +109,20 @@ describe('auto-implement-all-apis-test', function() {
       API.configure(baseConfig)
       const resp = await expectFailure(api({ today: new Date('2020-01-31T08:54:30.000Z') }))
       expect(resp.statusCode).toBe(404)
+    })
+
+    it('implementation order overrides declaration order', async function() {
+      // This test demonstrates what is typically unwanted behavior
+      const specificAPI = API.declareGetAPI('/order/specific').response<string>()
+      const parametrizedAPI = API.declareGetAPI('/order/:var')
+        .params(['var'] as const)
+        .response<string>()
+
+      parametrizedAPI.implement(req => req.params.var)
+      specificAPI.implement(() => 'token value')
+
+      const resp = await specificAPI()
+      expect(resp).toEqual('specific') // Oops!
     })
   })
 })

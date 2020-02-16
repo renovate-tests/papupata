@@ -11,6 +11,7 @@ export default function ImplementWithPapupataMiddleware() {
           An array of papupata middleware functions.
         </Parameter>
       }
+      availableFrom={'1.5.0'}
       examples={
         <Example label="Usage in implementation">
           {`

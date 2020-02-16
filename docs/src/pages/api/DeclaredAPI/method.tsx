@@ -3,18 +3,16 @@ import Page from '../../../components/Page'
 import Container from '../../../components/Container'
 import { Purpose, Examples, Example } from '../../../components/api-components'
 
-export default function Implementation() {
+export default function Method() {
   return (
     <IndexLayout>
       <Page>
         <Container>
           <h1>API Reference</h1>
           <h2>class DeclaredAPI</h2>
-          <h3>property implementation</h3>
+          <h3>property method</h3>
         </Container>
-        <Purpose>
-          Contains the latest implementation for the API. This exists primarily to help with testing the API implementations by providing direct access to them.
-        </Purpose>
+        <Purpose>The HTTP method of the API.</Purpose>
         <Examples>
           <Example>
             {`
@@ -22,12 +20,9 @@ export default function Implementation() {
             const api = new APIDeclaration()
             const myAPI = api.declareGetAPI('/get-stuff')
               .response<string>()
+          
+            // myAPI.method === 'get' 
             
-            const implFn = () => Promise.resolve('test')
-            myAPI.implement(implFn)
-            
-            // myAPI.implementation === implFn 
-              
           `}
           </Example>
         </Examples>

@@ -11,6 +11,7 @@ export default function ImplementWithExpressMiddleware() {
           An array of express middleware functions.
         </Parameter>
       }
+      availableFrom={'1.5.0'}
       examples={
         <Example label="Usage in implementation">
           {`

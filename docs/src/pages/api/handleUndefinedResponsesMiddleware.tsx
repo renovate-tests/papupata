@@ -1,5 +1,5 @@
 import React from 'react'
-import { Example, Examples, Purpose } from '../../components/api-components'
+import { Example, Examples, Purpose, AvailableFrom } from '../../components/api-components'
 import Container from '../../components/Container'
 import Page from '../../components/Page'
 import IndexLayout from '../../layouts'
@@ -13,6 +13,7 @@ export default function HandleUndefinedResponsesMiddleware() {
           <h2>handleUndefinedResponsesMiddleware</h2>
         </Container>
         <Example>{`import {handleUndefinedResponsesMiddleware} from 'papupata'`}</Example>
+        <AvailableFrom version="1.5.0" />
         <Purpose>
           <p>
             By default papupata assumes that if your route implementation returns undefined, it takes the responsibilities for sending the

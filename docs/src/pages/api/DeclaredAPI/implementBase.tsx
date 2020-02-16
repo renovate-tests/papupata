@@ -1,7 +1,17 @@
 import IndexLayout from '../../../layouts'
 import Page from '../../../components/Page'
 import Container from '../../../components/Container'
-import { Purpose, Usage, Parameter, Parameters, MethodReturnType, Examples, Example, Caveats } from '../../../components/api-components'
+import {
+  Purpose,
+  Usage,
+  Parameter,
+  Parameters,
+  MethodReturnType,
+  Examples,
+  Example,
+  Caveats,
+  AvailableFrom
+} from '../../../components/api-components'
 import { ReactNode } from 'react'
 
 interface Params {
@@ -9,9 +19,10 @@ interface Params {
   variantPurpose: ReactNode
   middlewareParameter: ReactNode
   examples: ReactNode
+  availableFrom?: '1.5.0'
 }
 
-export default function ImplementBase({ variantPurpose, middlewareParameter, fnName, examples }: Params) {
+export default function ImplementBase({ availableFrom, variantPurpose, middlewareParameter, fnName, examples }: Params) {
   return (
     <IndexLayout>
       <Page>
@@ -20,6 +31,7 @@ export default function ImplementBase({ variantPurpose, middlewareParameter, fnN
           <h2>class DeclaredAPI</h2>
           <h3>method {fnName}</h3>
         </Container>
+        {availableFrom && <AvailableFrom version={availableFrom} />}
         <Purpose>Implements an API using express. {variantPurpose}</Purpose>
         <Usage>
           Instead of calling the methods on an express app or router yourself, you use this function to have papupata do it for you.

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Example, Examples, Purpose } from '../../components/api-components'
+import { Example, Examples, Purpose, AvailableFrom } from '../../components/api-components'
 import Container from '../../components/Container'
 import Page from '../../components/Page'
 import IndexLayout from '../../layouts'
@@ -13,6 +13,7 @@ export default function SkipHandlingRoute() {
           <h2>skipHandlingRoute</h2>
         </Container>
         <Example>{`import {skipHandlingRoute} from 'papupata'`}</Example>
+        <AvailableFrom version="1.5.0" />
         <Purpose>
           <p>
             A token value a route implementation or papupata middleware can return to have express move on to the other route handlers and

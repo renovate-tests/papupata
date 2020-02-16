@@ -92,6 +92,9 @@ export default function NavMenu() {
           <NavEntry link="/api/DeclaredAPI/implementation">
             <Property>implementation</Property>
           </NavEntry>
+          <NavEntry link="/api/DeclaredAPI/implementationMiddleware">
+            <Property>implementationMiddleware</Property>
+          </NavEntry>
           <NavEntry link="/api/DeclaredAPI/implementWithMiddleware">
             <Method>implementWithMiddleware</Method>
           </NavEntry>
@@ -109,6 +112,15 @@ export default function NavMenu() {
           </NavEntry>
           <NavEntry link="/api/DeclaredAPI/unmock">
             <Method>unmock</Method>
+          </NavEntry>
+          <NavEntry link="/api/DeclaredAPI/method">
+            <Property>method</Property>
+          </NavEntry>
+          <NavEntry link="/api/DeclaredAPI/apiDeclaration">
+            <Property>apiDeclaration</Property>
+          </NavEntry>
+          <NavEntry link="/api/DeclaredAPI/apiUrlParameters">
+            <Property>apiUrlParameters</Property>
           </NavEntry>
           <NavEntry link="/api/DeclaredAPI/ResponseType">
             <Type>ResponseType</Type>

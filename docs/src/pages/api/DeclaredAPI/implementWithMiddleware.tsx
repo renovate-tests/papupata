@@ -18,10 +18,12 @@ export default function ImplementWithMiddleware() {
         }`}</Example>
           }
         >
-          An object with arrays of express and papupata middleware functions. Both arrays are optional. For compatiblity with older versions
-          of papupata, this parameter can be just an array of express middleware functions, but that usage is considered deprecated. You can
-          use the <Link to="/api/DeclaredAPI/implementWithExpressMiddleware">implementWithExpressMiddleware</Link> instead as it
-          specifically implements the old interface of implementWithMiddleware.
+          <p>An object with arrays of express and papupata middleware functions. Both arrays are optional.</p>
+          <p>
+            In versions prior to 1.5.0, this parameter was an array of express middleware. This is still supported, but is considered to be
+            deprecated. You can use the <Link to="/api/DeclaredAPI/implementWithExpressMiddleware">implementWithExpressMiddleware</Link>{' '}
+            instead as it specifically implements the old interface of implementWithMiddleware.
+          </p>
         </Parameter>
       }
       examples={

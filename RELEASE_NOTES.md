@@ -3,7 +3,7 @@
 - Added support for papupata middleware shared by all routes of an API declaration (config option inherentMiddleware)
 - Added built-in middleware handleUndefinedResponsesMiddleware
 - Added skipHandlingRoute
-- Added support for automatically implementing all APIs to return 501 Not Implemented, until actually implemented, instead of letting other handlers take over (config option autoImplementAllAPIs) -- todo: let a route opt out
+- Added support for automatically implementing all APIs to return 501 Not Implemented, until actually implemented, instead of letting other handlers take over (config option autoImplementAllAPIs)
 - Added implementation methods implementWithPapupataMiddleware and implementWithExpressMiddleware
 - implementWithMiddleware now accepts an object with papupata and express middleware; providing an array of express middleware is still supported but considered deprecated.
 - declared APIs expose all URL-based parameters as apiUrlParameters

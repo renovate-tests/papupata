@@ -1,6 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
 import NavEntry from './NavEntry'
+import { NavEntries } from './NavEntries'
+import NewNav from './NewNav'
 
 const Container = styled.div`
   border-right: 1px solid #aaa;
@@ -26,123 +28,70 @@ const Type = styled.span`
 const Property = styled.span``
 
 export default function NavMenu() {
+  const entries: NavEntries = {
+    '/what-is-papupata': 'What is papupata?',
+    '/getting-started': 'Getting started',
+    '/api-reference': {
+      label: 'API Reference',
+      children: {
+        '/api/APIDeclaration': {
+          label: 'class APIDeclaration',
+          children: {
+            '/api/APIDeclaration/configure': <Method>configure</Method>,
+            '/api/APIDeclaration/declareDeleteAPI': <Method>declareDeleteAPI</Method>,
+            '/api/APIDeclaration/declareGetAPI': <Method>declareGetAPI</Method>,
+            '/api/APIDeclaration/declarePostAPI': <Method>declarePostAPI</Method>,
+            '/api/APIDeclaration/declarePatchAPI': <Method>declarePatchAPI</Method>,
+            '/api/APIDeclaration/declarePutAPI': <Method>declarePutAPI</Method>,
+            '/api/APIDeclaration/unmockAll': <Method>unmockAll</Method>
+          }
+        },
+        '/api/IncompleteAPIDeclaration': {
+          label: 'IncompleteAPIDeclaration',
+          children: {
+            '/api/IncompleteAPIDeclaration/params': <Method>params</Method>,
+            '/api/IncompleteAPIDeclaration/query': <Method>query</Method>,
+            '/api/IncompleteAPIDeclaration/optionalQuery': <Method>optionalQuery</Method>,
+            '/api/IncompleteAPIDeclaration/queryBool': <Method>queryBool</Method>,
+            '/api/IncompleteAPIDeclaration/body': <Method>body</Method>,
+            '/api/IncompleteAPIDeclaration/response': <Method>response</Method>
+          }
+        },
+        '/api/DeclaredAPI': {
+          label: 'DeclaredAPI',
+          children: {
+            '/api/DeclaredAPI/invoke': <Method>invoke</Method>,
+            '/api/DeclaredAPI/getURL': <Method>getURL</Method>,
+            '/api/DeclaredAPI/implement': <Method>implement</Method>,
+            '/api/DeclaredAPI/implementation': <Property>implementation</Property>,
+            '/api/DeclaredAPI/implementationMiddleware': <Property>implementationMiddleware</Property>,
+            '/api/DeclaredAPI/implementWithMiddleware': <Method>implementWithMiddleware</Method>,
+            '/api/DeclaredAPI/implementWithExpressMiddleware': <Method>implementWithExpressMiddleware</Method>,
+            '/api/DeclaredAPI/implementWithPapupataMiddleware': <Method>implementWithPapupataMiddleware</Method>,
+            '/api/DeclaredAPI/mock': <Method>mock</Method>,
+            '/api/DeclaredAPI/mockOnce': <Method>mockOnce</Method>,
+            '/api/DeclaredAPI/unmock': <Method>unmock</Method>,
+            '/api/DeclaredAPI/method': <Property>method</Property>,
+            '/api/DeclaredAPI/apiDeclaration': <Property>apiDeclaration</Property>,
+            '/api/DeclaredAPI/apiUrlParameters': <Property>apiUrlParameters</Property>,
+            '/api/DeclaredAPI/ResponseType': <Type>ResponseType</Type>,
+            '/api/DeclaredAPI/ServerResponseType': <Type>ServerResponseType</Type>,
+            '/api/DeclaredAPI/BodyType': <Type>BodyType</Type>,
+            '/api/DeclaredAPI/CallArgsType': <Type>CallArgsType</Type>,
+            '/api/DeclaredAPI/RequestType': <Type>RequestType</Type>
+          }
+        },
+        '/api/skipHandlingRoute': 'skipHandlingRoute',
+        '/api/handleUndefinedResponsesMiddleware': 'handleUndefinedResponsesMiddleware',
+        '/api/requestPromiseAdapter': 'requestPromiseAdapter',
+        '/api/fetchAdapter': 'fetchAdapter'
+      }
+    }
+  }
   return (
     <Container>
       <Heading>Table of contents</Heading>
-      <NavEntry link="/what-is-papupata">What is papupata?</NavEntry>
-      <NavEntry link="/getting-started">Getting started</NavEntry>
-      <NavEntry link="/api-reference">API Reference</NavEntry>
-      <Indent>
-        <NavEntry link="/api/APIDeclaration">class APIDeclaration</NavEntry>
-        <Indent>
-          <NavEntry link="/api/APIDeclaration/configure">
-            <Method>configure</Method>
-          </NavEntry>
-          <NavEntry link="/api/APIDeclaration/declareDeleteAPI">
-            <Method>declareDeleteAPI</Method>
-          </NavEntry>
-          <NavEntry link="/api/APIDeclaration/declareGetAPI">
-            <Method>declareGetAPI</Method>
-          </NavEntry>
-          <NavEntry link="/api/APIDeclaration/declarePostAPI">
-            <Method>declarePostAPI</Method>
-          </NavEntry>
-          <NavEntry link="/api/APIDeclaration/declarePatchAPI">
-            <Method>declarePatchAPI</Method>
-          </NavEntry>
-          <NavEntry link="/api/APIDeclaration/declarePutAPI">
-            <Method>declarePutAPI</Method>
-          </NavEntry>
-          <NavEntry link="/api/APIDeclaration/unmockAll">
-            <Method>unmockAll</Method>
-          </NavEntry>
-        </Indent>
-        <NavEntry link="/api/IncompleteAPIDeclaration">IncompleteAPIDeclaration</NavEntry>
-        <Indent>
-          <NavEntry link="/api/IncompleteAPIDeclaration/params">
-            <Method>params</Method>
-          </NavEntry>
-          <NavEntry link="/api/IncompleteAPIDeclaration/query">
-            <Method>query</Method>
-          </NavEntry>
-          <NavEntry link="/api/IncompleteAPIDeclaration/optionalQuery">
-            <Method>optionalQuery</Method>
-          </NavEntry>
-          <NavEntry link="/api/IncompleteAPIDeclaration/queryBool">
-            <Method>queryBool</Method>
-          </NavEntry>
-          <NavEntry link="/api/IncompleteAPIDeclaration/body">
-            <Method>body</Method>
-          </NavEntry>
-          <NavEntry link="/api/IncompleteAPIDeclaration/response">
-            <Method>response</Method>
-          </NavEntry>
-        </Indent>
-        <NavEntry link="/api/DeclaredAPI">DeclaredAPI</NavEntry>
-        <Indent>
-          <NavEntry link="/api/DeclaredAPI/invoke">
-            <Method>invoke</Method>
-          </NavEntry>
-          <NavEntry link="/api/DeclaredAPI/getURL">
-            <Method>getURL</Method>
-          </NavEntry>
-          <NavEntry link="/api/DeclaredAPI/implement">
-            <Method>implement</Method>
-          </NavEntry>
-          <NavEntry link="/api/DeclaredAPI/implementation">
-            <Property>implementation</Property>
-          </NavEntry>
-          <NavEntry link="/api/DeclaredAPI/implementationMiddleware">
-            <Property>implementationMiddleware</Property>
-          </NavEntry>
-          <NavEntry link="/api/DeclaredAPI/implementWithMiddleware">
-            <Method>implementWithMiddleware</Method>
-          </NavEntry>
-          <NavEntry link="/api/DeclaredAPI/implementWithExpressMiddleware">
-            <Method>implementWithExpressMiddleware</Method>
-          </NavEntry>
-          <NavEntry link="/api/DeclaredAPI/implementWithPapupataMiddleware">
-            <Method>implementWithPapupataMiddleware</Method>
-          </NavEntry>
-          <NavEntry link="/api/DeclaredAPI/mock">
-            <Method>mock</Method>
-          </NavEntry>
-          <NavEntry link="/api/DeclaredAPI/mockOnce">
-            <Method>mockOnce</Method>
-          </NavEntry>
-          <NavEntry link="/api/DeclaredAPI/unmock">
-            <Method>unmock</Method>
-          </NavEntry>
-          <NavEntry link="/api/DeclaredAPI/method">
-            <Property>method</Property>
-          </NavEntry>
-          <NavEntry link="/api/DeclaredAPI/apiDeclaration">
-            <Property>apiDeclaration</Property>
-          </NavEntry>
-          <NavEntry link="/api/DeclaredAPI/apiUrlParameters">
-            <Property>apiUrlParameters</Property>
-          </NavEntry>
-          <NavEntry link="/api/DeclaredAPI/ResponseType">
-            <Type>ResponseType</Type>
-          </NavEntry>
-          <NavEntry link="/api/DeclaredAPI/ServerResponseType">
-            <Type>ServerResponseType</Type>
-          </NavEntry>
-          <NavEntry link="/api/DeclaredAPI/BodyType">
-            <Type>BodyType</Type>
-          </NavEntry>
-          <NavEntry link="/api/DeclaredAPI/CallArgsType">
-            <Type>CallArgsType</Type>
-          </NavEntry>
-          <NavEntry link="/api/DeclaredAPI/RequestType">
-            <Type>RequestType</Type>
-          </NavEntry>
-        </Indent>
-        <NavEntry link="/api/skipHandlingRoute">skipHandlingRoute</NavEntry>
-        <NavEntry link="/api/handleUndefinedResponsesMiddleware">handleUndefinedResponsesMiddleware</NavEntry>
-        <NavEntry link="/api/requestPromiseAdapter">requestPromiseAdapter</NavEntry>
-        <NavEntry link="/api/fetchAdapter">fetchAdapter</NavEntry>
-      </Indent>
+      <NewNav entries={entries} />
     </Container>
   )
 }

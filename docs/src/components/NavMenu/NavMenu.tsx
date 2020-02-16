@@ -23,8 +23,7 @@ const Type = styled.span`
   font-style: italic;
 `
 
-const Property = styled.span`
-`
+const Property = styled.span``
 
 export default function NavMenu() {
   return (
@@ -121,9 +120,10 @@ export default function NavMenu() {
             <Type>RequestType</Type>
           </NavEntry>
         </Indent>
+        <NavEntry link="/api/skipHandlingRoute">skipHandlingRoute</NavEntry>
+        <NavEntry link="/api/handleUndefinedResponsesMiddleware">handleUndefinedResponsesMiddleware</NavEntry>
         <NavEntry link="/api/requestPromiseAdapter">requestPromiseAdapter</NavEntry>
         <NavEntry link="/api/fetchAdapter">fetchAdapter</NavEntry>
-        <NavEntry link="/api/skipHandlingRoute">skipHandlingRoute</NavEntry>
       </Indent>
     </Container>
   )

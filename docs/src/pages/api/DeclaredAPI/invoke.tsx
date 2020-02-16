@@ -59,7 +59,7 @@ export default function Invoke() {
           </Example>
           <Example label="Usage in implementation">
             {`
-            await myAPI.implement(req => {
+            myAPI.implement(req => {
               const {q} = req.query,
                 {param} = req.params,
                 {key} = req.body

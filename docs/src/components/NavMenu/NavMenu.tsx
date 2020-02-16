@@ -95,6 +95,12 @@ export default function NavMenu() {
           <NavEntry link="/api/DeclaredAPI/implementWithMiddleware">
             <Method>implementWithMiddleware</Method>
           </NavEntry>
+          <NavEntry link="/api/DeclaredAPI/implementWithExpressMiddleware">
+            <Method>implementWithExpressMiddleware</Method>
+          </NavEntry>
+          <NavEntry link="/api/DeclaredAPI/implementWithPapupataMiddleware">
+            <Method>implementWithPapupataMiddleware</Method>
+          </NavEntry>
           <NavEntry link="/api/DeclaredAPI/mock">
             <Method>mock</Method>
           </NavEntry>

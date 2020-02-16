@@ -47,7 +47,7 @@ export default function OptionalQuery() {
           </Example>
           <Example label="Usage in implementation">
             {`
-            await myAPI.implement(req => {
+            myAPI.implement(req => {
               const {query1, query2} = req.query
               return query1 + query2 // would return abcundefined in the example
             })            

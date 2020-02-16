@@ -49,7 +49,7 @@ export default function Body() {
           </Example>
           <Example label="Usage in implementation">
             {`
-            await myAPI.implement(req => {
+            myAPI.implement(req => {
               const {value} = req.body
               return value.toString() // 123 in the example
             })            

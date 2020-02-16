@@ -53,7 +53,7 @@ export default function QueryBool() {
           </Example>
           <Example label="Usage in implementation">
             {`
-            await myAPI.implement(req => {
+            myAPI.implement(req => {
               const {query1, query2} = req.query
               return query1 + query2 // would return truefalse in the example. They come in as booleans, not strings.
             })            

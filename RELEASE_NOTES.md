@@ -1,7 +1,7 @@
   1.5.0
 - Added support for papupata middleware for individual routes
 - Added support for papupata middleware shared by all routes of an API declaration (config option inherentMiddleware)
-- Added configuration option treatUndefinedAs204
+- Added built-in middleware handleUndefinedResponsesMiddleware
 - Added support for automatically implementing all APIs to return 501 Not Implemented, until actually implemented, instead of letting other handlers take over (config option autoImplementAllAPIs) -- todo: let a route opt out
 - Added implementation methods implementWithPapupataMiddleware and implementWithExpressMiddleware
 - implementWithMiddleware now accepts an object with papupata and express middleware; providing an array of express middleware is still supported but considered deprecated.

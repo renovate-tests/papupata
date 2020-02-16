@@ -23,7 +23,6 @@ export interface Config<RequestType = void, RouteOptions = void, RequestOptions 
   router?: Router
   routerAt?: string
   app?: Application
-  treatUndefinedAs204?: boolean
   inherentMiddleware?: Array<PapupataMiddleware<RequestType, RouteOptions>>
   autoImplementAllAPIs?: boolean
 }

@@ -237,10 +237,6 @@ export function responder<
             )
             if (value !== undefined) {
               res.send(value)
-            } else if (config.treatUndefinedAs204) {
-              // TODO: only do so if there is no explicit status
-              res.status(204)
-              res.send()
             }
           } catch (err) {
             next(err)

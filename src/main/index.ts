@@ -1,6 +1,7 @@
 import { Config, MakeRequestAdapter as MakeRequestAdapterImpl } from './config'
 import { Request } from 'express'
 import { declareAPI } from './declareAPI'
+import middleware204 from './middleware204'
 
 export type TypedRequest<RequestBaseType, Params, Query, Body> = Omit<RequestBaseType, 'params' | 'query' | 'body'> & {
   params: Params
@@ -87,3 +88,5 @@ export class APIDeclaration<RequestType = Request, RouteOptions = void, RequestO
     }
   }
 }
+
+export const handleUndefinedResponsesMiddleware = middleware204

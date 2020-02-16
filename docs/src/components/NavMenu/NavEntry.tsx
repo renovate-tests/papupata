@@ -23,7 +23,7 @@ export default function NavEntry({ link, children }: Props) {
     <div>
       <StaticQuery
         query={graphql`
-          query GetPathPRefix {
+          query GetPathPRefix2 {
             site {
               pathPrefix
             }

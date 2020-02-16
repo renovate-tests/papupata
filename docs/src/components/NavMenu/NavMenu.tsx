@@ -1,6 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
 import NavEntry from './NavEntry'
+import { NavEntries } from './NavEntries'
+import NewNav from './NewNav'
 
 const Container = styled.div`
   border-right: 1px solid #aaa;
@@ -26,27 +28,31 @@ const Type = styled.span`
 const Property = styled.span``
 
 export default function NavMenu() {
+  const entries: NavEntries = {
+    '/what-is-papupata': 'What is papupata?',
+    '/getting-started': 'Getting started',
+    '/api-reference': {
+      label: 'API Reference',
+      children: {
+        '/api/APIDeclaration': {
+          label: 'class APIDeclaration',
+          children: {
+            '/api/APIDeclaration/configure': <Method>configure</Method>,
+            '/api/APIDeclaration/declareDeleteAPI': <Method>declareDeleteAPI</Method>,
+            '/api/APIDeclaration/declareGetAPI': <Method>declareGetAPI</Method>,
+            '/api/APIDeclaration/declarePostAPI': <Method>declarePostAPI</Method>
+          }
+        }
+      }
+    }
+  }
   return (
     <Container>
       <Heading>Table of contents</Heading>
-      <NavEntry link="/what-is-papupata">What is papupata?</NavEntry>
-      <NavEntry link="/getting-started">Getting started</NavEntry>
-      <NavEntry link="/api-reference">API Reference</NavEntry>
+      <NewNav entries={entries} />
       <Indent>
-        <NavEntry link="/api/APIDeclaration">class APIDeclaration</NavEntry>
         <Indent>
-          <NavEntry link="/api/APIDeclaration/configure">
-            <Method>configure</Method>
-          </NavEntry>
-          <NavEntry link="/api/APIDeclaration/declareDeleteAPI">
-            <Method>declareDeleteAPI</Method>
-          </NavEntry>
-          <NavEntry link="/api/APIDeclaration/declareGetAPI">
-            <Method>declareGetAPI</Method>
-          </NavEntry>
-          <NavEntry link="/api/APIDeclaration/declarePostAPI">
-            <Method>declarePostAPI</Method>
-          </NavEntry>
+     
           <NavEntry link="/api/APIDeclaration/declarePatchAPI">
             <Method>declarePatchAPI</Method>
           </NavEntry>

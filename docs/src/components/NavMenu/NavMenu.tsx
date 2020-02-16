@@ -118,8 +118,9 @@ export default function NavMenu() {
             <Type>RequestType</Type>
           </NavEntry>
         </Indent>
-        <NavEntry link="/api/fetchAdapter">fetchAdapter</NavEntry>
         <NavEntry link="/api/requestPromiseAdapter">requestPromiseAdapter</NavEntry>
+        <NavEntry link="/api/fetchAdapter">fetchAdapter</NavEntry>
+        <NavEntry link="/api/skipHandlingRoute">skipHandlingRoute</NavEntry>
       </Indent>
     </Container>
   )

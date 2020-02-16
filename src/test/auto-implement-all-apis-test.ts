@@ -1,4 +1,4 @@
-import { APIDeclaration } from '../main'
+import { APIDeclaration, skipHandlingRoute } from '../main'
 import { expectFailure, prepareTestServerFor } from './test-utils'
 import createRequestAdapter from '../main/request-promise-adapter'
 
@@ -79,6 +79,20 @@ describe('auto-implement-all-apis-test', function() {
 
       const resp = await specificAPI()
       expect(resp).toEqual('token value') // specific was declared before parametrized
+    })
+
+    it('it is possible for an implementation to indicate that it is uninterested in the request', async function() {
+      // This test demonstrates what is typically unwanted behavior
+      const specificAPI = API.declareGetAPI('/specific-skip/specific').response<string>()
+      const parametrizedAPI = API.declareGetAPI('/specific-skip/:var')
+        .params(['var'] as const)
+        .response<string>()
+
+      specificAPI.implement(() => skipHandlingRoute)
+      parametrizedAPI.implement(req => req.params.var)
+
+      const resp = await specificAPI()
+      expect(resp).toEqual('specific') // specific opted to let parametrized handle the request
     })
   })
 

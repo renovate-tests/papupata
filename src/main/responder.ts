@@ -1,5 +1,5 @@
 import { ActualOptionalTypeMap, ActualTypeMap, Method, StringTupleElementTypes } from './types'
-import { IAPIDeclaration, TypedRequest } from './index'
+import { IAPIDeclaration, TypedRequest, skipHandlingRoute } from './index'
 import { RequestHandler, Response, Application, Router } from 'express'
 import pick from 'lodash/pick'
 import fromPairs from 'lodash/fromPairs'
@@ -235,6 +235,9 @@ export function responder<
               res,
               call
             )
+            if (value === skipHandlingRoute) {
+              return next()
+            }
             if (value !== undefined) {
               res.send(value)
             }

@@ -90,3 +90,4 @@ export class APIDeclaration<RequestType = Request, RouteOptions = void, RequestO
 }
 
 export const handleUndefinedResponsesMiddleware = middleware204
+export const skipHandlingRoute = 'papupata-skip-1d7eb033-19f8-47f7-a96c-f07d90d849f2' as any

@@ -3,10 +3,20 @@ import { ucFirst } from '../utils'
 import IndexLayout from '../layouts'
 import Page from './Page'
 import Container from './Container'
-import { Purpose, Usage, Parameters, MethodReturnType, Parameter, Examples, Example } from './api-components'
+import {
+  Purpose,
+  Usage,
+  Parameters,
+  MethodReturnType,
+  Parameter,
+  Examples,
+  Example,
+  AvailableFrom,
+} from './api-components'
 import { IncompleteApiDeclarationLink } from './links'
 
-export default function DeclareAPIPage({ method }: { method: string }) {
+type Props = { method: string, availableFrom?: '1.5.0' }
+export default function DeclareAPIPage({ method, availableFrom }: Props) {
   return (
     <IndexLayout>
       <Page>
@@ -15,6 +25,7 @@ export default function DeclareAPIPage({ method }: { method: string }) {
           <h2>class APIDeclaration</h2>
           <h3>method declare{ucFirst(method)}API</h3>
         </Container>
+        {availableFrom && <AvailableFrom version={availableFrom}/>}
         <Purpose>Used for declaring an API using the HTTP {method.toUpperCase()} method</Purpose>
         <Usage>APIs can be declared at any time.</Usage>
         <Parameters>

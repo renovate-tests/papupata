@@ -18,8 +18,16 @@ export default function Body() {
           <p>Path params and query parameters must be defined before query.</p>
         </Usage>
         <Parameters>
-          <Parameter name="<BodyType>" dataType="Interface">
+          <Parameter name="<BodyType>" dataType="Type">
             The body type is declared as a type parameter.
+          </Parameter>
+          <Parameter name="<BodyInputType>" dataType="Type">
+            <p>The type of the body as seen when making a request. Defaults to BodyType.</p>
+            <p>
+              This allows for setting up things like dates to be provided as date objects when there is an implicit conversion to strings
+              when sending them as json. Using this parameter makes sense when there is a built-in conversion like with json, or if the
+              function for making requests is meant to do other kind of transformation as well.
+            </p>
           </Parameter>
         </Parameters>
         <MethodReturnType>
@@ -27,7 +35,6 @@ export default function Body() {
         </MethodReturnType>
         <Caveats>
           <ul>
-            <li>At this time the body, if used, must always be an object. This will be changed eventually.</li>
             <li>There is no validation for the shape of the body on the server</li>
             <li>This option is presented for methods without body, even if it is does nothing useful in those cases.</li>
           </ul>
@@ -52,7 +59,7 @@ export default function Body() {
             myAPI.implement(req => {
               const {value} = req.body
               return value.toString() // 123 in the example
-            })            
+            })
           `}
           </Example>
         </Examples>

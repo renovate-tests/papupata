@@ -3,13 +3,13 @@ import IndexLayout from '../../layouts'
 import Page from '../../components/Page'
 import Container from '../../components/Container'
 import { Link } from 'gatsby'
-import { Purpose, TypeParameter, TypeParameters, Usage } from '../../components/api-components'
+import { Example, Purpose, TypeParameter, TypeParameters, Usage } from '../../components/api-components'
 import { MethodMember, Members } from '../../components/members-table'
 import { IncompleteApiDeclarationLink } from '../../components/links'
 import { ucFirst } from '../../utils'
 
-const DeclareAPI: React.FC<{ method: string }> = ({ method }) => (
-  <MethodMember name={`declare${ucFirst(method)}API`} dataType={<IncompleteApiDeclarationLink />}>
+const DeclareAPI: React.FC<{ method: string, availableFrom?: '1.5.0' }> = ({ method, availableFrom }) => (
+  <MethodMember name={`declare${ucFirst(method)}API`} dataType={<IncompleteApiDeclarationLink />} availableFrom={availableFrom}>
     Declares an API using the {method.toUpperCase()} HTTP method.
   </MethodMember>
 )
@@ -22,6 +22,7 @@ export default function APIDeclaration() {
           <h1>API Reference</h1>
           <h2>class APIDeclaration</h2>
         </Container>
+        <Example>{`import {APIDeclaration} from 'papupata'`}</Example>
         <Purpose>Used for declaring, implementing and calling APIs</Purpose>
         <Usage>
           <p>
@@ -51,6 +52,7 @@ export default function APIDeclaration() {
           </MethodMember>
           <DeclareAPI method="delete" />
           <DeclareAPI method="get" />
+          <DeclareAPI method="patch" availableFrom='1.5.0' />
           <DeclareAPI method="post" />
           <DeclareAPI method="put" />
           <MethodMember name={'unmockAll'} dataType={'void'} availableFrom={'1.1.0'}>

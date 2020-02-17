@@ -1,5 +1,5 @@
 import React from 'react'
-import { Example, Examples, Purpose, AvailableFrom } from '../../components/api-components'
+import { Example, Examples, Purpose, AvailableFrom, Usage } from '../../components/api-components'
 import Container from '../../components/Container'
 import Page from '../../components/Page'
 import IndexLayout from '../../layouts'
@@ -15,6 +15,10 @@ export default function HandleUndefinedResponsesMiddleware() {
         <Example>{`import {handleUndefinedResponsesMiddleware} from 'papupata'`}</Example>
         <AvailableFrom version="1.5.0" />
         <Purpose>
+          Middleware that changes how papupata deals with undefined responses, automatically setting up response code 204 (if not otherwise
+          specified) and sending a response.
+        </Purpose>
+        <Usage>
           <p>
             By default papupata assumes that if your route implementation returns undefined, it takes the responsibilities for sending the
             response.
@@ -31,7 +35,7 @@ export default function HandleUndefinedResponsesMiddleware() {
             it becomes 204 (no content).
           </p>
           <p>The behaviour of this middleware might become the default mode of operation for papupata 2.0.</p>
-        </Purpose>
+        </Usage>
         <Examples>
           <Example label="Enabling middleware for all roues">{`
                 const API = new APIDeclaration()

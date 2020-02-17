@@ -49,7 +49,7 @@ export default function IncompleteApiDeclaration() {
           <MethodMember name="body" dataType={<IncompleteApiDeclarationLink />}>
             Declare body type. At this time the body must be an object.
           </MethodMember>
-          <MethodMember name="body" dataType={<DeclaredAPILink />}>
+          <MethodMember name="response" dataType={<DeclaredAPILink />}>
             Declare response type and conclude the declaration of an API.
           </MethodMember>
         </Members>

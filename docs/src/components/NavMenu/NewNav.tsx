@@ -1,5 +1,5 @@
 import { NavEntries, NavEntry } from './NavEntries'
-import React, { useState } from 'react'
+import React, { ReactNode, useState } from 'react'
 import { StaticQuery, graphql, Link } from 'gatsby'
 
 import { Location } from '@reach/router'
@@ -12,12 +12,30 @@ interface Props {
 type IsCurrentFn = (url: string) => boolean
 
 const LinkContainer = styled.div``
+export type AltComponentType = React.FC<{
+  children: ReactNode
+  label: ReactNode
+  showChildren: boolean
+  url: string | null
+  description: ReactNode | undefined
+}>
 
 const NavLink = styled(Link)`
   ${({ current }: { current: string }) =>
     current === 'true'
       ? `
-  
+
+  font-weight: bold;
+  `
+      : ''};
+`
+
+const NonLink = styled.span`
+  color: #777;
+  ${({ current }: { current: string }) =>
+    current === 'true'
+      ? `
+
   font-weight: bold;
   `
       : ''};
@@ -29,7 +47,8 @@ const Indent = styled.div`
 
 const Toggler = styled.span`
   display: inline-block;
-  margin: 0 5px 0 -17px;
+  position: absolute;
+  margin-left: -17px;
   user-select: none;
   transition: transform 150ms linear;
   &:hover {
@@ -61,18 +80,24 @@ export default function NewNav({ entries }: Props) {
       `}
       render={({ site: { pathPrefix } }: { site: { pathPrefix: string } }) => (
         <Location>
-          {({ location }) => <NewNavList entries={entries} isCurrent={link => [pathPrefix + link, link].includes(location.pathname)} />}
+          {({ location }) => (
+            <NewNavList entries={entries} isCurrent={link => [pathPrefix + link, link].includes(location.pathname)} AltComponent={null} />
+          )}
         </Location>
       )}
     />
   )
 }
 
-function NewNavList({ entries, isCurrent }: Props & { isCurrent: IsCurrentFn }) {
+export function NewNavList({
+  entries,
+  isCurrent,
+  AltComponent
+}: Props & { isCurrent: IsCurrentFn; AltComponent: AltComponentType | null }) {
   return (
     <>
       {Object.entries(entries).map(([url, entry]) => (
-        <NewNavEntry key={url} entry={entry} url={url} isCurrent={isCurrent} />
+        <NewNavEntry key={url} entry={entry} url={url} isCurrent={isCurrent} AltComponent={AltComponent} />
       ))}
     </>
   )
@@ -82,23 +107,40 @@ interface EntryProps {
   entry: NavEntry
   isCurrent: IsCurrentFn
   url: string
+  AltComponent: AltComponentType | null
 }
 
-function NewNavEntry({ entry, isCurrent, url }: EntryProps) {
-  const link = (
+function NewNavEntry({ entry, isCurrent, url, AltComponent }: EntryProps) {
+  let label = typeof entry === 'object' && entry && 'label' in entry ? entry.label : entry
+  const link = url.startsWith('<') ? (
+    <NonLink current={isCurrent(url) ? 'true' : 'false'}>{label}</NonLink>
+  ) : (
     <NavLink current={isCurrent(url) ? 'true' : 'false'} to={url}>
-      {typeof entry === 'object' && entry && 'label' in entry ? entry.label : entry}
+      {label}
     </NavLink>
   )
   const children =
     typeof entry === 'object' && entry && 'children' in entry && entry.children ? (
       <Indent>
-        <NewNavList entries={entry.children as NavEntries} isCurrent={isCurrent} />
+        <NewNavList entries={entry.children as NavEntries} isCurrent={isCurrent} AltComponent={AltComponent} />
       </Indent>
     ) : null
 
   const showChildren = isCurrent(url) || isAChildSelected(entry, isCurrent)
   const [checked, setChecked] = useState(showChildren)
+
+  const description = typeof entry === 'object' && entry && 'description' in entry ? entry.description : null
+  if (AltComponent) {
+    return (
+      <AltComponent
+        children={children}
+        label={label}
+        showChildren={showChildren}
+        url={url.startsWith('<') ? null : url}
+        description={description}
+      />
+    )
+  }
 
   return (
     <Container>

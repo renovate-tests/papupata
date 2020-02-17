@@ -1,5 +1,5 @@
 import React from 'react'
-import { Example, Examples, Purpose, AvailableFrom } from '../../components/api-components'
+import { Example, Examples, Purpose, AvailableFrom, Usage } from '../../components/api-components'
 import Container from '../../components/Container'
 import Page from '../../components/Page'
 import IndexLayout from '../../layouts'
@@ -15,10 +15,10 @@ export default function SkipHandlingRoute() {
         <Example>{`import {skipHandlingRoute} from 'papupata'`}</Example>
         <AvailableFrom version="1.5.0" />
         <Purpose>
-          <p>
-            A token value a route implementation or papupata middleware can return to have express move on to the other route handlers and
-            middleware.
-          </p>
+          A token value a route implementation or papupata middleware can return to have express move on to the other route handlers and
+          middleware.
+        </Purpose>
+        <Usage>
           <p>Most people will no need this, but there are a few use cases where this functionality can be useful.</p>
           <p>
             If routing needs are such, that there can be false positives for the route implementation, then this value can be used to defer
@@ -31,7 +31,7 @@ export default function SkipHandlingRoute() {
             papupata router. Or perhaps the route is implemented by a library. In these cases you can implement the route as one that always
             returns skipHandlingRoute to indicate that other code is responsible for it.
           </p>
-        </Purpose>
+        </Usage>
         <Examples>
           <Example label="Conditional skip">{`
                 api.implement(req => {

@@ -1,6 +1,5 @@
 import React from 'react'
 import styled from 'styled-components'
-import NavEntry from './NavEntry'
 import { NavEntries } from './NavEntries'
 import NewNav from './NewNav'
 
@@ -13,10 +12,6 @@ const Container = styled.div`
 `
 const Heading = styled.h2``
 
-const Indent = styled.div`
-  margin-left: 20px;
-`
-
 const Method: React.FC = ({ children }) => {
   return <span>{children}()</span>
 }
@@ -25,12 +20,93 @@ const Type = styled.span`
   font-style: italic;
 `
 
+const WIP = styled.span`
+  color: red;
+  font-weight: lighter;
+`
+
 const Property = styled.span``
+
+export const guides: NavEntries = {
+  '/guides/declaring': {
+    label: <WIP>Declaring APIs</WIP>,
+    description:
+      'This guide will help you declare APIs whether to model the APIs your application is going to implement them, call them or both.'
+  },
+  '/guides/metadata': {
+    label: <WIP>Accessing metadata</WIP>,
+    description: 'This guide will help you access metadata from any declared APIs.'
+  },
+  '<client>': {
+    label: 'Clients',
+    children: {
+      '/guides/client/setup': {
+        label: <WIP>Setting up papupata</WIP>,
+        description: 'This guide will go through all the basic configuration needed to call APIs declared with papupata.'
+      },
+      '/guides/client/calling': {
+        label: <WIP>Calling APIs</WIP>,
+        description: 'This guide will go through the specifics of how to call APIs using papupata'
+      },
+      '/guides/client/requestAdapters': {
+        label: <WIP>Request adapters</WIP>,
+        description:
+          'This guide gives you an undestanding of how to change the way papupata does its requests, for example by adding authentication headers.'
+      },
+      '/guides/client/testing': {
+        label: <WIP>Testing</WIP>,
+        description: 'This guide will help you with testing client code that calls APIs using papupata'
+      }
+    }
+  },
+  '<server>': {
+    label: 'Servers',
+    children: {
+      '/guides/server/setup': {
+        label: <WIP>Setting up papupata</WIP>,
+        description: 'This guide will go through all the basic configuration needed to start implementing APIs with papupata.'
+      },
+      '/guides/server/implementing': {
+        label: <WIP>Implementing APIs</WIP>,
+        description: 'This guide will go trough all the specifics of actually implementing APIs.'
+      },
+      '/guides/server/interactingWithExpress': {
+        label: <WIP>Interacting with express</WIP>,
+        description:
+          'This guide will help you with incorporating papupata with an existing express application, using the existing middleware and implementations.'
+      },
+      '/guides/server/middleware': {
+        label: <WIP>Middleware</WIP>,
+        description:
+          'Middleware can be used to change the behaviour of APIs. This guide covers how to use and implement middeware in papupata.'
+      },
+      '/guides/server/testing': {
+        label: <WIP>Testing</WIP>,
+        description: 'This guide will help you with testing server code that implements APIs with papupata.'
+      }
+    }
+  }
+}
 
 export default function NavMenu() {
   const entries: NavEntries = {
     '/what-is-papupata': 'What is papupata?',
     '/getting-started': 'Getting started',
+    '/guides': {
+      label: 'Guides',
+      children: guides
+    },
+    '/concepts': {
+      label: <WIP>Concepts</WIP>,
+      children: {
+        '/concepts/APIDeclaration': <WIP>API Declaration</WIP>,
+        '/concepts/API': <WIP>API</WIP>,
+        '/concepts/Route': <WIP>Route</WIP>,
+        '/concepts/Middleware': <WIP>Middleware</WIP>,
+        '/concepts/Mocks': <WIP>Mocks</WIP>,
+        '/concepts/RequestAdapter': <WIP>Request adapter</WIP>
+      }
+    },
     '/api-reference': {
       label: 'API Reference',
       children: {

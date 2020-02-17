@@ -29,7 +29,7 @@ const Property = styled.span``
 
 export const guides: NavEntries = {
   '/guides/declaring': {
-    label: <WIP>Declaring APIs</WIP>,
+    label: 'Declaring APIs',
     description:
       'This guide will help you declare APIs whether to model the APIs your application is going to implement them, call them or both.'
   },
@@ -37,24 +37,28 @@ export const guides: NavEntries = {
     label: <WIP>Accessing metadata</WIP>,
     description: 'This guide will help you access metadata from any declared APIs.'
   },
+  '/guides/sharing': {
+    label: <WIP>Sharing APIs declarations</WIP>,
+    description: 'This guide will help you share your API declarations.'
+  },
   '<client>': {
     label: 'Clients',
     children: {
       '/guides/client/setup': {
-        label: <WIP>Setting up papupata</WIP>,
+        label: 'Setting up papupata',
         description: 'This guide will go through all the basic configuration needed to call APIs declared with papupata.'
       },
       '/guides/client/calling': {
-        label: <WIP>Calling APIs</WIP>,
+        label: 'Calling APIs',
         description: 'This guide will go through the specifics of how to call APIs using papupata'
       },
-      '/guides/client/requestAdapters': {
-        label: <WIP>Request adapters</WIP>,
+      '/guides/client/customRequestAdapters': {
+        label: <WIP>Custom request adapters</WIP>,
         description:
           'This guide gives you an undestanding of how to change the way papupata does its requests, for example by adding authentication headers.'
       },
       '/guides/client/testing': {
-        label: <WIP>Testing</WIP>,
+        label: 'Testing',
         description: 'This guide will help you with testing client code that calls APIs using papupata'
       }
     }

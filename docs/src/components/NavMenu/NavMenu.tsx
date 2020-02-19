@@ -67,7 +67,7 @@ export const guides: NavEntries = {
     label: 'Servers',
     children: {
       '/guides/server/setup': {
-        label: <WIP>Setting up papupata</WIP>,
+        label: 'Setting up papupata',
         description: 'This guide will go through all the basic configuration needed to start implementing APIs with papupata.'
       },
       '/guides/server/implementing': {

@@ -71,7 +71,7 @@ export const guides: NavEntries = {
         description: 'This guide will go through all the basic configuration needed to start implementing APIs with papupata.'
       },
       '/guides/server/implementing': {
-        label: <WIP>Implementing APIs</WIP>,
+        label: 'Implementing APIs',
         description: 'This guide will go trough all the specifics of actually implementing APIs.'
       },
       '/guides/server/interactingWithExpress': {

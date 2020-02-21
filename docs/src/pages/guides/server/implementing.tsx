@@ -13,8 +13,8 @@ const IndexPage = () => (
       <Container>
         <h1>Guide: implementing APIs</h1>
         <Overview>
-          In order to start implementing APIs on the server you need to configure papupata to let it know about its environment. This guide
-          covers the most common cases and gives pointer for less common ones.
+          When creating a server with papupata, the one thing you want is to be able to do is implementing the APIs. This guide help you
+          understand how that is done.
         </Overview>
         <GuideContent
           content={[

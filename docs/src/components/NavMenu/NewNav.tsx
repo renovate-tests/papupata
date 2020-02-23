@@ -31,7 +31,7 @@ const NavLink = styled(Link)`
 `
 
 const NonLink = styled.span`
-  color: #777;
+  color: black;
   ${({ current }: { current: string }) =>
     current === 'true'
       ? `

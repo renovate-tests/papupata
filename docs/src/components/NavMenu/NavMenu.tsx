@@ -41,7 +41,7 @@ export const guides: NavEntries = {
     label: 'Sharing APIs declarations',
     description: 'This guide will help you share your API declarations.'
   },
-  '<client>': {
+  '/guides?client': {
     label: 'Clients',
     children: {
       '/guides/client/setup': {
@@ -63,7 +63,7 @@ export const guides: NavEntries = {
       }
     }
   },
-  '<server>': {
+  '/guides?server': {
     label: 'Servers',
     children: {
       '/guides/server/setup': {
@@ -96,20 +96,10 @@ export default function NavMenu() {
   const entries: NavEntries = {
     '/what-is-papupata': 'What is papupata?',
     '/getting-started': 'Getting started',
+    '/concepts': 'Concepts and terms',
     '/guides': {
       label: 'Guides',
       children: guides
-    },
-    '/concepts': {
-      label: <WIP>Concepts</WIP>,
-      children: {
-        '/concepts/APIDeclaration': <WIP>API Declaration</WIP>,
-        '/concepts/API': <WIP>API</WIP>,
-        '/concepts/Route': <WIP>Route</WIP>,
-        '/concepts/Middleware': <WIP>Middleware</WIP>,
-        '/concepts/Mocks': <WIP>Mocks</WIP>,
-        '/concepts/RequestAdapter': <WIP>Request adapter</WIP>
-      }
     },
     '/api-reference': {
       label: 'API Reference',

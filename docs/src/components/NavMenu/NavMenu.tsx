@@ -34,11 +34,11 @@ export const guides: NavEntries = {
       'This guide will help you declare APIs whether to model the APIs your application is going to implement them, call them or both.'
   },
   '/guides/metadata': {
-    label: <WIP>Accessing metadata</WIP>,
+    label: 'Accessing metadata',
     description: 'This guide will help you access metadata from any declared APIs.'
   },
   '/guides/sharing': {
-    label: <WIP>Sharing APIs declarations</WIP>,
+    label: 'Sharing APIs declarations',
     description: 'This guide will help you share your API declarations.'
   },
   '<client>': {
@@ -53,7 +53,7 @@ export const guides: NavEntries = {
         description: 'This guide will go through the specifics of how to call APIs using papupata'
       },
       '/guides/client/customRequestAdapters': {
-        label: <WIP>Custom request adapters</WIP>,
+        label: 'Custom request adapters',
         description:
           'This guide gives you an undestanding of how to change the way papupata does its requests, for example by adding authentication headers.'
       },
@@ -75,12 +75,12 @@ export const guides: NavEntries = {
         description: 'This guide will go trough all the specifics of actually implementing APIs.'
       },
       '/guides/server/interactingWithExpress': {
-        label: <WIP>Interacting with express</WIP>,
+        label: 'Interacting with express',
         description:
           'This guide will help you with incorporating papupata with an existing express application, using the existing middleware and implementations.'
       },
       '/guides/server/middleware': {
-        label: <WIP>Middleware</WIP>,
+        label: 'Middleware',
         description:
           'Middleware can be used to change the behaviour of APIs. This guide covers how to use and implement middeware in papupata.'
       },

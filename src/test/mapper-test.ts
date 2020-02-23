@@ -32,7 +32,6 @@ describe('mapper-test', function() {
 
       const response = await responseMapperAPI()
 
-
       expect(response.value).toBe('200')
     })
 

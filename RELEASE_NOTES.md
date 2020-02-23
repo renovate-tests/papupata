@@ -1,4 +1,5 @@
   1.5.0
+- TODO: document and test express middleware converter, add path and CallBodyType
 - Added support for papupata middleware for individual routes
 - Added support for papupata middleware shared by all routes of an API declaration (config option inherentMiddleware)
 - Added built-in middleware handleUndefinedResponsesMiddleware

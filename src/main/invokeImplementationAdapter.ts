@@ -7,6 +7,7 @@ export type AssertResponseFn = (res: Response) => void
 export interface InvokerImplementationOptions<T> {
   createRequest?(requestProps: { method: string; url: string }): T
   assertResponse?: AssertResponseFn
+  withMiddleware?: boolean
 }
 type Options<T> = InvokerImplementationOptions<T>
 
@@ -14,10 +15,6 @@ export default function createInvokeImplementationAdapter<T = any>(options: Opti
   return async (method, path, query, body, params, api) => {
     if (!api.implementation) {
       throw new Error('API not implemented')
-    }
-
-    for (const boolParam of api.apiUrlParameters.boolQuery || []) {
-      query[boolParam] = query[boolParam] === 'true'
     }
 
     const requestProps = { method, url: path }
@@ -32,7 +29,32 @@ export default function createInvokeImplementationAdapter<T = any>(options: Opti
 
     const res = createMockResponse()
 
-    const resp = await api.implementation(req, res)
+    let resp: any
+    if (options.withMiddleware) {
+      let nextCalled = false
+      let error: any = null
+      let resolveNextCalled: () => void
+      const nextCalledPromise = new Promise(resolve => {
+        resolveNextCalled = resolve
+      })
+
+      api.expressImplementation(req, res, (err: any) => {
+        nextCalled = true
+        error = err
+        resolveNextCalled()
+      })
+      await Promise.race([res.sentPromise, nextCalledPromise])
+
+      if (error) throw error
+      if (nextCalled) return
+    } else {
+      // The middleware path takes care of this in the express request implementation
+      for (const boolParam of api.apiUrlParameters.boolQuery || []) {
+        req.query[boolParam] = req.query[boolParam] === 'true'
+      }
+
+      resp = await api.implementation(req, res)
+    }
 
     options.assertResponse?.(res as any)
 

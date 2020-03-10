@@ -1,6 +1,6 @@
 import { ActualOptionalTypeMap, ActualTypeMap, Method, StringTupleElementTypes } from './types'
 import { IAPIDeclaration, TypedRequest, skipHandlingRoute } from './index'
-import { RequestHandler, Response, Application, Router } from 'express'
+import { RequestHandler, Request as ExpressRequest, Response, Application, Router } from 'express'
 import pick from 'lodash/pick'
 import fromPairs from 'lodash/fromPairs'
 import omit from 'lodash/omit'
@@ -164,6 +164,7 @@ export function responder<
       }
       call.implementation = undefined as any
       call.implementationMiddleware = {} as MiddlewareContainer
+      call.expressImplementation = expressImplementation
 
       let expressHost: undefined | Application | Router
       const config = parent.getConfig()
@@ -180,6 +181,56 @@ export function responder<
         impl: ImplFn | null
       ) {
         return implementWithMiddleware({ papupata: middleware }, impl)
+      }
+
+      async function expressImplementation(req: ExpressRequest, res: Response, next: any) {
+        const impl = call.implementation
+
+        try {
+          const { express: expressMiddleware } = call.implementationMiddleware
+          if (expressMiddleware) {
+            await runExpressMiddleware(expressMiddleware, req, res)
+          }
+        } catch (error) {
+          return next(error)
+        }
+
+        if (!impl) {
+          if (parent.getConfig()?.autoImplementAllAPIs) {
+            res.status(501)
+            res.send('Not implemented')
+          } else {
+            return next()
+          }
+          return
+        }
+        try {
+          for (const bq of boolQuery) {
+            req.query[bq] = req.query[bq] === 'true'
+          }
+          async function getImplVal() {
+            const unmappedValue = await impl(req as any, res)
+            return mapper ? await mapper(unmappedValue) : unmappedValue
+          }
+          const value = await runHandlerChain(
+            [
+              ...(parent.getConfig()?.inherentMiddleware || []),
+              ...(call.implementationMiddleware.papupata || []),
+              getImplVal,
+            ],
+            req,
+            res,
+            call
+          )
+          if (value === skipHandlingRoute) {
+            return next()
+          }
+          if (value !== undefined) {
+            res.send(value)
+          }
+        } catch (err) {
+          next(err)
+        }
       }
 
       function implementWithMiddleware(middleware: RequestHandler[] | MiddlewareContainer, impl: ImplFn | null) {
@@ -200,51 +251,7 @@ export function responder<
         }
         const strippedPath = config.routerAt ? path.substring(config.routerAt.length) : path
 
-        host[method](strippedPath, async (req, res, next) => {
-          const impl = call.implementation
-
-          try {
-            const { express: expressMiddleware } = call.implementationMiddleware
-            if (expressMiddleware) {
-              await runExpressMiddleware(expressMiddleware, req, res)
-            }
-          } catch (error) {
-            return next(error)
-          }
-
-          if (!impl) {
-            if (parent.getConfig()?.autoImplementAllAPIs) {
-              res.status(501)
-              res.send('Not implemented')
-            } else {
-              return next()
-            }
-            return
-          }
-          try {
-            for (const bq of boolQuery) {
-              req.query[bq] = req.query[bq] === 'true'
-            }
-            async function getImplVal() {
-              const unmappedValue = await impl(req as any, res)
-              return mapper ? await mapper(unmappedValue) : unmappedValue
-            }
-            const value = await runHandlerChain(
-              [...(config.inherentMiddleware || []), ...(call.implementationMiddleware.papupata || []), getImplVal],
-              req,
-              res,
-              call
-            )
-            if (value === skipHandlingRoute) {
-              return next()
-            }
-            if (value !== undefined) {
-              res.send(value)
-            }
-          } catch (err) {
-            next(err)
-          }
-        })
+        host[method](strippedPath, expressImplementation)
         expressHost = host
       }
 
@@ -307,6 +314,7 @@ export function responder<
         }
         method: Method
         apiDeclaration: any
+        expressImplementation(req: ExpressRequest, res: Response, next: any): Promise<void>
       }
 
       function applyPathParams(reqParams: ActualTypeMap<StringTupleElementTypes<ParamsType>, string>) {

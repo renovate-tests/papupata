@@ -1,6 +1,9 @@
 import { APIDeclaration } from '../main'
 import testInvoke from '../main/testInvoker'
 import { AssertResponseFn } from '../main/invokeImplementationAdapter'
+import { Handler } from 'express'
+import { PapupataMiddleware } from '../main/config'
+import middleware204 from '../main/middleware204'
 
 describe('testInvoker-test', function() {
   const API = new APIDeclaration()
@@ -31,12 +34,14 @@ describe('testInvoker-test', function() {
     },
   }
 
-  api.implement(({ headers, body, params, query }) => ({
+  const defaultResponder = ({ headers, body, params, query }: typeof api.RequestType) => ({
     headers,
     body,
     params,
     query,
-  }))
+  })
+
+  api.implement(defaultResponder)
 
   it('works for a basic case', async function() {
     const resp = await testInvoke(api, defaultArgs)
@@ -183,12 +188,89 @@ describe('testInvoker-test', function() {
   })
 
   describe('withMiddleware', function() {
-    it.todo('works even if there is no middleware')
-    it.todo('works with express middleware')
-    it.todo('works with inherent papupata middleware')
-    it.todo('works with papupata middleware')
-    it.todo('works with all middleware in the same route')
-    it.todo('is compatible with 204 middleware')
+    const expressMiddleware: Handler = (req, _res, next) => {
+      req.params.express = 'express'
+      next()
+    }
+
+    const papupataMiddleware: PapupataMiddleware<any, any> = (req, _res, _api, next) => {
+      req.params.papupata = 'papupata'
+      return next()
+    }
+
+    it('works even if there is no middleware', async function() {
+      const myAPI = declareAPI()
+      myAPI.implement(defaultResponder)
+      const res = await testInvoke(myAPI, defaultArgs, { withMiddleware: true })
+      expect(res).toEqual({ ...defaultResponse, headers: undefined })
+    })
+
+    it('works with express middleware', async function() {
+      const myAPI = declareAPI()
+      myAPI.implementWithExpressMiddleware([expressMiddleware], defaultResponder)
+      const res = await testInvoke(myAPI, defaultArgs, { withMiddleware: true })
+      expect(res).toEqual({
+        ...defaultResponse,
+        headers: undefined,
+        params: { ...defaultResponse.params, express: 'express' },
+      })
+    })
+
+    it('works with inherent papupata middleware', async function() {
+      const myAPI = declareAPI()
+      const initialConfig = API.getConfig()
+      API.configure({
+        ...initialConfig,
+        inherentMiddleware: [papupataMiddleware],
+      })
+      try {
+        myAPI.implement(defaultResponder)
+        const res = await testInvoke(myAPI, defaultArgs, { withMiddleware: true })
+        expect(res).toEqual({
+          ...defaultResponse,
+          headers: undefined,
+          params: { ...defaultResponse.params, papupata: 'papupata' },
+        })
+      } finally {
+        API.configure(initialConfig)
+      }
+    })
+
+    it('works with papupata middleware', async function() {
+      const myAPI = declareAPI()
+      myAPI.implementWithPapupataMiddleware([papupataMiddleware], defaultResponder)
+      const res = await testInvoke(myAPI, defaultArgs, { withMiddleware: true })
+      expect(res).toEqual({
+        ...defaultResponse,
+        headers: undefined,
+        params: { ...defaultResponse.params, papupata: 'papupata' },
+      })
+    })
+
+    it('is compatible with 204 middleware (normal response)', async function() {
+      const myAPI = declareAPI()
+      myAPI.implementWithPapupataMiddleware([middleware204], defaultResponder)
+      const res = await testInvoke(myAPI, defaultArgs, {
+        withMiddleware: true,
+        ...responseChecker(res => {
+          return expect(res.statusCode).toEqual(200)
+        }),
+      })
+      expect(res).toEqual({
+        ...defaultResponse,
+        headers: undefined,
+      })
+    })
+
+    it('is compatible with 204 middleware (no response)', async function() {
+      const myAPI = declareAPI()
+      myAPI.implementWithPapupataMiddleware([middleware204], () => undefined as any)      
+      const res = await testInvoke(myAPI, defaultArgs, {
+        withMiddleware: true,
+        ...responseChecker(res => expect(res.statusCode).toEqual(204)),
+      })
+      expect(res).toEqual(undefined)
+    })
   })
 
   function responseChecker(checkFn: AssertResponseFn) {

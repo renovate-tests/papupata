@@ -2,32 +2,35 @@ import { Response } from 'express'
 
 interface ExtendedResponse extends Response {
   sentData: any
+  sentPromise: Promise<void>
 }
 
 export default function createMockResponse(): ExtendedResponse {
-  let statusCode = 200,
-    sent = false,
+  let sent = false,
     resData: any = null,
-    headers: any = {}
+    headers: any = {},
+    resolveSent: () => void
+
+  const sentPromise = new Promise<void>(resolve => {
+    resolveSent = resolve
+  })
+
   const implemented: Partial<ExtendedResponse> = {
     send(data) {
       this.end(data)
       return this
     },
     status(code) {
-      statusCode = code
+      implemented.statusCode = code
       return this
     },
 
     sendStatus(status) {
-      statusCode = status
+      implemented.statusCode = status
       this.end()
       return this
     },
-
-    get statusCode() {
-      return statusCode
-    },
+    statusCode: 200,
 
     redirect(statusOrTarget: number | string, statusOrTarget2?: string | number) {
       if (typeof statusOrTarget === 'number') {
@@ -53,6 +56,7 @@ export default function createMockResponse(): ExtendedResponse {
       if (sent) throw new Error('Response already sent')
       sent = true
       resData = data
+      resolveSent()
       return this
     },
 
@@ -68,6 +72,11 @@ export default function createMockResponse(): ExtendedResponse {
     get(header) {
       return headers[header]
     },
+
+    get headersSent() {
+      return sent
+    },
+    sentPromise,
   }
   return new Proxy(implemented, {
     get(target, key) {

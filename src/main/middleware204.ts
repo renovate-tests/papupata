@@ -14,7 +14,6 @@ const middleware204: PapupataMiddleware<any, any> = async (_req, res, _route, ne
     },
   })
   const response = await next()
-
   if (response === undefined) {
     if (!res.headersSent) {
       if (!statusCodeSet) {

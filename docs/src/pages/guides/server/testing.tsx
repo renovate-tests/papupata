@@ -84,23 +84,6 @@ const IndexPage = () => (
               )
             },
             {
-              heading: 'Just testing the implementation',
-              anchor: 'implementation',
-              content: (
-                <>
-                  <p>
-                    For the purpose of unit testing, you'll probably want to test just the implementation of the API. Once implemented, the
-                    actual implementation can be accessed as <FixedFont>api.implementation</FixedFont>. You can call it directly from your
-                    tests, although you might find it inconvenient because you have to supply request and response to the function.
-                  </p>
-                  <Example>{`
-                    const response = await api.implementation(request, response)
-                  `}</Example>
-                  <p>In practice, you'll want a helper of some kind to deal with setting up the objects.</p>
-                </>
-              )
-            },
-            {
               heading: 'Having papupata call the implementation',
               anchor: 'directMakeRequest',
               level: 1,
@@ -122,10 +105,37 @@ const IndexPage = () => (
                     API.configure({
                       ...API.getConfig(),
                       baseURL: '', // the value is not relevant, but must be a string
-                      makeRequest: createAdapter
+                      makeRequest: createAdapter()
                     })
                     const response = await api({id: '1', author: 'Sinead', notifyWatchers: false, name: 'Ulrich'})
                   `}</Example>
+                  <p>The adapters supports a few options that make your life easier:</p>
+                  <ul>
+                    <li>
+                      <FixedFont>createRequest</FixedFont> for setting up the request as you need (with, say, headers, session etc)
+                      <Example>{`
+                        const makeRequest = createAdapter({
+                          createRequest: () => ({ headers: { 'authorization': 'bearer 123'}}) 
+                        })
+                      `}</Example>
+                    </li>
+                    <li>
+                      <FixedFont>assertResponse</FixedFont> for making assertions about the response beyond just the data
+                      <Example>{`
+                        const makeRequest = createAdapter({
+                          assertResponse: res => expect(res.statusCode).toEqual(400) 
+                        })
+                      `}</Example>
+                    </li>
+                    <li>
+                      <FixedFont>withMiddleware</FixedFont>, which enables the use of middleware for the request
+                      <Example>{`
+                        const makeRequest = createAdapter({
+                          withMiddleware: true
+                        })
+                      `}</Example>
+                    </li>
+                  </ul>
                 </>
               )
             },
@@ -141,9 +151,12 @@ const IndexPage = () => (
                     feel free to use the provided function as a template to work on.
                   </p>
                   <Example>{`
-                    import createTestInvoker from 'papupata/dist/testInvoker'
-                    const invoker = createTestInvoker()
+                    import testInvoke from 'papupata/dist/testInvoker'
                     const response = await invoker(api, {id: '1', author: 'Sinead', notifyWatchers: false, name: 'Ulrich'})
+                  `}</Example>
+                  <p>The test invoker supports the same options as invokeImplementationAdapter described above.</p>
+                  <Example>{`
+                    const response = await invoker(api, data, { withMiddleware: true })
                   `}</Example>
                 </>
               )
@@ -169,13 +182,30 @@ const IndexPage = () => (
                   `}</Example>
                   <p>If you are using supertest, you can use adapter specifically made for it instead.</p>
                   <Example>{`
-                    import supertestAdapter from 'papupata/dist/supertestAdapter'
-                    API.configure({
+                    import createSupertestAdapter from 'papupata/dist/supertestAdapter'
+
+                    const supertestRequest = supertest(app) // express app
+                    API.configure({                      
                       ...API.getConfig(),
                       baseURL: '', // The value must be an empty string
-                      makeRequest: supertestAdapter
+                      makeRequest: createSupertestAdapter(supertestRequest)
                     })
                     const response = await api({id: '1', author: 'Sinead', notifyWatchers: false, name: 'Ulrich'})
+                  `}</Example>
+                  <p>If you wish to access the actual supertest request for your assertions, you can instead use supertest invoker.</p>
+                  <Example>{`
+                    import supertestInvoker from 'papupata/dist/supertestInvoker'
+
+                    API.configure({                      
+                      ...API.getConfig(),
+                      baseURL: '', // The value must be an empty string
+                    })
+                    
+                    const supertestRequest = supertest(app) // express app
+                    const data = {id: '1', author: 'Sinead', notifyWatchers: false, name: 'Ulrich'}
+
+                    await invokeSupertest(supertestRequest, api, data)
+                      .expect(200)                    
                   `}</Example>
                 </>
               )

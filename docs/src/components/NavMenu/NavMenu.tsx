@@ -85,7 +85,7 @@ export const guides: NavEntries = {
           'Middleware can be used to change the behaviour of APIs. This guide covers how to use and implement middeware in papupata.'
       },
       '/guides/server/testing': {
-        label: <WIP>Testing</WIP>,
+        label: 'Testing',
         description: 'This guide will help you with testing server code that implements APIs with papupata.'
       }
     }

@@ -1,5 +1,5 @@
 import { NavEntries, NavEntry } from './NavEntries'
-import React, { ReactNode, useState } from 'react'
+import React, { ReactNode, useState, useEffect } from 'react'
 import { StaticQuery, graphql, Link } from 'gatsby'
 
 import { Location } from '@reach/router'
@@ -9,7 +9,7 @@ interface Props {
   entries: NavEntries
 }
 
-type IsCurrentFn = (url: string) => boolean
+type IsCurrentFn = (url: string, considerQuery: boolean) => boolean
 
 const LinkContainer = styled.div``
 export type AltComponentType = React.FC<{
@@ -81,7 +81,14 @@ export default function NewNav({ entries }: Props) {
       render={({ site: { pathPrefix } }: { site: { pathPrefix: string } }) => (
         <Location>
           {({ location }) => (
-            <NewNavList entries={entries} isCurrent={link => [pathPrefix + link, link].includes(location.pathname)} AltComponent={null} />
+            <NewNavList
+              entries={entries}
+              isCurrent={(link, considerQuery) =>
+                [pathPrefix + link, link].includes(location.pathname) ||
+                (considerQuery && [pathPrefix + link, link].includes(location.pathname + location.search))
+              }
+              AltComponent={null}
+            />
           )}
         </Location>
       )}
@@ -113,9 +120,9 @@ interface EntryProps {
 function NewNavEntry({ entry, isCurrent, url, AltComponent }: EntryProps) {
   let label = typeof entry === 'object' && entry && 'label' in entry ? entry.label : entry
   const link = url.startsWith('<') ? (
-    <NonLink current={isCurrent(url) ? 'true' : 'false'}>{label}</NonLink>
+    <NonLink current={isCurrent(url, false) ? 'true' : 'false'}>{label}</NonLink>
   ) : (
-    <NavLink current={isCurrent(url) ? 'true' : 'false'} to={url}>
+    <NavLink current={isCurrent(url, false) ? 'true' : 'false'} to={url}>
       {label}
     </NavLink>
   )
@@ -126,8 +133,12 @@ function NewNavEntry({ entry, isCurrent, url, AltComponent }: EntryProps) {
       </Indent>
     ) : null
 
-  const showChildren = isCurrent(url) || isAChildSelected(entry, isCurrent)
+  const showChildren = isCurrent(url, true) || isAChildSelected(entry, isCurrent)
   const [checked, setChecked] = useState(showChildren)
+
+  useEffect(() => {
+    setChecked(checked => checked || showChildren)
+  }, [showChildren])
 
   const description = typeof entry === 'object' && entry && 'description' in entry ? entry.description : null
   if (AltComponent) {
@@ -166,6 +177,6 @@ function NewNavEntry({ entry, isCurrent, url, AltComponent }: EntryProps) {
 function isAChildSelected(entry: NavEntry, isCurrent: IsCurrentFn): boolean {
   if (typeof entry !== 'object' || !entry || !('children' in entry)) return false
   return Object.entries(entry.children as NavEntries).some(child => {
-    return isCurrent(child[0]) || isAChildSelected(child[1], isCurrent)
+    return isCurrent(child[0], true) || isAChildSelected(child[1], isCurrent)
   })
 }

@@ -1,0 +1,210 @@
+import { APIDeclaration } from '../main'
+import testInvoke from '../main/testInvoker'
+import { AssertResponseFn } from '../main/invokeImplementationAdapter'
+
+describe('testInvoker-test', function() {
+  const API = new APIDeclaration()
+  API.configure({
+    autoImplementAllAPIs: true,
+  })
+  const api = declareAPI()
+
+  const defaultArgs = {
+    bodyValue: 'this is body',
+    query: 'this is query',
+    optionalQuery: 'this is optional query',
+    queryBool: true,
+    queryBool2: false,
+    id: 'theId',
+  }
+
+  const defaultResponse = {
+    body: { bodyValue: defaultArgs.bodyValue },
+    query: {
+      query: defaultArgs.query,
+      optionalQuery: defaultArgs.optionalQuery,
+      queryBool: defaultArgs.queryBool,
+      queryBool2: defaultArgs.queryBool2,
+    },
+    params: {
+      id: defaultArgs.id,
+    },
+  }
+
+  api.implement(({ headers, body, params, query }) => ({
+    headers,
+    body,
+    params,
+    query,
+  }))
+
+  it('works for a basic case', async function() {
+    const resp = await testInvoke(api, defaultArgs)
+    expect(resp).toEqual(defaultResponse)
+  })
+
+  it('allows customizing request', async function() {
+    const resp = await testInvoke(api, defaultArgs, {
+      createRequest: req => ({ ...req, headers: { 'Content-Type': 'application/json' } }),
+    })
+    expect(resp).toEqual({
+      ...defaultResponse,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+  })
+
+  it('does not invoke papupata middleware', async function() {
+    const myAPI = declareAPI()
+    const mock = jest.fn()
+    myAPI.implementWithPapupataMiddleware([mock], () => null as any)
+    await testInvoke(myAPI, defaultArgs)
+    expect(mock).not.toHaveBeenCalled()
+  })
+
+  it('does not invoke express middleware', async function() {
+    const myAPI = declareAPI()
+    const mock = jest.fn()
+    myAPI.implementWithExpressMiddleware([mock], () => null as any)
+    await testInvoke(myAPI, defaultArgs)
+    expect(mock).not.toHaveBeenCalled()
+  })
+
+  it('works with APIs that use res.send', async function() {
+    const myAPI = declareAPI()
+    myAPI.implement((_req, res) => {
+      res.send('this is cool')
+      return undefined as any
+    })
+    const res = await testInvoke(myAPI, defaultArgs)
+    expect(res).toEqual('this is cool')
+  })
+
+  it('res.set is fine', async function() {
+    const myAPI = declareAPI()
+    myAPI.implement((_req, res) => {
+      res.set('x-implemented-by', 'papupata')
+      return {
+        ...defaultResponse,
+        headers: undefined,
+      }
+    })
+    await testInvoke(
+      myAPI,
+      defaultArgs,
+      responseChecker(res => expect(res.get('x-implemented-by')).toEqual('papupata'))
+    )
+  })
+
+  it('res.status is fine', async function() {
+    const myAPI = declareAPI()
+    myAPI.implement((_req, res) => {
+      res.status(400)
+      return {
+        ...defaultResponse,
+        headers: undefined,
+      }
+    })
+    await testInvoke(
+      myAPI,
+      defaultArgs,
+      responseChecker(res => expect(res.statusCode).toEqual(400))
+    )
+  })
+
+  it('works with APIs that use res.end', async function() {
+    const myAPI = declareAPI()
+    myAPI.implement((_req, res) => {
+      res.end('this is cool')
+      return undefined as any
+    })
+    const res = await testInvoke(myAPI, defaultArgs)
+    expect(res).toEqual('this is cool')
+  })
+
+  it('works with APIs that use res.redirect', async function() {
+    const myAPI = declareAPI()
+    myAPI.implement((_req, res) => {
+      res.redirect('https://www.example.com')
+      return undefined as any
+    })
+    await testInvoke(
+      myAPI,
+      defaultArgs,
+      responseChecker(res => expect(res.statusCode).toEqual(301))
+    )
+  })
+
+  it('works with APIs that use res.redirect with explicit code', async function() {
+    const myAPI = declareAPI()
+    myAPI.implement((_req, res) => {
+      res.redirect(309, 'https://www.example.com')
+      return undefined as any
+    })
+    await testInvoke(
+      myAPI,
+      defaultArgs,
+      responseChecker(res => expect(res.statusCode).toEqual(309))
+    )
+  })
+
+  it('res.sendStatus is fine', async function() {
+    const myAPI = declareAPI()
+    myAPI.implement((_req, res) => {
+      res.sendStatus(400)
+      return undefined as any
+    })
+    await testInvoke(
+      myAPI,
+      defaultArgs,
+      responseChecker(res => expect(res.statusCode).toEqual(400))
+    )
+  })
+
+  it('works with APIs that use res.json', async function() {
+    const myAPI = declareAPI()
+    myAPI.implement((_req, res) => {
+      res.json('this is cool')
+      return undefined as any
+    })
+    const res = await testInvoke(myAPI, defaultArgs)
+    expect(res).toEqual('this is cool')
+  })
+
+  it('works with APIs that use res.jsonp', async function() {
+    const myAPI = declareAPI()
+    myAPI.implement((_req, res) => {
+      res.jsonp('this is cool')
+      return undefined as any
+    })
+    const res = await testInvoke(myAPI, defaultArgs)
+    expect(res).toEqual('this is cool')
+  })
+
+  describe('withMiddleware', function() {
+    it.todo('works even if there is no middleware')
+    it.todo('works with express middleware')
+    it.todo('works with inherent papupata middleware')
+    it.todo('works with papupata middleware')
+    it.todo('works with all middleware in the same route')
+    it.todo('is compatible with 204 middleware')
+  })
+
+  function responseChecker(checkFn: AssertResponseFn) {
+    return {
+      assertResponse: checkFn,
+    }
+  }
+
+  function declareAPI() {
+    // since we never have an express server overlapping paths are not an issue
+    return API.declarePostAPI('/test/:id')
+      .params(['id'] as const)
+      .query(['query'] as const)
+      .optionalQuery(['optionalQuery', 'optionalQuery2'] as const)
+      .queryBool(['queryBool', 'queryBool2'] as const)
+      .body<{ bodyValue: string }>()
+      .response<{ headers: any; body: any; params: any; query: any }>()
+  }
+})

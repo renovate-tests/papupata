@@ -3,5 +3,7 @@ node_modules
 *.iml
 dist
 example/node_modules
+.vscode
+
 
 

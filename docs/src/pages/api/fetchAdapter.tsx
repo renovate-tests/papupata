@@ -13,7 +13,7 @@ export default function FetchAdapter() {
           <h1>API Reference</h1>
           <h2>fetchAdapter</h2>
         </Container>
-        <Example>{`import fetchAdapter from 'papupata/dist/fetchAdapter'`}</Example>
+        <Example>{`import fetchAdapter from 'papupata/dist/main/fetchAdapter'`}</Example>
         <Purpose>An adapter that utilizes fetch to invoke APIs</Purpose>
         <ToDo>
           <p>

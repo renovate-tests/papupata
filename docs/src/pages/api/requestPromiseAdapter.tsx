@@ -13,7 +13,7 @@ export default function RequestPromiseAdapter() {
           <h1>API Reference</h1>
           <h2>requestPromiseAdapter</h2>
         </Container>
-        <Example>{`import createRequestAdapter from 'papupata/dist/requestPromiseAdapter'`}</Example>
+        <Example>{`import createRequestAdapter from 'papupata/dist/main/requestPromiseAdapter'`}</Example>
         <Purpose>An adapter that utilizes request-promise to invoke APIs</Purpose>
         <ToDo>
           <p>

@@ -137,7 +137,7 @@ const IndexPage = () => (
                   </p>
                   <p>Simply put, in its current state the adapter is only really suitable for extremely simple use cases.</p>
                   <Example>{`
-                    import fetchAdapter from 'papupata/dist/fetch-adapter'
+                    import fetchAdapter from 'papupata/dist/main/fetch-adapter'
                     API.configure({
                       ...API.getConfig(),
                       makeRequest: fetchAdapter
@@ -158,7 +158,7 @@ const IndexPage = () => (
                     be usable on both node.js and browser environments, supports json and form data as well as non-object bodies.
                   </p>
                   <Example>{`
-                    import createRequestPromiseAdapter from 'papupata/dist/request-promise-adapter'
+                    import createRequestPromiseAdapter from 'papupata/dist/main/request-promise-adapter'
                     API.configure({
                       ...API.getConfig(),
                       makeRequest: createRequestPromiseAdapter('json') // could pass 'form' for form data payloads

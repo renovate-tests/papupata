@@ -116,15 +116,15 @@ export default function NavMenu() {
             '/api/APIDeclaration/unmockAll': <Method>unmockAll</Method>
           }
         },
-        '/api/IncompleteAPIDeclaration': {
-          label: 'IncompleteAPIDeclaration',
+        '/api/PartiallyDeclaredAPI': {
+          label: 'PartiallyDeclaredAPI',
           children: {
-            '/api/IncompleteAPIDeclaration/params': <Method>params</Method>,
-            '/api/IncompleteAPIDeclaration/query': <Method>query</Method>,
-            '/api/IncompleteAPIDeclaration/optionalQuery': <Method>optionalQuery</Method>,
-            '/api/IncompleteAPIDeclaration/queryBool': <Method>queryBool</Method>,
-            '/api/IncompleteAPIDeclaration/body': <Method>body</Method>,
-            '/api/IncompleteAPIDeclaration/response': <Method>response</Method>
+            '/api/PartiallyDeclaredAPI/params': <Method>params</Method>,
+            '/api/PartiallyDeclaredAPI/query': <Method>query</Method>,
+            '/api/PartiallyDeclaredAPI/optionalQuery': <Method>optionalQuery</Method>,
+            '/api/PartiallyDeclaredAPI/queryBool': <Method>queryBool</Method>,
+            '/api/PartiallyDeclaredAPI/body': <Method>body</Method>,
+            '/api/PartiallyDeclaredAPI/response': <Method>response</Method>
           }
         },
         '/api/DeclaredAPI': {
@@ -151,10 +151,15 @@ export default function NavMenu() {
             '/api/DeclaredAPI/RequestType': <Type>RequestType</Type>
           }
         },
+        '/api/convertExpressMiddleware': 'convertExpressMiddleware',
         '/api/skipHandlingRoute': 'skipHandlingRoute',
         '/api/handleUndefinedResponsesMiddleware': 'handleUndefinedResponsesMiddleware',
+        '/api/fetchAdapter': 'fetchAdapter',
         '/api/requestPromiseAdapter': 'requestPromiseAdapter',
-        '/api/fetchAdapter': 'fetchAdapter'
+        '/api/supertestAdapter': 'supertestAdapter',
+        '/api/supertestInvoker': 'supertestInvoker',
+        '/api/invokeImplementationAdapter': 'invokeImplementationAdapter',
+        '/api/testInvoker': 'testInvoker'
       }
     }
   }

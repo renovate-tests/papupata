@@ -32,7 +32,7 @@ export default function IncompleteApiDeclaration() {
             fully declared API which can then be implemented or called.
           </p>
         </Usage>
-        <Members context="IncompleteAPIDeclaration">
+        <Members context="PartiallyDeclaredAPI">
           <MethodMember name="params" dataType={<IncompleteApiDeclarationLink />}>
             Declare URL/path parameters for the API.
           </MethodMember>

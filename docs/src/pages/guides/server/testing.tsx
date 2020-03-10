@@ -101,7 +101,7 @@ const IndexPage = () => (
                     to build your own.
                   </p>
                   <Example>{`
-                    import createAdapter from 'papupata/dist/invokeImplementationAdapter'
+                    import createAdapter from 'papupata/dist/main/invokeImplementationAdapter'
                     API.configure({
                       ...API.getConfig(),
                       baseURL: '', // the value is not relevant, but must be a string
@@ -151,7 +151,7 @@ const IndexPage = () => (
                     feel free to use the provided function as a template to work on.
                   </p>
                   <Example>{`
-                    import testInvoke from 'papupata/dist/testInvoker'
+                    import testInvoke from 'papupata/dist/main/testInvoker'
                     const response = await invoker(api, {id: '1', author: 'Sinead', notifyWatchers: false, name: 'Ulrich'})
                   `}</Example>
                   <p>The test invoker supports the same options as invokeImplementationAdapter described above.</p>
@@ -172,7 +172,7 @@ const IndexPage = () => (
                     adapter or write your own if you use something else.
                   </p>
                   <Example>{`
-                    import createRequestAdapter from 'papupata/dist/requestPromiseAdapter'
+                    import createRequestAdapter from 'papupata/dist/main/requestPromiseAdapter'
                     API.configure({
                       ...API.getConfig(),
                       baseURL: \`http://localhost:\${port}\`
@@ -182,7 +182,7 @@ const IndexPage = () => (
                   `}</Example>
                   <p>If you are using supertest, you can use adapter specifically made for it instead.</p>
                   <Example>{`
-                    import createSupertestAdapter from 'papupata/dist/supertestAdapter'
+                    import createSupertestAdapter from 'papupata/dist/main/supertestAdapter'
 
                     const supertestRequest = supertest(app) // express app
                     API.configure({                      
@@ -194,7 +194,7 @@ const IndexPage = () => (
                   `}</Example>
                   <p>If you wish to access the actual supertest request for your assertions, you can instead use supertest invoker.</p>
                   <Example>{`
-                    import supertestInvoker from 'papupata/dist/supertestInvoker'
+                    import supertestInvoker from 'papupata/dist/main/supertestInvoker'
 
                     API.configure({                      
                       ...API.getConfig(),

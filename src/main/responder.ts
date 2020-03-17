@@ -156,6 +156,7 @@ export function responder<
       call.options = routeOptions
       call.apiDeclaration = parent
       call.method = method
+      call.path = path
       call.apiUrlParameters = {
         params,
         query,
@@ -315,6 +316,7 @@ export function responder<
         method: Method
         apiDeclaration: any
         expressImplementation(req: ExpressRequest, res: Response, next: any): Promise<void>
+        path: string
       }
 
       function applyPathParams(reqParams: ActualTypeMap<StringTupleElementTypes<ParamsType>, string>) {

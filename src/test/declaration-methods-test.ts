@@ -40,6 +40,18 @@ describe('declaration-methods-test', function() {
     await expect404(requestPromise.put(url))
   })
 
+  it('PATCH', async function() {
+    const api = API.declarePatchAPI('/patch').response<string>()
+    api.implement(() => 'Hello, world!')
+
+    const url = api.getURL({})
+    
+    expect(url).toMatch(/http:\/\/localhost:\d+\/patch/)
+    const resp = await requestPromise.patch(url)
+    expect(resp).toBe('Hello, world!')
+    await expect404(requestPromise.put(url))
+  })
+
   it('DELETE', async function() {
     const api = API.declareDeleteAPI('/del').response<string>()
     api.implement(() => 'Hello, world!')

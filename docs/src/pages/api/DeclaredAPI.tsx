@@ -3,7 +3,7 @@ import IndexLayout from '../../layouts'
 import Page from '../../components/Page'
 import Container from '../../components/Container'
 import { Purpose, Usage, Examples, Example } from '../../components/api-components'
-import { MethodMember, Members, ExposedTypeMember } from '../../components/members-table'
+import { MethodMember, Members, ExposedTypeMember, PropertyMember } from '../../components/members-table'
 
 export default function DeclaredAPI() {
   return (
@@ -38,6 +38,33 @@ export default function DeclaredAPI() {
           <MethodMember name="implementWithMiddleware" dataType="void">
             Implement an API, providing additional middleware for it.
           </MethodMember>
+
+          <PropertyMember name="implementation" dataType="Function" availableFrom="1.5.0">
+            The current implementation for the API
+          </PropertyMember>
+
+          <PropertyMember name="implementationMiddleware" dataType="object" availableFrom="1.5.0">
+            Middleware for the current implementation
+          </PropertyMember>
+
+          <PropertyMember name="method" dataType="string" availableFrom="1.5.0">
+            The method of the api
+          </PropertyMember>
+
+          <PropertyMember name="apiDeclaration" dataType="APIDeclaration" availableFrom="1.5.0">
+            The API declaration on which this API was declared.
+          </PropertyMember>
+
+          <PropertyMember name="implementation" dataType="Function" availableFrom="1.5.0">
+            The current implementation for the API
+          </PropertyMember>
+
+          <PropertyMember name="apiUrlParameters" dataType="object" availableFrom="1.5.0" link={true}>
+            Exposes the path and query parameters of the API.
+          </PropertyMember>
+          <PropertyMember name="path" dataType={'string'} availableFrom={'1.5.0'}>
+            The path of the API, with path parameters left as placeholders. If you want a full URL, use the getURL method.
+          </PropertyMember>
           <ExposedTypeMember name="ResponseType">The type of the response.</ExposedTypeMember>
           <ExposedTypeMember name="ServerResponseType">The type of the response as the server returns it.</ExposedTypeMember>
           <ExposedTypeMember name="CallArgsType">The type of the parameter object passed to invoke the API.</ExposedTypeMember>
@@ -49,7 +76,7 @@ export default function DeclaredAPI() {
           <Example label="Using the exposed types">{`
             import { APIDeclaration } from 'papupata'
             const api = new APIDeclaration()
-            const myAPI = api.declarePostAPI('/do-stuff/:pathParam')              
+            const myAPI = api.declarePostAPI('/do-stuff/:pathParam')
               .response<string>()
 
             type RespType = typeof myAPI['ResponseType']

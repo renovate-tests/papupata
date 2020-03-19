@@ -13,7 +13,7 @@ export default function Implementation() {
           <h3>property implementation</h3>
         </Container>
         <Purpose>
-          Contains the latest implementation for the API. This exists primarily to help with testing the API implemetations by providing direct access to them.
+          Contains the latest implementation for the API. This exists primarily to help with testing the API implementations by providing direct access to them.
         </Purpose>
         <Examples>
           <Example>

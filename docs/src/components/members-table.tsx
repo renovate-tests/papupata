@@ -77,18 +77,19 @@ export const MethodMember: React.FC<{ name: string; dataType: any; required?: an
   )
 }
 
-export const PropertyMember: React.FC<{ name: string; dataType: any; required?: any; availableFrom?: string }> = ({
+export const PropertyMember: React.FC<{ name: string; dataType: any; required?: any; availableFrom?: string; link?: boolean }> = ({
   children,
   name,
   dataType,
   required,
-  availableFrom
+  availableFrom,
+  link
 }) => {
   const includeAvailableFrom = React.useContext(IncludeAvailableFromContext)
 
   return (
     <Row>
-      <NameColumnBase>{name}</NameColumnBase>
+      {link ? <NameColumn name={name}>{name}</NameColumn> : <NameColumnBase>{name}</NameColumnBase>}
       <TypeColumn>property</TypeColumn>
       <DataTypeColumn>{dataType}</DataTypeColumn>
       <DescriptionColumn>{children}</DescriptionColumn>

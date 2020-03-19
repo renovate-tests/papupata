@@ -3,34 +3,37 @@ import Page from '../../../components/Page'
 import Container from '../../../components/Container'
 import { Purpose, Usage, Parameter, Parameters, MethodReturnType, Examples, Example, Caveats } from '../../../components/api-components'
 import { IncompleteApiDeclarationLink } from '../../../components/links'
+import { MightChange } from '../../../components/MightChange'
 
-export default function Body() {
+export default function QueryBool() {
   return (
     <IndexLayout>
       <Page>
         <Container>
           <h1>API Reference</h1>
           <h2>class IncompleteAPIDeclaration</h2>
-          <h3>method body</h3>
+          <h3>method queryBool</h3>
         </Container>
-        <Purpose>Declares body type for an API.</Purpose>
+        <MightChange />
+        <Purpose>Declares boolean query parameters for an API</Purpose>
         <Usage>
-          <p>Path params and query parameters must be defined before query.</p>
+          <p>Path params and other query parameters may be defined before query.</p>
         </Usage>
         <Parameters>
-          <Parameter name="<BodyType>" dataType="Interface">
-            The body type is declared as a type parameter.
+          <Parameter name="booleanQueryParams" dataType="Const string array">
+            <p>Names of the query parameters. See the example below for the recommended way to set up the const string array.</p>
+            <p>
+              At typescript level a regular string array is not treated as an error at declaration time, but using is NOT correct.
+              Unfortunately we have not come up with a way to prevent this kind of usage.
+            </p>
           </Parameter>
         </Parameters>
         <MethodReturnType>
           <IncompleteApiDeclarationLink />
         </MethodReturnType>
         <Caveats>
-          <ul>
-            <li>At this time the body, if used, must always be an object. This will be changed eventually.</li>
-            <li>There is no validation for the shape of the body on the server</li>
-            <li>This option is presented for methods without body, even if it is does nothing useful in those cases.</li>
-          </ul>
+          This feature is intented mainly to be used for papupata-to-papupata communications. The string "true" stands for true values on
+          the server, all other values stand for false.
         </Caveats>
         <Examples>
           <Example label="Declaration">
@@ -38,20 +41,21 @@ export default function Body() {
             import { APIDeclaration } from 'papupata'
             const api = new APIDeclaration()
             const myAPI = api.declarePostAPI('/do-stuff')
-              .body<{value: number}>()
+              .queryBool(['query1', 'query2'] as const)
               .response<string>()
           `}
           </Example>
           <Example label="Usage in invocation">
             {`
-            await myAPI({value: 123})
+            await myAPI({query1: true, query2: false})
+            // Invokes URL /do-stuff?query1=true&query2=false
           `}
           </Example>
           <Example label="Usage in implementation">
             {`
-            await myAPI.implement(req => {
-              const {value} = req.body
-              return value.toString() // 123 in the example
+            myAPI.implement(req => {
+              const {query1, query2} = req.query
+              return query1 + query2 // would return truefalse in the example. They come in as booleans, not strings.
             })            
           `}
           </Example>

@@ -50,7 +50,7 @@ export default function Params() {
           </Example>
           <Example label="Usage in implementation">
             {`
-            await myAPI.implement(req => {
+            myAPI.implement(req => {
               const {param1, param1} = req.params
               return param1 + param1 // would return abcdef in the example
             })            

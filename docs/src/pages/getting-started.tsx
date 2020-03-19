@@ -4,7 +4,7 @@ import Page from '../components/Page'
 import Container from '../components/Container'
 import IndexLayout from '../layouts'
 import { Code } from '../components/Code'
-import { ToDo } from '../components/ToDo'
+import { Link } from 'gatsby'
 
 const IndexPage = () => (
   <IndexLayout>
@@ -34,10 +34,13 @@ const IndexPage = () => (
           <li>Configuring papupata on the browser</li>
           <li>Making the API calls</li>
         </ul>
-        <ToDo>
-          Basic instructions are yet to be done. See <a href="https://github.com/BaronaGroup/papupata/tree/master/example">example app</a>{' '}
-          and API reference for how all of this can be done.
-        </ToDo>
+        <p>
+          Take a look at the <Link to="/guides">guides</Link> to help you along this journey.
+        </p>
+        <p>
+          Or if you prefer, you can look at the <a href="https://github.com/BaronaGroup/papupata/tree/master/example">example app</a> and
+          API reference for how all of this can be done.
+        </p>
       </Container>
     </Page>
   </IndexLayout>

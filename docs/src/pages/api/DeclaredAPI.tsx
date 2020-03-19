@@ -62,6 +62,9 @@ export default function DeclaredAPI() {
           <PropertyMember name="apiUrlParameters" dataType="object" availableFrom="1.5.0" link={true}>
             Exposes the path and query parameters of the API.
           </PropertyMember>
+          <PropertyMember name="path" dataType={'string'} availableFrom={'1.5.0'}>
+            The path of the API, with path parameters left as placeholders. If you want a full URL, use the getURL method.
+          </PropertyMember>
           <ExposedTypeMember name="ResponseType">The type of the response.</ExposedTypeMember>
           <ExposedTypeMember name="ServerResponseType">The type of the response as the server returns it.</ExposedTypeMember>
           <ExposedTypeMember name="CallArgsType">The type of the parameter object passed to invoke the API.</ExposedTypeMember>
@@ -73,7 +76,7 @@ export default function DeclaredAPI() {
           <Example label="Using the exposed types">{`
             import { APIDeclaration } from 'papupata'
             const api = new APIDeclaration()
-            const myAPI = api.declarePostAPI('/do-stuff/:pathParam')              
+            const myAPI = api.declarePostAPI('/do-stuff/:pathParam')
               .response<string>()
 
             type RespType = typeof myAPI['ResponseType']

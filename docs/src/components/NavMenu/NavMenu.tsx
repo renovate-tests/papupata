@@ -144,6 +144,7 @@ export default function NavMenu() {
             '/api/DeclaredAPI/method': <Property>method</Property>,
             '/api/DeclaredAPI/apiDeclaration': <Property>apiDeclaration</Property>,
             '/api/DeclaredAPI/apiUrlParameters': <Property>apiUrlParameters</Property>,
+            '/api/DeclaredAPI/path': <Property>path</Property>,
             '/api/DeclaredAPI/ResponseType': <Type>ResponseType</Type>,
             '/api/DeclaredAPI/ServerResponseType': <Type>ServerResponseType</Type>,
             '/api/DeclaredAPI/BodyType': <Type>BodyType</Type>,

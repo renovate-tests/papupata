@@ -209,10 +209,6 @@ export function responder<
           for (const bq of boolQuery) {
             req.query[bq] = req.query[bq] === 'true'
           }
-          async function getImplVal() {
-            const unmappedValue = await impl(req as any, res)
-            return mapper ? await mapper(unmappedValue) : unmappedValue
-          }
           const value = await runHandlerChain(
             [
               ...(parent.getConfig()?.inherentMiddleware || []),
@@ -231,6 +227,11 @@ export function responder<
           }
         } catch (err) {
           next(err)
+        }
+
+        async function getImplVal() {
+          const unmappedValue = await impl(req as any, res)
+          return mapper ? await mapper(unmappedValue) : unmappedValue
         }
       }
 

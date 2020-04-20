@@ -1,3 +1,6 @@
+  1.6.0
+- Typescript build now targets ES5; it still expected promises at least to be available, so on es5 targets polyfilling will be needed.
+  
   1.5.0
 - TODO: document and test express middleware converter, add path and CallBodyType
 - Added support for papupata middleware for individual routes

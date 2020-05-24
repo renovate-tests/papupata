@@ -1,14 +1,23 @@
-import { ActualOptionalTypeMap, ActualTypeMap, Method, StringTupleElementTypes } from './types'
-import { IAPIDeclaration, TypedRequest, skipHandlingRoute } from './index'
-import { RequestHandler, Request as ExpressRequest, Response, Application, Router } from 'express'
-import pick from 'lodash/pick'
+import { Application, Request as ExpressRequest, RequestHandler, Response, Router } from 'express'
 import fromPairs from 'lodash/fromPairs'
 import omit from 'lodash/omit'
+import pick from 'lodash/pick'
 import qs from 'qs'
+import { IAPIDeclaration, skipHandlingRoute } from './index'
+import {
+  CallArgParam,
+  CallArgs,
+  CallArgsWithoutBody,
+  DeclaredAPI,
+  ImplFn,
+  MiddlewareContainer,
+  Mock,
+  MockOptions,
+} from './responderTypes'
+import runExpressMiddleware from './runExpressMiddleware'
+import { ActualOptionalTypeMap, ActualTypeMap, Method, StringTupleElementTypes } from './types'
 import { paramMatchers } from './utils/paramMatchers'
 import { runHandlerChain } from './utils/runHandlerChain'
-import runExpressMiddleware from './runExpressMiddleware'
-import { PapupataMiddleware } from './config'
 
 export function responder<
   ParamsType extends readonly string[],
@@ -32,49 +41,57 @@ export function responder<
   parent: IAPIDeclaration<RequestType, RouteOptions, RequestOptions>,
   routeOptions: RouteOptions
 ) {
-  type CallArgsWithoutBody = ActualTypeMap<StringTupleElementTypes<ParamsType>, string> &
+  /*type CallArgsWithoutBody = ActualTypeMap<StringTupleElementTypes<ParamsType>, string> &
     ActualTypeMap<StringTupleElementTypes<QueryType>, string> &
     ActualOptionalTypeMap<StringTupleElementTypes<OptionalQueryType>, string> &
-    ActualTypeMap<StringTupleElementTypes<BoolQueryType>, boolean>
-  type CallArgs = BodyInputType & CallArgsWithoutBody
+    ActualTypeMap<StringTupleElementTypes<BoolQueryType>, boolean>*/
+  //type CallArgs = BodyInputType & CallArgsWithoutBody
 
-  type CallArgParam = {} extends CallArgs
+  /*type CallArgParam = {} extends CallArgs
     ? [] | [CallArgs] | [CallArgs, RequestOptions]
     :
         | [CallArgs]
         | [CallArgs, RequestOptions]
         | [BodyInputType, CallArgsWithoutBody]
-        | [BodyInputType, CallArgsWithoutBody, RequestOptions]
+        | [BodyInputType, CallArgsWithoutBody, RequestOptions]*/
 
   return {
     response<ResponseType, ResponseTypeOnServer = ResponseType>(
       mapper?: (payload: ResponseTypeOnServer) => ResponseType | Promise<ResponseType>
-    ) {
-      type ActualRequestType = TypedRequest<
-        RequestType,
-        ActualTypeMap<StringTupleElementTypes<ParamsType>, string>,
-        ActualTypeMap<StringTupleElementTypes<QueryType>, string> &
-          ActualOptionalTypeMap<StringTupleElementTypes<OptionalQueryType>, string> &
-          ActualTypeMap<StringTupleElementTypes<BoolQueryType>, boolean>,
-        BodyType
-      >
-      type ImplFn = (req: ActualRequestType, res: Response) => Promise<ResponseTypeOnServer> | ResponseTypeOnServer
+    ): DeclaredAPI<
+      ParamsType,
+      QueryType,
+      OptionalQueryType,
+      BoolQueryType,
+      BodyType,
+      BodyInputType,
+      RequestOptions,
+      RequestType,
+      ResponseType,
+      ResponseTypeOnServer,
+      RouteOptions
+    > {
+      type MyMock = Mock<CallArgs<ParamsType, QueryType, OptionalQueryType, BoolQueryType, BodyInputType>, ResponseType>
 
-      type MockFn = (args: CallArgs, body?: BodyType) => ResponseType | Promise<ResponseType>
-      type Mock = ResponseType | ((args: CallArgs) => ResponseType | Promise<ResponseType>)
-      type MiddlewareContainer = {
-        express?: RequestHandler[]
-        papupata?: Array<PapupataMiddleware<RequestType, RouteOptions>>
-      }
+      type MockFn = (
+        args: CallArgs<ParamsType, QueryType, OptionalQueryType, BoolQueryType, BodyInputType>,
+        body?: BodyType
+      ) => ResponseType | Promise<ResponseType>
 
-      interface ActiveMock {
+      interface ActiveMock extends MockOptions {
         mockFn: MockFn
-        includeBodySeparately?: boolean
       }
 
       let mockImpl: ActiveMock | null = null
 
-      function call(...argsArr: CallArgParam): Promise<ResponseType> {
+      function call(
+        ...argsArr: CallArgParam<
+          CallArgs<ParamsType, QueryType, OptionalQueryType, BoolQueryType, BodyInputType>,
+          BodyInputType,
+          CallArgsWithoutBody<ParamsType, QueryType, OptionalQueryType, BoolQueryType>,
+          RequestOptions
+        >
+      ): Promise<ResponseType> {
         const separateBody =
           typeof argsArr[0] !== 'object' ||
           argsArr.length > 2 ||
@@ -89,7 +106,7 @@ export function responder<
           reqQuery = {
             ...pick(args, query),
             ...pick(args, optionalQuery),
-            ...fromPairs(boolQuery.map(key => [key, (!!(args as any)[key]).toString()])),
+            ...fromPairs(boolQuery.map((key) => [key, (!!(args as any)[key]).toString()])),
           },
           reqBody = separateBody ? argsArr[0] : omit(args, [...params, ...query, ...boolQuery, ...optionalQuery])
 
@@ -121,24 +138,24 @@ export function responder<
       function isValidAsNonBodyRequestData(obj: any) {
         if (typeof obj !== 'object') return false
         const validKeys = [...query, ...optionalQuery, ...boolQuery, ...params]
-        return Object.keys(obj).every(key => validKeys.includes(key))
+        return Object.keys(obj).every((key) => validKeys.includes(key))
       }
 
       function unmock() {
         mockImpl = null
       }
 
-      function mock(mockFnOrValue: Mock, options: Omit<ActiveMock, 'mockFn'> = {}) {
+      function mock(mockFnOrValue: MyMock, options: MockOptions = {}) {
         mockImpl = {
           ...options,
           mockFn: typeof mockFnOrValue === 'function' ? (mockFnOrValue as any) : () => mockFnOrValue,
         }
       }
 
-      function mockOnce(mockFnOrValue: Mock, options: Omit<ActiveMock, 'mockFn'> = {}) {
+      function mockOnce(mockFnOrValue: MyMock, options: MockOptions = {}) {
         mockImpl = {
           ...options,
-          mockFn: args => {
+          mockFn: (args) => {
             unmock()
             return typeof mockFnOrValue === 'function' ? (mockFnOrValue as any)(args) : mockFnOrValue
           },
@@ -163,8 +180,9 @@ export function responder<
         optionalQuery,
         boolQuery,
       }
+      type MyMiddlewareContainer = MiddlewareContainer<RequestType, RouteOptions>
       call.implementation = undefined as any
-      call.implementationMiddleware = {} as MiddlewareContainer
+      call.implementationMiddleware = {} as MyMiddlewareContainer
       call.expressImplementation = expressImplementation
 
       let expressHost: undefined | Application | Router
@@ -173,13 +191,23 @@ export function responder<
         implement(null)
       }
 
-      function implement(impl: ImplFn | null) {
+      type MyImplFn = ImplFn<
+        RequestType,
+        ParamsType,
+        QueryType,
+        OptionalQueryType,
+        BoolQueryType,
+        BodyType,
+        ResponseTypeOnServer
+      >
+
+      function implement(impl: MyImplFn | null) {
         return implementWithMiddleware({}, impl)
       }
 
       function implementWithPapupataMiddleware(
-        middleware: NonNullable<MiddlewareContainer['papupata']>,
-        impl: ImplFn | null
+        middleware: NonNullable<MyMiddlewareContainer['papupata']>,
+        impl: MyImplFn | null
       ) {
         return implementWithMiddleware({ papupata: middleware }, impl)
       }
@@ -235,7 +263,7 @@ export function responder<
         }
       }
 
-      function implementWithMiddleware(middleware: RequestHandler[] | MiddlewareContainer, impl: ImplFn | null) {
+      function implementWithMiddleware(middleware: RequestHandler[] | MyMiddlewareContainer, impl: MyImplFn | null) {
         call.implementation = impl
         call.implementationMiddleware = Array.isArray(middleware) ? { express: middleware } : middleware
         const config = parent.getConfig()
@@ -273,53 +301,13 @@ export function responder<
 
       parent.__apis.push(call)
 
-      // Typescript is fine without this explicit typing here, but idea's autocomplete does not work without it
-      return call as {
-        (...argsArr: CallArgParam): Promise<ResponseType>
-        implement: (impl: ImplFn | null) => void
-        implementation?: ImplFn
-        implementationMiddleware?: MiddlewareContainer
-        /** @deprecated */
-        implementWithMiddleware: (
-          middleware:
-            | RequestHandler[]
-            | { express: RequestHandler[]; papupata?: Array<PapupataMiddleware<RequestType, RouteOptions>> },
-          impl: ImplFn
-        ) => void
-        implementWithExpressMiddleware: (middleware: RequestHandler[], impl: ImplFn) => void
-        implementWithPapupataMiddleware: (
-          middleware: Array<PapupataMiddleware<RequestType, RouteOptions>>,
-          impl: ImplFn
-        ) => void
-        getURL: (
-          pathParams:
-            | ActualTypeMap<StringTupleElementTypes<ParamsType>, string>
-            | (ActualTypeMap<StringTupleElementTypes<ParamsType>, string> &
-                ActualTypeMap<StringTupleElementTypes<QueryType>, string> &
-                ActualOptionalTypeMap<StringTupleElementTypes<OptionalQueryType>, string> &
-                ActualTypeMap<StringTupleElementTypes<BoolQueryType>, boolean>)
-        ) => string
-        ResponseType: ResponseType
-        ServerResponseType: ResponseTypeOnServer
-        BodyType: BodyType
-        CallArgsType: CallArgs
-        RequestType: ActualRequestType
-        mockOnce: (fn: Mock) => void
-        mock: (fn: Mock) => void
-        unmock: () => void
-        options?: RouteOptions
-        apiUrlParameters: {
-          params: ParamsType
-          query: QueryType
-          optionalQuery: OptionalQueryType
-          boolQuery: BoolQueryType
-        }
-        method: Method
-        apiDeclaration: any
-        expressImplementation(req: ExpressRequest, res: Response, next: any): Promise<void>
-        path: string
-      }
+      call.BodyType = null as any
+      call.RequestType = null as any
+      call.ResponseType = null as any
+      call.ServerResponseType = null as any
+      call.CallArgsType = null as any
 
+      return call
       function applyPathParams(reqParams: ActualTypeMap<StringTupleElementTypes<ParamsType>, string>) {
         const pathWithParams = paramMatchers(params).reduce((currPath, { matcher, name }) => {
           return currPath.replace(matcher, (_, before, after) => {

@@ -1,13 +1,14 @@
 import { Method } from './types'
 import { responder } from './responder'
 import { IAPIDeclaration } from './index'
+import { PartiallyDeclaredAPIAtEndpoint } from './partiallyDeclaredTypes'
 
 export function declareAPI<RequestType, RouteOptions, RequestOptions>(
   parent: IAPIDeclaration<RequestType, RouteOptions, RequestOptions>,
   method: Method,
   path: string,
   routeOptions?: RouteOptions
-) {
+): PartiallyDeclaredAPIAtEndpoint<RequestOptions, RequestType, RouteOptions> {
   function params() {
     return <PT extends readonly string[]>(params: PT) => {
       const q = query(params)

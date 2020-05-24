@@ -3,12 +3,8 @@ node_js:
   - '10'
 
 before_script:
-  - npm run build
-  - cd docs
-  - npm i
-  - cd ..
+  - npx lerna bootstrap --hoist
+  - npx lerna run build
 
 script:
-  - npm test
-  - cd docs
-  - npm run build
+  - npx lerna run test

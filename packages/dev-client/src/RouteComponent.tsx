@@ -54,20 +54,20 @@ function getComponentsFor(route: string) {
         }
       }
     },
-    { locked: false, components: [] }
+    { locked: false, components: routeChain[routeChain.length - 1].selfComponents || [] }
   ).components
 }
 
 function getRouteChain(to: string) {
-  return getRouteChainFrom(routes, to)
+  return getRouteChainFrom('', routes, to)
 }
 
-function getRouteChainFrom(startPoint: Route[], to: string): Route[] | null {
+function getRouteChainFrom(prefix: string, startPoint: Route[], to: string): Route[] | null {
   for (const route of startPoint) {
-    if (route.name === to) {
+    if (prefix + route.name === to) {
       return [route]
     } else if (route.children) {
-      const child = getRouteChainFrom(route.children, to)
+      const child = getRouteChainFrom(prefix + route.name + '.', route.children, to)
       if (child) return [route, ...child]
     }
   }

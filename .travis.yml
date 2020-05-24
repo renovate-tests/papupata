@@ -3,7 +3,7 @@ node_js:
   - '10'
 
 before_script:
-  - npx lerna bootstrap --hoist
+  - npx lerna bootstrap
   - npx lerna run build
 
 script:

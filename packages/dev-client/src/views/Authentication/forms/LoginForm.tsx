@@ -25,7 +25,7 @@ export default function LoginForm({ retryAuth }: Props) {
         }
       })
     },
-    [retryAuth]
+    [retryAuth, createLatest, login]
   )
 
   return <UsernamePasswordForm onSubmit={handleSubmit} />

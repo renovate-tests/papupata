@@ -13,7 +13,10 @@ export default function AuthenticationVerifier({ children }: { children: ReactNo
 
   const AuthComponent = authenticationStatus === AuthenticationStatus.PENDING ? Loading : AuthForm
 
-  const components = useMemo(() => [TopLayout, () => <AuthComponent retryAuth={handleRetry} />], [AuthComponent])
+  const components = useMemo(() => {
+    const Component = AuthComponent
+    return [TopLayout, () => <Component retryAuth={handleRetry} />]
+  }, [AuthComponent, handleRetry])
 
   if (authenticationStatus === AuthenticationStatus.AUTHENTICATED) {
     return <>{children}</>

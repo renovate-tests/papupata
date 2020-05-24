@@ -1,7 +1,8 @@
+import React, { createRef, useCallback, useState } from 'react'
 import { PageHeader } from '../../../commonStyles'
-import React, { useState, useCallback, createRef, useEffect } from 'react'
-import { form } from './common'
 import { mutateStore } from '../../../utils/store'
+import useAutoFocusInput from '../../../utils/useAutoFocusInput'
+import { form } from './common'
 
 interface Props {
   retryAuth(): void
@@ -26,9 +27,7 @@ export default function TokenInputForm({ retryAuth }: Props) {
 
   const inputRef = createRef<HTMLInputElement>()
 
-  useEffect(() => {
-    inputRef.current?.focus()
-  }, [!!inputRef.current])
+  useAutoFocusInput(inputRef)
 
   return (
     <>

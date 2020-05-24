@@ -1,5 +1,6 @@
-import React, { useCallback, useState, useEffect, createRef } from 'react'
+import React, { createRef, useCallback, useState } from 'react'
 import { PageHeader } from '../../../commonStyles'
+import useAutoFocusInput from '../../../utils/useAutoFocusInput'
 import { form } from './common'
 
 interface Props {
@@ -14,14 +15,14 @@ export default function UsernamePasswordForm({ onSubmit }: Props) {
   const updatePassword = useCallback((e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value), [])
 
   const usernameRef = createRef<HTMLInputElement>()
-  useEffect(() => usernameRef.current?.focus(), [!!usernameRef.current])
+  useAutoFocusInput(usernameRef)
 
   const handleSubmit = useCallback(
     (e: React.FormEvent) => {
       e.preventDefault()
       onSubmit(username, password)
     },
-    [username, password]
+    [username, password, onSubmit]
   )
 
   return (

@@ -1,8 +1,8 @@
-import React, { useContext, ReactNode, ReactElement } from 'react'
-import { apiContext } from '../../apiContext'
-import NavAPI from './NavAPI'
-import { APISet } from '../../typedAPI'
+import React, { useContext } from 'react'
 import styled from 'styled-components'
+import { apiContext } from '../../apiContext'
+import { APISet } from '../../typedAPI'
+import NavAPI from './NavAPI'
 
 export default function APINav() {
   const apis = useContext(apiContext)
@@ -35,12 +35,12 @@ export function APINavLevel({ apis, prefix }: Props) {
           if (handled.has(innerPrefix.join('.'))) return null
           handled.add(innerPrefix.join('.'))
           return (
-            <>
+            <React.Fragment key={innerPrefix.join('.')}>
               <div>{innerPrefix[innerPrefix.length - 1]}</div>
               <Indent>
                 <APINavLevel apis={apis} prefix={innerPrefix} />
               </Indent>
-            </>
+            </React.Fragment>
           )
         }
         return null

@@ -24,7 +24,7 @@ export default function useAuthenticationStatus(retryKey?: number): Authenticati
         setStatus(authenticated ? AuthenticationStatus.AUTHENTICATED : AuthenticationStatus.LOGIN_NEEDED)
       })
     }
-  }, [config, retryKey])
+  }, [config, retryKey, setLatest])
 
   return status
 }

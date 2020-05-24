@@ -40,7 +40,7 @@ export default function SlowDeleteButton({ onClick }: Props) {
     return () => {
       if (timer) clearTimeout(timer)
     }
-  }, [held])
+  }, [held, onClick])
 
   return (
     <Button onMouseDown={() => setHeld(true)} onMouseUp={() => setHeld(false)}>

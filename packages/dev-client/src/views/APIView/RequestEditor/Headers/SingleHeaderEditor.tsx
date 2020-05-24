@@ -26,7 +26,7 @@ export default function SingleHeaderEditor({ header, index, onUpdateHeader, onRe
 
   const handleRemoveHeader = useCallback(() => {
     onRemoveHeader?.(index)
-  }, [onRemoveHeader])
+  }, [onRemoveHeader, index])
 
   return (
     <div>

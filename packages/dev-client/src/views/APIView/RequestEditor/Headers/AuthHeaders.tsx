@@ -1,8 +1,8 @@
-import React, { useContext, useState, useCallback } from 'react'
+import React, { useCallback } from 'react'
 import { useConfig } from '../../../../config'
 import getAuthHeaders from '../../../../utils/getAuthHeaders'
-import SingleHeaderEditor from './SingleHeaderEditor'
 import { useLiveEdit } from '../LiveEditContext'
+import SingleHeaderEditor from './SingleHeaderEditor'
 
 export default function AuthHeader() {
   const authHeaderEditor = useLiveEdit(['request', 'sendAuthHeader'])
@@ -15,9 +15,12 @@ export default function AuthHeader() {
     internalId: name,
   }))
 
-  const updateChecked = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    authHeaderEditor.setValue(e.target.checked)
-  }, [])
+  const updateChecked = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      authHeaderEditor.setValue(e.target.checked)
+    },
+    [authHeaderEditor]
+  )
 
   if (!asRequestHeaders.length) return null
   return (

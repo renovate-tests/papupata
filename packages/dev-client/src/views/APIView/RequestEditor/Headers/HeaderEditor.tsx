@@ -16,8 +16,8 @@ export interface StoredHeader {
 
 export default function HeaderEditor() {
   const headerEdit = useLiveEdit<StoredHeader[]>(['request', 'headers'])
-  const headers = headerEdit.value
-  const nonEmptyHeaders = (headers || []).filter((h) => h.name !== '' || h.value !== '')
+  const headers = headerEdit.value || []
+  const nonEmptyHeaders = headers.filter((h) => h.name !== '' || h.value !== '')
   const possiblyEmptyHeader = headers[headers.length - 1]
   const emptyHeader =
     possiblyEmptyHeader && possiblyEmptyHeader.name === '' && possiblyEmptyHeader.value === '' && possiblyEmptyHeader

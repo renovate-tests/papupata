@@ -5,6 +5,7 @@ import RouteComponent, { RouteComponentRootProvider } from './RouteComponent'
 import { createGlobalStyle } from 'styled-components'
 import { DefaultConfigProvider } from './config'
 import AuthenticationVerifier from './views/Authentication/AuthenticationVerifier'
+import { APIProvider } from './apiContext'
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -17,10 +18,12 @@ function App() {
     <RouterProvider router={router}>
       <RouteComponentRootProvider>
         <DefaultConfigProvider>
-          <GlobalStyle />
-          <AuthenticationVerifier>
-            <RouteComponent />
-          </AuthenticationVerifier>
+          <APIProvider>
+            <GlobalStyle />
+            <AuthenticationVerifier>
+              <RouteComponent />
+            </AuthenticationVerifier>
+          </APIProvider>
         </DefaultConfigProvider>
       </RouteComponentRootProvider>
     </RouterProvider>

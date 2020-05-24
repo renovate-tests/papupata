@@ -5,8 +5,13 @@ import { Route } from './routes'
 
 export const routeComponentContext = createContext<RouteComponentImpl[]>([])
 
-export default function RouteComponent() {
-  const [Component, ...rest] = useContext(routeComponentContext)
+interface Props {
+  skip?: number
+}
+
+export default function RouteComponent({ skip }: Props) {
+  const ctx = useContext(routeComponentContext)
+  const [Component, ...rest] = ctx.slice(skip || 0)
   const route = useRoute()
   const props = route.route?.params || {}
 

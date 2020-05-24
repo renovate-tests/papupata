@@ -1,6 +1,9 @@
 import { ReactNode } from 'react'
 import TopLayout from './layouts/TopLayout'
 import APIListView from './views/APIListView'
+import NavBarLayout from './layouts/NavBarLayout'
+import APINav from './views/APIView/APINav'
+import APIView from './views/APIView/APIView'
 
 export type RouteComponentImpl = (params: any) => ReactNode
 
@@ -19,7 +22,7 @@ const routes: Route[] = [
   {
     name: 'viewAPI',
     path: '/api/:apiName',
-    setComponents: [],
+    setComponents: [TopLayout, NavBarLayout, APINav, APIView],
     children: [
       {
         name: 'overview',

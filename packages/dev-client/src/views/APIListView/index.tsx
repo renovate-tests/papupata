@@ -1,12 +1,17 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { PageHeader } from '../../commonStyles'
+import { apiContext } from '../../apiContext'
+import ListedAPI from './ListedAPI'
 
 export default function APIListView() {
+  const apis = useContext(apiContext)
   return (
     <>
       {' '}
       <PageHeader>List of APIs</PageHeader>
-      <p>This, then implemented, will contain a list of all available APIs.</p>
+      {apis.map((api) => (
+        <ListedAPI key={api.name} api={api} />
+      ))}
     </>
   )
 }

@@ -2,6 +2,7 @@ import React, { useMemo } from 'react'
 import { LiveEditProvider } from './LiveEditContext'
 import ParamAndQueryEditor from './ParamAndQueryEditor'
 import { useAPI } from '../useAPI'
+import HeaderEditor from './Headers/HeaderEditor'
 
 export default function RequestEditor() {
   const api = useAPI()
@@ -11,6 +12,7 @@ export default function RequestEditor() {
   return (
     <LiveEditProvider path={path}>
       <ParamAndQueryEditor />
+      <HeaderEditor />
     </LiveEditProvider>
   )
 }

@@ -6,7 +6,10 @@ const base64Encode = btoa
 export default function getAuthHeaders(config: Config): any {
   const tokenDelivery = config.authentication?.tokenDeliveryMechanism
 
-  if (!tokenDelivery || tokenDelivery === 'cookie') return {}
+  if (!tokenDelivery || tokenDelivery === 'cookie')
+    return {
+      Authorization: 'Bearer 123',
+    }
   if (tokenDelivery === 'bearerAuth') {
     return {
       Authorization: 'Bearer ' + getStore().authentication?.token,
@@ -23,5 +26,5 @@ export default function getAuthHeaders(config: Config): any {
       [tokenDelivery.headerName]: getStore().authentication?.token,
     }
   }
-  throw new Error('Token delivery mehcanism not supported')
+  throw new Error('Token delivery mechanism not supported')
 }

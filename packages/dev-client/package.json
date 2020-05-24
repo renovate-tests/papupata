@@ -11,6 +11,7 @@
     "@types/react": "^16.9.35",
     "@types/react-dom": "^16.9.8",
     "@types/styled-components": "^5.1.0",
+    "immer": "^6.0.8",
     "lodash": "^4.17.15",
     "papupata": "^1.6.0",
     "react": "^16.13.1",
@@ -20,7 +21,8 @@
     "router5": "^8.0.1",
     "router5-plugin-browser": "^8.0.1",
     "styled-components": "^5.1.0",
-    "typescript": "^3.7.5"
+    "typescript": "^3.7.5",
+    "uuid": "^8.1.0"
   },
   "scripts": {
     "start": "SKIP_PREFLIGHT_CHECK=true react-scripts start",
@@ -44,6 +46,7 @@
     ]
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.152"
+    "@types/lodash": "^4.14.152",
+    "@types/uuid": "^8.0.0"
   }
 }

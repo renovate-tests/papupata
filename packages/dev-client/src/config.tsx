@@ -28,6 +28,7 @@ type AuthenticationVariants = null | {
 
 export interface Config {
   authentication: AuthenticationVariants
+  suggestedHeaders?: Array<{ name: string; value: string }>
 }
 
 const configContext = createContext<Config>(null as any)

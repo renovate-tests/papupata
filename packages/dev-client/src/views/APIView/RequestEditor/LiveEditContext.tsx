@@ -23,12 +23,12 @@ export function LiveEditProvider({ children, path }: ProviderProps) {
   return <liveEditContext.Provider value={{ version, incrementVersion, path }}>{children}</liveEditContext.Provider>
 }
 
-export function useLiveEdit(childPath: string[]) {
+export function useLiveEdit<ValueType = any>(childPath: string[]) {
   const lec = useContext(liveEditContext)
 
   return useMemo(() => {
-    const value = get(getStore(), [...lec.path, ...childPath])
-    const setValue = (newValue: any) => {
+    const value = get(getStore(), [...lec.path, ...childPath]) as ValueType
+    const setValue = (newValue: ValueType) => {
       mutateStore((store) => set(store, [...lec.path, ...childPath], newValue))
       lec.incrementVersion()
     }

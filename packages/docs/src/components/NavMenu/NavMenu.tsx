@@ -20,10 +20,10 @@ const Type = styled.span`
   font-style: italic;
 `
 
-const WIP = styled.span`
+/*const WIP = styled.span`
   color: red;
   font-weight: lighter;
-`
+`*/
 
 const Property = styled.span``
 

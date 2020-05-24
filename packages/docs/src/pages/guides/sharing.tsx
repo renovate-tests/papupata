@@ -1,15 +1,8 @@
 import * as React from 'react'
-import styled from 'styled-components'
 import Container from '../../components/Container'
 import { GuideContent, Overview } from '../../components/guides'
 import Page from '../../components/Page'
 import IndexLayout from '../../layouts'
-
-const LineIndent = styled.div`
-  border-left: 3px solid #eee;
-  padding-left: 30px;
-  margin-bottom: 30px;
-`
 
 const IndexPage = () => (
   <IndexLayout>

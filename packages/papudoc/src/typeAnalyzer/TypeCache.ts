@@ -8,7 +8,7 @@ interface Entry {
 
 export default class TypeCache {
   private entries: Entry[] = []
-  private uniqueNum = 0
+  //private uniqueNum = 0
 
   public get(typeStack: ts.Type[]) {
     const match = this.findMatchIndex(typeStack)

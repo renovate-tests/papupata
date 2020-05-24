@@ -118,7 +118,7 @@ interface EntryProps {
 }
 
 function NewNavEntry({ entry, isCurrent, url, AltComponent }: EntryProps) {
-  let label = typeof entry === 'object' && entry && 'label' in entry ? entry.label : entry
+  const label = typeof entry === 'object' && entry && 'label' in entry ? entry.label : entry
   const link = url.startsWith('<') ? (
     <NonLink current={isCurrent(url, false) ? 'true' : 'false'}>{label}</NonLink>
   ) : (
@@ -137,19 +137,15 @@ function NewNavEntry({ entry, isCurrent, url, AltComponent }: EntryProps) {
   const [checked, setChecked] = useState(showChildren)
 
   useEffect(() => {
-    setChecked(checked => checked || showChildren)
+    setChecked((newChecked) => newChecked || showChildren)
   }, [showChildren])
 
   const description = typeof entry === 'object' && entry && 'description' in entry ? entry.description : null
   if (AltComponent) {
     return (
-      <AltComponent
-        children={children}
-        label={label}
-        showChildren={showChildren}
-        url={url.startsWith('<') ? null : url}
-        description={description}
-      />
+      <AltComponent label={label} showChildren={showChildren} url={url.startsWith('<') ? null : url} description={description}>
+        {children}
+      </AltComponent>
     )
   }
 
@@ -159,9 +155,9 @@ function NewNavEntry({ entry, isCurrent, url, AltComponent }: EntryProps) {
       <LinkContainer>
         {children && (
           <Toggler
-            onClick={e => {
+            onClick={(e) => {
               e.preventDefault()
-              setChecked(s => !s)
+              setChecked((s) => !s)
             }}
           >
             {'>'}
@@ -176,7 +172,7 @@ function NewNavEntry({ entry, isCurrent, url, AltComponent }: EntryProps) {
 
 function isAChildSelected(entry: NavEntry, isCurrent: IsCurrentFn): boolean {
   if (typeof entry !== 'object' || !entry || !('children' in entry)) return false
-  return Object.entries(entry.children as NavEntries).some(child => {
+  return Object.entries(entry.children as NavEntries).some((child) => {
     return isCurrent(child[0], true) || isAChildSelected(child[1], isCurrent)
   })
 }

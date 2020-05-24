@@ -1,21 +1,9 @@
 import * as React from 'react'
-
-import Page from '../components/Page'
+import { Example, Section, SectionHeading } from '../components/api-components'
 import Container from '../components/Container'
-import IndexLayout from '../layouts'
-import { Link } from 'gatsby'
-import { guides } from '../components/NavMenu/NavMenu'
-import { AltComponentType, NewNavList } from '../components/NavMenu/NewNav'
-import { Section, SectionHeading, Example } from '../components/api-components'
 import { FixedFont } from '../components/guides'
-
-const Guide: AltComponentType = ({ children, label, url, description }) => (
-  <div>
-    <h2>{url ? <Link to={url}>{label}</Link> : label}</h2>
-    <p>{description}</p>
-    {children}
-  </div>
-)
+import Page from '../components/Page'
+import IndexLayout from '../layouts'
 
 const Concept: React.FC<{ children: React.ReactNode; label: React.ReactNode }> = ({ children, label }) => {
   return (

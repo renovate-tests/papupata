@@ -1,11 +1,8 @@
-import IndexLayout from '../../layouts'
-import Page from '../../components/Page'
-import Container from '../../components/Container'
-import { Purpose, Usage, Parameter, Parameters, MethodReturnType, Examples, Example, AvailableFrom } from '../../components/api-components'
-import { Link } from 'gatsby'
 import * as React from 'react'
-import { FixedFont } from '../../components/guides'
-import { Members, MethodMember, PropertyMember } from '../../components/members-table'
+import { AvailableFrom, Example, Examples, MethodReturnType, Parameter, Parameters, Purpose, Usage } from '../../components/api-components'
+import Container from '../../components/Container'
+import Page from '../../components/Page'
+import IndexLayout from '../../layouts'
 import { OptionsTable } from './invokeImplementationAdapter'
 
 export default function Mock() {

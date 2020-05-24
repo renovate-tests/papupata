@@ -1,7 +1,7 @@
-import IndexLayout from '../../../layouts'
-import Page from '../../../components/Page'
+import { Purpose } from '../../../components/api-components'
 import Container from '../../../components/Container'
-import { Purpose, Examples, Example } from '../../../components/api-components'
+import Page from '../../../components/Page'
+import IndexLayout from '../../../layouts'
 
 export default function ApiDeclaration() {
   return (

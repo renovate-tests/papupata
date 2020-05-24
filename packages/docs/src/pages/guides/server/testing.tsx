@@ -1,11 +1,10 @@
 import * as React from 'react'
-
-import Page from '../../../components/Page'
-import Container from '../../../components/Container'
-import IndexLayout from '../../../layouts'
-import { FixedFont, GuideContent, Overview } from '../../../components/guides'
 import { Example } from '../../../components/api-components'
-import { Link } from 'gatsby'
+import Container from '../../../components/Container'
+import { FixedFont, GuideContent, Overview } from '../../../components/guides'
+import Page from '../../../components/Page'
+import IndexLayout from '../../../layouts'
+
 
 const IndexPage = () => (
   <IndexLayout>

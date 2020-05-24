@@ -12,7 +12,7 @@ export interface AnalyserContext {
   analyse(this: AnalyserContext, contextualName: string[], type: ts.Type): TsType
   checker: ts.TypeChecker
   typeMap: TypeCache
-  typeStack: Array<ts.Type | {mapperOnly: true, mapper: any}>
+  typeStack: Array<ts.Type | { mapperOnly: true; mapper: any }>
 }
 export type AnalyzeTypeFn = (type: ts.Type, checked: ts.TypeChecker) => TsType
 
@@ -46,7 +46,7 @@ export function analyzeTypeInternal(outerCtx: AnalyserContext, contextualName: s
     ...outerCtx,
     typeStack: [...outerCtx.typeStack, type],
   }
-  let cached = ctx.typeMap.get([...outerCtx.typeStack, type])
+  let cached = ctx.typeMap.get([...outerCtx.typeStack, type] as any) // TODO: fix this
   if (cached) {
     cached.refCount++
     cached.contextualNames.push(contextualName)
@@ -84,7 +84,7 @@ export function analyzeTypeInternal(outerCtx: AnalyserContext, contextualName: s
 
   //console.log('Handling', type.getSymbol()?.name)
   const handled = handle()
-  ctx.typeMap.set([...ctx.typeStack, type], handled)
+  ctx.typeMap.set([...ctx.typeStack, type] as any, handled) // TODO: fix this
   return handled
 
   function handle() {

@@ -1,11 +1,10 @@
-import TsType, { Complexity, RenderContext } from '../TsType'
-import ts, { createImportSpecifier } from 'typescript'
-import { AnalyserContext } from '../typeAnalyzer'
-import React from 'react'
 import compact from 'lodash/compact'
-import MemberTable from '../../front/ApiView/MemberTable'
 import last from 'lodash/last'
-import { type } from 'os'
+import React from 'react'
+import ts from 'typescript'
+import MemberTable from '../../front/ApiView/MemberTable'
+import TsType, { Complexity, RenderContext } from '../TsType'
+import { AnalyserContext } from '../typeAnalyzer'
 
 interface Property {
   name: string
@@ -50,7 +49,7 @@ export default class ObjectType extends TsType {
             //console.log(type.aliasTypeArguments[0].target.typeParameters)
             //console.log(ctx.typeStack[ctx.typeStack.length - 3].resolvedProperties)
             findResolvedTypeAutonest(memberContext, valueType, true)
-            console.log(member.name, ctx.typeStack[0].types[0])
+            //console.log(member.name, ctx.typeStack[0].types[0])
             throw new Error('stopping at ' + contextualName.join('.') + type.getSymbol()?.name)
           }
           memberType = foundResolvedType || valueType

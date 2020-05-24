@@ -1,8 +1,8 @@
-import IndexLayout from '../../../layouts'
-import Page from '../../../components/Page'
+import { AvailableFrom, Purpose } from '../../../components/api-components'
 import Container from '../../../components/Container'
-import { Purpose, Usage, Examples, Example, AvailableFrom } from '../../../components/api-components'
 import { Members, PropertyMember } from '../../../components/members-table'
+import Page from '../../../components/Page'
+import IndexLayout from '../../../layouts'
 
 export default function ApiUrlParameters() {
   return (

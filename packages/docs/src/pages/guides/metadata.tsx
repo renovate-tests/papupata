@@ -1,18 +1,9 @@
 import * as React from 'react'
-
-import Page from '../../components/Page'
-import Container from '../../components/Container'
-import IndexLayout from '../../layouts'
-import { FixedFont, GuideContent, Overview } from '../../components/guides'
 import { Example } from '../../components/api-components'
-import styled from 'styled-components'
-import { Link } from 'gatsby'
-
-const LineIndent = styled.div`
-  border-left: 3px solid #eee;
-  padding-left: 30px;
-  margin-bottom: 30px;
-`
+import Container from '../../components/Container'
+import { FixedFont, GuideContent, Overview } from '../../components/guides'
+import Page from '../../components/Page'
+import IndexLayout from '../../layouts'
 
 const IndexPage = () => (
   <IndexLayout>

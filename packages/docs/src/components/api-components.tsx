@@ -38,11 +38,11 @@ export const Usage: React.FC = ({ children }) => {
     </Section>
   )
 }
-export const Parameters: React.FC<{ includeAvailableFrom?: boolean, label?: string }> = ({ children, includeAvailableFrom, label }) => {
+export const Parameters: React.FC<{ includeAvailableFrom?: boolean; label?: string }> = ({ children, includeAvailableFrom, label }) => {
   return (
     <Section>
       <IncludeAvailableFromContext.Provider value={!!includeAvailableFrom}>
-        <SectionHeading>Parameters{label && ': ' + label}</SectionHeading>
+        <SectionHeading>Parameters{label && `: ${label}`}</SectionHeading>
         {children ? (
           <table>
             <thead>
@@ -124,7 +124,7 @@ export const ExampleCommon: React.FC<{ children: any }> = ({ children }) => {
   )
 }
 
-export const TypeParameters: React.FC<{ children: ReactNode; includeAvailableFrom?: boolean }> = ({children, includeAvailableFrom}) => {
+export const TypeParameters: React.FC<{ children: ReactNode; includeAvailableFrom?: boolean }> = ({ children, includeAvailableFrom }) => {
   return (
     <Section>
       <SectionHeading>Type parameeters</SectionHeading>
@@ -156,10 +156,11 @@ const DefaultValueColumn = styled.td``
 const DescriptionColumn = styled.td``
 const AvailableFromColumn = styled.td``
 
-export const TypeParameter: React.FC<{ name: string; defaultValue?: string, availableFrom?: string }> = ({
+export const TypeParameter: React.FC<{ name: string; defaultValue?: string; availableFrom?: string }> = ({
   children,
   name,
-  defaultValue,availableFrom = 'none'
+  defaultValue,
+  availableFrom = 'none'
 }) => {
   const includeAvailableFrom = React.useContext(IncludeAvailableFromContext)
   return (

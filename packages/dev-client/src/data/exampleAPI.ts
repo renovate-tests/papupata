@@ -48,6 +48,18 @@ const exampleAPI: APISet = [
     name: 'collection.a2',
     ...minimalAPI,
   },
+  {
+    name: 'nestedcoll.b1.n0',
+    ...minimalAPI,
+  },
+  {
+    name: 'nestedcoll.b2',
+    ...minimalAPI,
+  },
+  {
+    name: 'nestedcoll.b1.n1',
+    ...minimalAPI,
+  },
 ]
 
 export default exampleAPI

@@ -3,6 +3,7 @@ import { LiveEditProvider } from './LiveEditContext'
 import ParamAndQueryEditor from './ParamAndQueryEditor'
 import { useAPI } from '../useAPI'
 import HeaderEditor from './Headers/HeaderEditor'
+import BodyEditor from './Body/BodyEditor'
 
 export default function RequestEditor() {
   const api = useAPI()
@@ -13,6 +14,7 @@ export default function RequestEditor() {
     <LiveEditProvider path={path}>
       <ParamAndQueryEditor />
       <HeaderEditor />
+      <BodyEditor />
     </LiveEditProvider>
   )
 }

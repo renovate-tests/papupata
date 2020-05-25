@@ -27,7 +27,7 @@ export function useLiveEdit<ValueType = any>(childPath: string[]) {
   const lec = useContext(liveEditContext)
 
   return useMemo(() => {
-    const value = get(getStore(), [...lec.path, ...childPath]) as ValueType
+    const value = get(getStore(), [...lec.path, ...childPath]) as (ValueType | undefined)
     const setValue = (newValue: ValueType) => {
       mutateStore((store) => set(store, [...lec.path, ...childPath], newValue))
       lec.incrementVersion()

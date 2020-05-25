@@ -4,7 +4,7 @@ interface QueryParameter {
   type: 'string' | 'boolean'
 }
 
-type AnyType = {
+export  type AnyType = {
   type: 'string' | 'void'
 }
 

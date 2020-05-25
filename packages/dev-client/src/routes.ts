@@ -6,6 +6,8 @@ import APINav from './views/APIView/APINav'
 import APIView from './views/APIView/APIView'
 import ApiOverview from './views/APIView/ApiOverview'
 import RequestEditor from './views/APIView/RequestEditor/RequestEditor'
+import WaitForRequest from './views/APIView/WaitForRequest'
+import ViewPastRequest from './views/APIView/PastRequest/ViewPastRequest'
 
 export type RouteComponentImpl = (params: any) => ReactNode
 
@@ -44,9 +46,14 @@ const routes: Route[] = [
         addComponents: [],
       },
       {
-        name: 'viewOldRequest',
-        path: '/request/:id',
-        addComponents: [],
+        name: 'viewPastRequest',
+        path: '/request/:requestName',
+        addComponents: [ViewPastRequest],
+      },
+      {
+        name: 'waitForRequest',
+        path: '/request/:requestName/wait',
+        addComponents: [WaitForRequest],
       },
     ],
   },

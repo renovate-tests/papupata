@@ -1,6 +1,7 @@
 import { Config } from '../config'
 
 const defaultConfig: Config = {
+  baseURL: '',
   authentication: null,
   suggestedHeaders: [
     { name: 'Content-Type', value: 'application/json' },

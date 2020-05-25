@@ -27,6 +27,7 @@ type AuthenticationVariants = null | {
 }
 
 export interface Config {
+  baseURL: string
   authentication: AuthenticationVariants
   suggestedHeaders?: Array<{ name: string; value: string }>
 }

@@ -3,6 +3,7 @@ import { useCallback } from 'react'
 import navigate from '../../navigate'
 import React from 'react'
 import { ActionButton } from '../../commonStyles'
+import PastRequestList from './PastRequestList'
 
 export default function ApiOverview() {
   const api = useAPI()
@@ -12,6 +13,7 @@ export default function ApiOverview() {
   return (
     <div>
       <ActionButton onClick={makeRequest}>Make request</ActionButton>
+      <PastRequestList apiName={api.name} />
     </div>
   )
 }

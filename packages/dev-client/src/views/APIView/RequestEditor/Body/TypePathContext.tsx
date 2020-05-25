@@ -12,7 +12,7 @@ export function useLiveEditTypePath() {
 
 export function useTypeEditOptions<OptionsType extends Object>(defaultValue: OptionsType) {
   const ctxPath = useContext(typePathContext)
-  const path = useMemo(() => ['request', 'bodyOptions', ...ctxPath], [ctxPath])
+  const path = useMemo(() => ['request', 'bodyOptions', ctxPath.join('/')], [ctxPath])
   const editable = useLiveEdit(path)
 
   const defaultedValue = useMemo(() => ({ ...defaultValue, ...(editable.value || {}) }), [defaultValue, editable.value])

@@ -4,6 +4,7 @@ import ParamAndQueryEditor from './ParamAndQueryEditor'
 import { useAPI } from '../useAPI'
 import HeaderEditor from './Headers/HeaderEditor'
 import BodyEditor from './Body/BodyEditor'
+import SubmitRequestButton from './SubmitRequestButton'
 
 export default function RequestEditor() {
   const api = useAPI()
@@ -15,6 +16,7 @@ export default function RequestEditor() {
       <ParamAndQueryEditor />
       <HeaderEditor />
       <BodyEditor />
+      <SubmitRequestButton />
     </LiveEditProvider>
   )
 }

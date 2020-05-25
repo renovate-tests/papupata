@@ -7,17 +7,21 @@
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
     "@types/jest": "^24.9.1",
+    "@types/js-beautify": "^1.11.0",
     "@types/node": "^12.12.42",
     "@types/react": "^16.9.35",
     "@types/react-dom": "^16.9.8",
     "@types/styled-components": "^5.1.0",
     "immer": "^6.0.8",
+    "js-beautify": "^1.11.0",
     "lodash": "^4.17.15",
     "papupata": "^1.6.0",
+    "qs": "^6.9.4",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-router5": "^8.0.1",
     "react-scripts": "3.4.1",
+    "react-syntax-highlighter": "^12.2.1",
     "router5": "^8.0.1",
     "router5-plugin-browser": "^8.0.1",
     "styled-components": "^5.1.0",
@@ -47,6 +51,8 @@
   },
   "devDependencies": {
     "@types/lodash": "^4.14.152",
+    "@types/qs": "^6.9.3",
+    "@types/react-syntax-highlighter": "^11.0.4",
     "@types/uuid": "^8.0.0"
   }
 }

@@ -1,10 +1,10 @@
 import React from 'react'
 import { PPHeader } from '../../../utils/store'
 
-export default function ResponseHeaders({ headers }: { headers: PPHeader[] }) {
+export default function HeaderList({ headers }: { headers: PPHeader[] }) {
   return (
     <div>
-      <h3>Headers</h3>
+      <h4>Headers</h4>
       <table>
         <tbody>
           {headers.map((header) => (

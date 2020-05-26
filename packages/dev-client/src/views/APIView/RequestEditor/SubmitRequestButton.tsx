@@ -13,10 +13,9 @@ export default function SubmitRequestButton() {
   const submitRequest = useCallback(() => {
     if (!api) return
     mutateStore((data) => {
-      let dataApi = data.apis[api?.name ?? '']
-      const currentRequest = dataApi.currentRequest
-      if (!currentRequest) return
-      dataApi.currentRequest = undefined
+      let dataApi = data.apis?.[api?.name ?? '']
+      const currentRequest = dataApi?.currentRequest
+      if (!currentRequest || !dataApi) return
       if (!dataApi.pastRequests) dataApi.pastRequests = {}
       dataApi.pastRequests.latest = { ...currentRequest, sent: undefined, response: undefined }
     })

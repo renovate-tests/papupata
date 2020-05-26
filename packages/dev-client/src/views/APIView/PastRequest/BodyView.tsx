@@ -1,4 +1,4 @@
-import React, { ReactElement, useCallback, useState } from 'react'
+import React, { ReactNode, useCallback, useState } from 'react'
 import styled from 'styled-components'
 import SyntaxHighlighter from 'react-syntax-highlighter'
 import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs'
@@ -16,7 +16,12 @@ const Unspecified = styled.div`
 
 const Raw = Unspecified
 
-export default function ResponseBody({ children }: { children: string }) {
+interface Props {
+  children: string
+  heading: ReactNode
+}
+
+export default function BodyView({ children, heading }: Props) {
   const [raw, setRaw] = useState(false)
   let rendered = { raw: true, elem: <Raw>{children}</Raw> }
   if (!raw) {
@@ -29,7 +34,7 @@ export default function ResponseBody({ children }: { children: string }) {
   const toggleRaw = useCallback(() => setRaw((x) => !x), [])
   return (
     <div>
-      <h3>Body</h3>
+      <h4>{heading}</h4>
       {!rendered?.raw || raw ? (
         <div>
           <label>

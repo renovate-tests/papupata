@@ -19,6 +19,7 @@ interface RequestMeta {
     timestamp: number
     data: string
     headers?: PPHeader[]
+    duration: number
   }
   sent?: number
 }
@@ -29,7 +30,7 @@ interface StoreData {
     username?: string
     password?: string
   }
-  apis: {
+  apis?: {
     [name: string]: {
       currentRequest?: RequestMeta
       pastRequests?: {

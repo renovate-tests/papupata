@@ -8,6 +8,7 @@ import pick from 'lodash/pick'
 export default async function makeRequest(config: Config, api: API, requestName: string) {
   const request = getStore().apis?.[api.name]?.pastRequests?.[requestName].request
   if (!request) throw new Error('Request not found')
+  const before = new Date()
   try {
     const queryParams = pick(
       request.pq,
@@ -24,7 +25,7 @@ export default async function makeRequest(config: Config, api: API, requestName:
       method: api.method,
       headers: {
         ...(request.sendAuthHeader ? getAuthHeaders(config) : {}),
-        ...Object.fromEntries((request.headers || []).map((h) => [h.name, h.value])),
+        ...Object.fromEntries((request.headers || []).filter((h) => h.name && h.value).map((h) => [h.name, h.value])),
       },
       body: api.method === 'POST' || api.method === 'PUT' || api.method === 'PATCH' ? body : undefined,
     })
@@ -41,6 +42,7 @@ export default async function makeRequest(config: Config, api: API, requestName:
         headers: responseHeaders,
         status: fetched.status,
         timestamp: new Date().valueOf(),
+        duration: new Date().valueOf() - before.valueOf(),
       }
     })
   } catch (err) {
@@ -51,6 +53,7 @@ export default async function makeRequest(config: Config, api: API, requestName:
         headers: [],
         status: 0,
         timestamp: new Date().valueOf(),
+        duration: new Date().valueOf() - before.valueOf(),
       }
     })
   }

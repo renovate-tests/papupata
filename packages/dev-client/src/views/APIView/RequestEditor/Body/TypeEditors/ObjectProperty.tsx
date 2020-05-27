@@ -8,6 +8,7 @@ import ExpandedEditor from '../ExpandedEditor'
 
 interface Props {
   property: ObjectApiType['properties'][0]
+  even: boolean
 }
 
 const ComplexEditor = styled.td`
@@ -21,7 +22,18 @@ const ExpandButton = styled.button`
 `
 ComplexEditor.defaultProps = { colSpan: 2 }
 
-export default function ObjectProperty({ property }: Props) {
+const Row = styled.tr<{ even: boolean }>`
+  background-color: ${({ even }) => (even ? '#EEF' : '#DDF')};
+  td {
+    padding: 5px 0;
+  }
+`
+
+const NameColumn = styled.td`
+  width: 200px;
+`
+
+export default function ObjectProperty({ property, even }: Props) {
   const [expanded, setExpanded] = useState(false)
   const UnwrappedEditor = <TypeEditor type={property.type} />
   const toggleExpanded = useCallback(() => setExpanded((x) => !x), [])
@@ -38,21 +50,21 @@ export default function ObjectProperty({ property }: Props) {
 
   if (isSimple(property.type)) {
     return (
-      <tr>
-        <td>{property.name}</td>
+      <Row even={even}>
+        <NameColumn>{property.name}</NameColumn>
         <td>{Editor}</td>
-      </tr>
+      </Row>
     )
   } else {
     return (
       <>
-        <tr>
+        <Row even={even}>
           <td>{property.name}</td>
           <td>
             <ExpandButton onClick={toggleExpanded}>{expanded ? '-' : 'v'}</ExpandButton>
           </td>
-        </tr>
-        <tr>
+        </Row>
+        <Row even={even}>
           {expanded ? (
             <td colSpan={2}>
               <ExpandedEditor ChildComponent={CreateEditor} />{' '}
@@ -60,7 +72,7 @@ export default function ObjectProperty({ property }: Props) {
           ) : (
             <ComplexEditor>{Editor}</ComplexEditor>
           )}
-        </tr>
+        </Row>
       </>
     )
   }

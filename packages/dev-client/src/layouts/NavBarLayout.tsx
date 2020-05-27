@@ -24,6 +24,7 @@ const BorderInner = styled.div`
 
 const Content = styled.div`
   margin-left: 30px;
+  flex-grow: 1;
 `
 
 export default function NavBarLayout() {

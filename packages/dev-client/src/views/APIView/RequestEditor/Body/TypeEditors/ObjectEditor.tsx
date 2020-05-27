@@ -13,7 +13,7 @@ const Table = styled.table`
 
 export default function ObjectEditor({ type }: Props) {
   return (
-    <Table>
+    <Table style={{ width: '100%' }}>
       <tbody>
         {type.properties.map((property) => (
           <ObjectProperty property={property} key={property.name} />

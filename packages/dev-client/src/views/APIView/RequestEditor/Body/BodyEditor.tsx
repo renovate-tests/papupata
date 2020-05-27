@@ -16,7 +16,7 @@ export default function BodyEditor() {
   const api = useAPI()
   if (!api) return <Loading />
   return (
-    <Section>
+    <Section style={{ position: 'relative' }}>
       <SectionHeader>Body</SectionHeader>
       {api.body ? (
         <typePathContext.Provider value={[]}>

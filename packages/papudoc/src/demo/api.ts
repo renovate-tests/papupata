@@ -45,6 +45,8 @@ const api = {
       union: string | number
       inlineinterface: { key: string }
       stringarray: string[]
+      nestedArray: string[][][]
+
       enumref: MyEnum
       namedinterface: InterfaceHere
       optionalstring?: string
@@ -60,7 +62,7 @@ const api = {
           }
         }
         also: {
-          another: string,
+          another: string
           anda: boolean
         }
       }

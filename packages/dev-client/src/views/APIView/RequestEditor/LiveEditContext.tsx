@@ -57,8 +57,8 @@ export function useGenericLiveEdit<T = any>(childPath?: string[]) {
   return useLiveEdit<T>(noVars, childPath)
 }
 
-export function useBodyLiveEdit() {
-  return useLiveEdit(bodyVars)
+export function useBodyLiveEdit<T>() {
+  return useLiveEdit<T>(bodyVars)
 }
 export function useBodyOptionsLiveEdit<T>() {
   return useLiveEdit<T>(bodyOptionsVars)

@@ -9,6 +9,7 @@ import BooleanEditor from './TypeEditors/BooleanEditor'
 import UndefinedEditor from './TypeEditors/UndefinedEditor'
 import NonEditor from './TypeEditors/NonEditor'
 import UnionEditor from './TypeEditors/UnionEditor'
+import ArrayEditor from './TypeEditors/ArrayEditor'
 
 export default function TypeEditorImpl({ type, setupDefaultValue }: TypeEditorProps) {
   switch (type.type) {
@@ -37,6 +38,8 @@ export default function TypeEditorImpl({ type, setupDefaultValue }: TypeEditorPr
       )
     case 'union':
       return <UnionEditor type={type} required={setupDefaultValue} />
+    case 'array':
+      return defaultValueWrapper(<ArrayEditor type={type} />, [])
     default:
       return <div>Not supported: {type.type}</div>
   }

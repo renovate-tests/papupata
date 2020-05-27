@@ -5,39 +5,19 @@ import React, { useCallback, useState } from 'react'
 import { JSONApiType, ObjectApiType } from 'papudoc/dist/jsonAPI'
 import styled from 'styled-components'
 import ExpandedEditor from '../ExpandedEditor'
+import { isSimple, Row, Separator } from './common'
+import ExpandButton from '../ExpandButton'
 
 interface Props {
   property: ObjectApiType['properties'][0]
   even: boolean
 }
 
-const ComplexEditor = styled.td`
-  border-left: 3px solid orange;
-`
-
-const ExpandButton = styled.button`
-  float: right;
-  background: lime;
-`
-ComplexEditor.defaultProps = { colSpan: 2 }
-
-const Row = styled.tr<{ even: boolean }>`
-  background-color: ${({ even }) => (even ? '#EEF' : '#DDF')};
-  td {
-    padding: 5px 0;
-  }
-`
-
 const TallEditor = styled.div`
   display: flex;
   align-items: stretch;
 `
 
-const Separator = styled.div`
-  margin: 0 10px;
-  width: 3px;
-  background: orange;
-`
 const EditorBody = styled.div`
   flex-grow: 1;
 `
@@ -48,8 +28,8 @@ const NameColumn = styled.td`
 
 export default function ObjectProperty({ property, even }: Props) {
   const [expanded, setExpanded] = useState(false)
-  const UnwrappedEditor = <TypeEditor type={property.type} setupDefaultValue={property.required} />
   const toggleExpanded = useCallback(() => setExpanded((x) => !x), [])
+  const UnwrappedEditor = <TypeEditor type={property.type} setupDefaultValue={property.required} />
   const editor = (
     <NestedLiveEditProvider addToPath={property.name}>
       <OptionalWrapper isRequired={property.required}>{UnwrappedEditor}</OptionalWrapper>
@@ -72,7 +52,7 @@ export default function ObjectProperty({ property, even }: Props) {
         <Row even={even}>
           <td>{property.name}</td>
           <td>
-            <ExpandButton onClick={toggleExpanded}>{expanded ? '-' : 'v'}</ExpandButton>
+            <ExpandButton onClick={toggleExpanded} expanded={expanded} />
           </td>
         </Row>
         <Row even={even}>
@@ -92,9 +72,4 @@ export default function ObjectProperty({ property, even }: Props) {
       </>
     )
   }
-}
-
-function isSimple(type: JSONApiType) {
-  // 2 keys would be just type and name
-  return Object.keys(type).length === 2 || type.type.includes('Literal')
 }

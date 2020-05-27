@@ -1,4 +1,4 @@
-import React, { createRef, useLayoutEffect, useState } from 'react'
+import React, { createRef, ReactNode, useCallback, useLayoutEffect, useState } from 'react'
 import styled from 'styled-components'
 
 interface Props {
@@ -13,6 +13,7 @@ const Wrapper = styled.div`
 
 const Locator = styled.div`
   position: absolute;
+  z-index: 1;
   left: 0;
   width: 1px;
   height: 1px;
@@ -45,4 +46,19 @@ export default function ExpandedEditor({ ChildComponent }: Props) {
       </Wrapper>
     </>
   )
+}
+
+interface WrapperProps {
+  children: ReactNode
+  expanded: boolean
+}
+
+export function ExpandWrapper({ children, expanded }: WrapperProps) {
+  const ChildComponent = useCallback(() => {
+    return <>{children}</>
+  }, [children])
+
+  if (!expanded) return <>{children}</>
+
+  return <ExpandedEditor ChildComponent={ChildComponent} />
 }

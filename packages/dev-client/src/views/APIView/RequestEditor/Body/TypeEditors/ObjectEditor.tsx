@@ -8,7 +8,6 @@ interface Props {
 }
 
 const Table = styled.table`
-  border-left: 3px solid purple;
 `
 
 export default function ObjectEditor({ type }: Props) {

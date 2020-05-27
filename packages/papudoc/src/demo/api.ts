@@ -59,6 +59,10 @@ const api = {
             field: string
           }
         }
+        also: {
+          another: string,
+          anda: boolean
+        }
       }
     }>()
     .response<Array<Omit<{ key: string; value: number }, 'key'>>[]>(),

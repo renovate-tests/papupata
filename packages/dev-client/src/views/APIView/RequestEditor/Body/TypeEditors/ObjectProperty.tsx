@@ -13,7 +13,6 @@ interface Props {
 
 const ComplexEditor = styled.td`
   border-left: 3px solid orange;
-  padding-left: 10px;
 `
 
 const ExpandButton = styled.button`
@@ -29,6 +28,20 @@ const Row = styled.tr<{ even: boolean }>`
   }
 `
 
+const TallEditor = styled.div`
+  display: flex;
+  align-items: stretch;
+`
+
+const Separator = styled.div`
+  margin: 0 10px;
+  width: 3px;
+  background: orange;
+`
+const EditorBody = styled.div`
+  flex-grow: 1;
+`
+
 const NameColumn = styled.td`
   width: 200px;
 `
@@ -37,20 +50,20 @@ export default function ObjectProperty({ property, even }: Props) {
   const [expanded, setExpanded] = useState(false)
   const UnwrappedEditor = <TypeEditor type={property.type} setupDefaultValue={property.required} />
   const toggleExpanded = useCallback(() => setExpanded((x) => !x), [])
-  const Editor = (
+  const editor = (
     <NestedLiveEditProvider addToPath={property.name}>
       <OptionalWrapper isRequired={property.required}>{UnwrappedEditor}</OptionalWrapper>
     </NestedLiveEditProvider>
   )
   const CreateEditor = useCallback(() => {
-    return <>{Editor}</>
-  }, [Editor])
+    return <>{editor}</>
+  }, [editor])
 
   if (isSimple(property.type)) {
     return (
       <Row even={even}>
         <NameColumn>{property.name}</NameColumn>
-        <td>{Editor}</td>
+        <td>{editor}</td>
       </Row>
     )
   } else {
@@ -68,7 +81,12 @@ export default function ObjectProperty({ property, even }: Props) {
               <ExpandedEditor ChildComponent={CreateEditor} />{' '}
             </td>
           ) : (
-            <ComplexEditor>{Editor}</ComplexEditor>
+            <td colSpan={2}>
+              <TallEditor>
+                <Separator />
+                <EditorBody>{editor}</EditorBody>
+              </TallEditor>
+            </td>
           )}
         </Row>
       </>

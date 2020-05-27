@@ -5,6 +5,7 @@ import { typePathContext } from './TypePathContext'
 import TypeEditorProvider from './TypeEditorProvider'
 import { TypeEditor } from './TypeEditorContext'
 import Loading from '../../../../components/Loading'
+import { NestedLiveEditProvider } from '../LiveEditContext'
 
 export interface StoredHeader {
   name: string
@@ -21,7 +22,11 @@ export default function BodyEditor() {
       {api.body ? (
         <typePathContext.Provider value={[]}>
           <TypeEditorProvider>
-            <TypeEditor type={api.body} setupDefaultValue={true} />
+            <NestedLiveEditProvider addToPath={'request'}>
+              <NestedLiveEditProvider addToPath={'body'}>
+                <TypeEditor type={api.body} setupDefaultValue={true} />
+              </NestedLiveEditProvider>
+            </NestedLiveEditProvider>
           </TypeEditorProvider>
         </typePathContext.Provider>
       ) : (

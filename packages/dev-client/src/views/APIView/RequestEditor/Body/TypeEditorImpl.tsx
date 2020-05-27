@@ -5,17 +5,35 @@ import TypeNamingWrapper from './TypeEditors/TypeNamingWrapper'
 import ObjectEditor from './TypeEditors/ObjectEditor'
 import DefaultValueInserter from './DefaultValueInserter'
 import NumberEditor from './TypeEditors/NumberEditor'
+import BooleanEditor from './TypeEditors/BooleanEditor'
+import UndefinedEditor from './TypeEditors/UndefinedEditor'
+import NonEditor from './TypeEditors/NonEditor'
 
 export default function TypeEditorImpl({ type, setupDefaultValue }: TypeEditorProps) {
   switch (type.type) {
     case 'typeNamingWrapper':
       return <TypeNamingWrapper type={type} setupDefaultValue={setupDefaultValue} />
     case 'string':
-      return defaultValueWrapper(<StringEditor />,  '')
+      return defaultValueWrapper(<StringEditor />, '')
     case 'number':
-      return defaultValueWrapper(<NumberEditor />,  0)
+      return defaultValueWrapper(<NumberEditor />, 0)
+    case 'boolean':
+      return defaultValueWrapper(<BooleanEditor />, false)
     case 'object':
-      return defaultValueWrapper(<ObjectEditor type={type} />,  {})
+      return defaultValueWrapper(<ObjectEditor type={type} />, {})
+    case 'undefined':
+    case 'never':
+    case 'void':
+      return <UndefinedEditor />
+    case 'null':
+      return defaultValueWrapper(<NonEditor value={null} label={'null'} allowSet={!setupDefaultValue} />, null)
+    case 'stringLiteral':
+    case 'numberLiteral':
+    case 'booleanLiteral':
+      return defaultValueWrapper(
+        <NonEditor value={type.value} label={type.value} allowSet={!setupDefaultValue} />,
+        type.value
+      )
     default:
       return <div>Not supported: {type.type}</div>
   }

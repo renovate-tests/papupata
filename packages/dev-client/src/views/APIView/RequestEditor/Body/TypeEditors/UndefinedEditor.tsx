@@ -1,8 +1,8 @@
-import { useLiveEdit } from '../../LiveEditContext'
+import { useBodyLiveEdit } from '../../LiveEditContext'
 import React, { useEffect } from 'react'
 
 export default function UndefinedEditor() {
-  const liveEdit = useLiveEdit()
+  const liveEdit = useBodyLiveEdit()
   useEffect(() => {
     if (liveEdit.value !== undefined) {
       liveEdit.setValue(undefined)

@@ -1,8 +1,8 @@
-import { useLiveEdit } from '../../LiveEditContext'
+import { useBodyLiveEdit } from '../../LiveEditContext'
 import React, { useCallback } from 'react'
 
 export default function BooleanEditor() {
-  const liveEdit = useLiveEdit()
+  const liveEdit = useBodyLiveEdit()
 
   const effectiveValue = typeof liveEdit.value !== 'boolean' ? 'undefined' : liveEdit.value.toString()
 

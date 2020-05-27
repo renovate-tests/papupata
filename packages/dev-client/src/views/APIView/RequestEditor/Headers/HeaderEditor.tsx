@@ -1,6 +1,6 @@
-import { SectionHeader, Section } from '../common'
+import { Section, SectionHeader } from '../common'
 import React, { useCallback } from 'react'
-import { useLiveEdit } from '../LiveEditContext'
+import { useGenericLiveEdit } from '../LiveEditContext'
 import AuthHeader from './AuthHeaders'
 import SuggestedHeaders from './SuggestedHeaders'
 import SingleHeaderEditor from './SingleHeaderEditor'
@@ -15,7 +15,7 @@ export interface StoredHeader {
 }
 
 export default function HeaderEditor() {
-  const headerEdit = useLiveEdit<StoredHeader[]>(['request', 'headers'])
+  const headerEdit = useGenericLiveEdit<StoredHeader[]>(['request', 'headers'])
   const headers = headerEdit.value || []
   const nonEmptyHeaders = headers.filter((h) => h.name !== '' || h.value !== '')
   const possiblyEmptyHeader = headers[headers.length - 1]

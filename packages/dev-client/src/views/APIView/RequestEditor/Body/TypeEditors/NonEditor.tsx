@@ -1,4 +1,4 @@
-import { useLiveEdit } from '../../LiveEditContext'
+import { useBodyLiveEdit } from '../../LiveEditContext'
 import React, { ReactNode, useCallback } from 'react'
 
 interface Props {
@@ -8,10 +8,7 @@ interface Props {
 }
 
 export default function NonEditor({ label, value, allowSet }: Props) {
-  const liveEdit = useLiveEdit()
-
-  const effectiveValue = typeof liveEdit.value !== 'number' ? '0' : liveEdit.value.toString()
-
+  const liveEdit = useBodyLiveEdit()
   const setValue = useCallback(() => liveEdit.setValue(parseFloat(value)), [liveEdit, value])
 
   return (

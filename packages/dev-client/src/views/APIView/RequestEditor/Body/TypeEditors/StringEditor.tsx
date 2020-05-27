@@ -1,4 +1,4 @@
-import { useLiveEdit } from '../../LiveEditContext'
+import { useBodyLiveEdit } from '../../LiveEditContext'
 import React, { useCallback } from 'react'
 import { useTypeEditOptions } from '../TypePathContext'
 import styled from 'styled-components'
@@ -21,7 +21,7 @@ const BigCol = styled.div`
 const Textarea = styled.textarea`height: 150px;`
 
 export default function StringEditor() {
-  const liveEdit = useLiveEdit()
+  const liveEdit = useBodyLiveEdit()
   const optionsEdit = useTypeEditOptions<Options>({})
 
   console.log(optionsEdit.value)

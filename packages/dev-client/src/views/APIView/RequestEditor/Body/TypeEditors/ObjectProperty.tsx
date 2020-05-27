@@ -39,9 +39,7 @@ export default function ObjectProperty({ property, even }: Props) {
   const toggleExpanded = useCallback(() => setExpanded((x) => !x), [])
   const Editor = (
     <NestedLiveEditProvider addToPath={property.name}>
-      <OptionalWrapper isRequired={property.required} liveEditPath={[]}>
-        {UnwrappedEditor}
-      </OptionalWrapper>
+      <OptionalWrapper isRequired={property.required}>{UnwrappedEditor}</OptionalWrapper>
     </NestedLiveEditProvider>
   )
   const CreateEditor = useCallback(() => {

@@ -1,5 +1,5 @@
 import React, { ReactNode, useEffect } from 'react'
-import { useLiveEdit } from '../LiveEditContext'
+import { useBodyLiveEdit } from '../LiveEditContext'
 import Loading from '../../../../components/Loading'
 
 interface Props {
@@ -8,7 +8,7 @@ interface Props {
 }
 
 export default function DefaultValueInserter({ defaultValue, children }: Props) {
-  const liveEdit = useLiveEdit([])
+  const liveEdit = useBodyLiveEdit()
   useEffect(() => {
     if (liveEdit.value === undefined) {
       liveEdit.setValue(defaultValue)

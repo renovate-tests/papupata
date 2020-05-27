@@ -23,7 +23,7 @@ export default function BodyEditor() {
         <typePathContext.Provider value={[]}>
           <TypeEditorProvider>
             <NestedLiveEditProvider addToPath={'request'}>
-              <NestedLiveEditProvider addToPath={'body'}>
+              <NestedLiveEditProvider addToPath={'$REQFIELD'}>
                 <TypeEditor type={api.body} setupDefaultValue={true} />
               </NestedLiveEditProvider>
             </NestedLiveEditProvider>

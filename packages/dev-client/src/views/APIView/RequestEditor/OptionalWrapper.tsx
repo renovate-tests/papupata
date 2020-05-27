@@ -1,10 +1,10 @@
 import React, { ReactNode, useCallback } from 'react'
-import { useLiveEdit } from './LiveEditContext'
+import { useBodyLiveEdit, useGenericLiveEdit } from './LiveEditContext'
 import styled, { css } from 'styled-components'
 
 interface Props {
   isRequired: boolean
-  liveEditPath: string[]
+  liveEditPath?: string[]
   children: ReactNode
 }
 
@@ -33,8 +33,9 @@ const NoValueLabel = styled.div`
 `
 
 export default function OptionalWrapper({ children, isRequired, liveEditPath }: Props) {
-
-  const liveEdit = useLiveEdit(liveEditPath)
+  const gle = useGenericLiveEdit(liveEditPath)
+  const ble = useBodyLiveEdit()
+  const liveEdit = liveEditPath ? gle : ble
 
   const unset = useCallback(() => {
     liveEdit.setValue(undefined)

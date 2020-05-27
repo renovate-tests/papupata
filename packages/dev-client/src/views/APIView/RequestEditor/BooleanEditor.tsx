@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo } from 'react'
 import { API } from '../../../typedAPI'
-import { useLiveEdit } from './LiveEditContext'
+import { useGenericLiveEdit } from './LiveEditContext'
 
 interface Props {
   field: API['query'][0]
@@ -8,7 +8,7 @@ interface Props {
 
 export default function BooleanEditor({ field }: Props) {
   const cp = useMemo(() => ['request', 'pq', field.name], [field.name])
-  const liveEdit = useLiveEdit(cp)
+  const liveEdit = useGenericLiveEdit(cp)
 
   const updateValue = useCallback(
     (e: React.ChangeEvent<HTMLSelectElement>) => {

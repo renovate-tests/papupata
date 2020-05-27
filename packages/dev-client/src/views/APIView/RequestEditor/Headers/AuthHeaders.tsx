@@ -1,11 +1,11 @@
 import React, { useCallback } from 'react'
 import { useConfig } from '../../../../config'
 import getAuthHeaders from '../../../../utils/getAuthHeaders'
-import { useLiveEdit } from '../LiveEditContext'
+import { useGenericLiveEdit } from '../LiveEditContext'
 import SingleHeaderEditor from './SingleHeaderEditor'
 
 export default function AuthHeader() {
-  const authHeaderEditor = useLiveEdit(['request', 'sendAuthHeader'])
+  const authHeaderEditor = useGenericLiveEdit(['request', 'sendAuthHeader'])
   const checked = authHeaderEditor.value ?? true
   const config = useConfig()
   const authHeaders = getAuthHeaders(config)

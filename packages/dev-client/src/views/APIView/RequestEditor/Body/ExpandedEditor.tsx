@@ -1,4 +1,4 @@
-import React, { createRef, ReactNode, useLayoutEffect, useState } from 'react'
+import React, { createRef, useLayoutEffect, useState } from 'react'
 import styled from 'styled-components'
 
 interface Props {

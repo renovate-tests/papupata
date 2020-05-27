@@ -5,12 +5,13 @@ import React from 'react'
 
 interface Props {
   type: JsonAPITypeNamingWrapper
+  setupDefaultValue: boolean
 }
 
-export default function TypeNamingWrapper({ type }: Props) {
+export default function TypeNamingWrapper({ type, setupDefaultValue }: Props) {
   return (
     <NamedTypeProvider namedTypes={type.namedTypes}>
-      <TypeEditor type={type.mainType} />
+      <TypeEditor type={type.mainType} setupDefaultValue={setupDefaultValue} />
     </NamedTypeProvider>
   )
 }

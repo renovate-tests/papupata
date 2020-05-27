@@ -35,7 +35,7 @@ const NameColumn = styled.td`
 
 export default function ObjectProperty({ property, even }: Props) {
   const [expanded, setExpanded] = useState(false)
-  const UnwrappedEditor = <TypeEditor type={property.type} />
+  const UnwrappedEditor = <TypeEditor type={property.type} setupDefaultValue={property.required} />
   const toggleExpanded = useCallback(() => setExpanded((x) => !x), [])
   const Editor = (
     <NestedLiveEditProvider addToPath={property.name}>

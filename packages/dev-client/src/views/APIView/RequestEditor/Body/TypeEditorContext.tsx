@@ -3,6 +3,7 @@ import { JSONApiType } from 'papudoc/dist/jsonAPI'
 
 export interface TypeEditorProps {
   type: JSONApiType
+  setupDefaultValue: boolean
 }
 /*
 interface Ctx {

@@ -21,7 +21,7 @@ export default function BodyEditor() {
       {api.body ? (
         <typePathContext.Provider value={[]}>
           <TypeEditorProvider>
-            <TypeEditor type={api.body} />
+            <TypeEditor type={api.body} setupDefaultValue={true} />
           </TypeEditorProvider>
         </typePathContext.Provider>
       ) : (

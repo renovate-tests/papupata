@@ -34,7 +34,7 @@ interface StoreData {
     [name: string]: {
       currentRequest?: RequestMeta
       pastRequests?: {
-        [name: string]: RequestMeta
+        [name: string]: RequestMeta | undefined
       }
     }
   }

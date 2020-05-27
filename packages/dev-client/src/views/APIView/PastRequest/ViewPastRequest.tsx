@@ -3,8 +3,16 @@ import React, { useCallback, useMemo } from 'react'
 import { getStore, mutateStore } from '../../../utils/store'
 import BodyView from './BodyView'
 import HeaderList from './HeaderList'
-import { ActionButton } from '../../../commonStyles'
+import { ActionButton, DeleteActionButton, SecondaryActionButton } from '../../../commonStyles'
 import navigate from '../../../navigate'
+import styled from 'styled-components'
+
+const Actions = styled.div`
+  float: right;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+`
 
 export default function ViewPastRequest() {
   const { apiName, requestName } = useRoute().route?.params || {}
@@ -23,14 +31,68 @@ export default function ViewPastRequest() {
     navigate.newRequest(apiName)
   }, [apiName, req])
 
+  const saveRequest = useCallback(() => {
+    const name = window.prompt('Enter name to save as')
+    if (!name) return
+    if (name === 'latest') {
+      alert('Cannot save as "latest"')
+      return
+    }
+    if (getStore().apis?.[apiName]?.pastRequests?.[name]) {
+      if (!window.prompt('Overwrite ' + name + '?')) {
+        return
+      }
+    }
+
+    mutateStore((store) => {
+      store.apis![apiName]!.pastRequests![name] = req!
+      navigate.toPastRequest(apiName, name)
+    })
+  }, [req, apiName])
+
+  const renameRequest = useCallback(() => {
+    const name = window.prompt('Enter name to save as', requestName)
+    if (!name) return
+    if (name === requestName) return
+    if (name === 'latest') {
+      alert('Cannot save as "latest"')
+      return
+    }
+    if (getStore().apis?.[apiName]?.pastRequests?.[name]) {
+      if (!window.prompt('Overwrite ' + name + '?')) {
+        return
+      }
+    }
+
+    mutateStore((store) => {
+      store.apis![apiName]!.pastRequests![name] = req!
+      store.apis![apiName]!.pastRequests![requestName] = undefined
+      navigate.toPastRequest(apiName, name)
+    })
+  }, [req, apiName, requestName])
+
+  const handleDelete = useCallback(() => {
+    if (!window.confirm('Are you sure you want to delete?')) return
+    mutateStore((store) => {
+      store.apis![apiName]!.pastRequests![requestName] = undefined
+      navigate.toAPI(apiName)
+    })
+  }, [req, apiName, requestName])
+
   if (!req) return null
   const { response, request } = req
   if (!response || !request) return null
   return (
     <div>
-      <ActionButton style={{ float: 'right' }} onClick={createNewRequestBasedOnThis}>
-        New request based on this
-      </ActionButton>
+      <Actions>
+        <ActionButton onClick={createNewRequestBasedOnThis}>New request based on this</ActionButton>
+        {requestName === 'latest' ? (
+          <SecondaryActionButton onClick={saveRequest}>Save</SecondaryActionButton>
+        ) : (
+          <SecondaryActionButton onClick={renameRequest}>Rename</SecondaryActionButton>
+        )}
+        <DeleteActionButton onClick={handleDelete}>Delete</DeleteActionButton>
+      </Actions>
       <h3>{requestName}</h3>
       <div>Timestamp: {new Date(response.timestamp).toISOString()}</div>
       <h3>Response</h3>

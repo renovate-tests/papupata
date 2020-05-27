@@ -13,3 +13,18 @@ export const ActionButton = styled.button`
     background: green;
   }
 `
+export const SecondaryActionButton = styled(ActionButton)`
+  background: blue;
+  &:focus,
+  &:hover {
+    background: deepskyblue;
+  }
+`
+
+export const DeleteActionButton = styled(ActionButton)`
+  background: darkred;
+  &:focus,
+  &:hover {
+    background: red;
+  }
+`

@@ -7,7 +7,7 @@ import pick from 'lodash/pick'
 import getCSRFHeader from './utils/getCSRFHeader'
 
 export default async function makeRequest(config: Config, api: API, requestName: string) {
-  const request = getStore().apis?.[api.name]?.pastRequests?.[requestName].request
+  const request = getStore().apis?.[api.name]?.pastRequests?.[requestName]?.request
   if (!request) throw new Error('Request not found')
   const before = new Date()
   try {

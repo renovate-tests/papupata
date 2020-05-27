@@ -8,37 +8,37 @@ type SimpleJSONApiType = {
   type: 'string' | 'number' | 'boolean' | 'undefined' | 'null' | 'void' | 'unknown' | 'never' | 'enumliteral' | 'any'
 }
 
-interface StringLiteralApiType {
+export interface StringLiteralApiType {
   type: 'stringLiteral'
   value: string
 }
 
-interface NumberLiteralApiType {
+export interface NumberLiteralApiType {
   type: 'numberLiteral'
   value: number
 }
 
-interface BooleanLiteralApiType {
+export interface BooleanLiteralApiType {
   type: 'booleanLiteral'
   value: boolean
 }
 
-interface TypeNamingWrapper {
+export interface TypeNamingWrapper {
   type: 'typeNamingWrapper'
   mainType: JSONApiType
   namedTypes: JSONApiType[]
 }
-interface UnionApiType {
+export  interface UnionApiType {
   type: 'union'
   unionOf: JSONApiType[]
 }
 
-interface ArrayApiType {
+export  interface ArrayApiType {
   type: 'array'
   itemType: JSONApiType
 }
 
-interface ObjectApiType {
+export interface ObjectApiType {
   type: 'object'
   properties: Array<{
     name: string

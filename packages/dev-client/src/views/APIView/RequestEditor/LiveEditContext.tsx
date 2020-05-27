@@ -16,6 +16,10 @@ interface ProviderProps {
   children: ReactNode
   path: string[]
 }
+interface NestedProviderProps {
+  children: ReactNode
+  addToPath: string
+}
 
 export function LiveEditProvider({ children, path }: ProviderProps) {
   const [version, setVersion] = useState(0)
@@ -23,11 +27,18 @@ export function LiveEditProvider({ children, path }: ProviderProps) {
   return <liveEditContext.Provider value={{ version, incrementVersion, path }}>{children}</liveEditContext.Provider>
 }
 
+export function NestedLiveEditProvider({ children, addToPath }: NestedProviderProps) {
+  const parent = useContext(liveEditContext)
+  const parentPath = parent.path
+  const myPath = useMemo(() => [...parentPath, addToPath], [parentPath, addToPath])
+  return <liveEditContext.Provider value={{ ...parent, path: myPath }}>{children}</liveEditContext.Provider>
+}
+
 export function useLiveEdit<ValueType = any>(childPath: string[]) {
   const lec = useContext(liveEditContext)
 
   return useMemo(() => {
-    const value = get(getStore(), [...lec.path, ...childPath]) as (ValueType | undefined)
+    const value = get(getStore(), [...lec.path, ...childPath]) as ValueType | undefined
     const setValue = (newValue: ValueType) => {
       mutateStore((store) => set(store, [...lec.path, ...childPath], newValue))
       lec.incrementVersion()

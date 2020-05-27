@@ -56,5 +56,6 @@
     "@types/react-syntax-highlighter": "^11.0.4",
     "@types/uuid": "^8.0.0"
   },
-  "proxy": "http://localhost:3000"
+  "proxy": "http://localhost:3000",
+  "homepage": "."
 }

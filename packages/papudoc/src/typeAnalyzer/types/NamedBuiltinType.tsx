@@ -31,6 +31,8 @@ export default class NamedBuiltinType extends TsType {
       }
     }
     switch (this.name) {
+      case 'void':
+        return { type: 'void', name: this.name }
       case 'string':
         return { type: 'string', name: this.name }
       case 'number':
@@ -50,7 +52,8 @@ export default class NamedBuiltinType extends TsType {
       case 'enumliteral':
         return { type: 'enumliteral', name: this.name } // evidently not supported properly
       default:
-        throw new Error('NamedBuiltinType does not support ' + this.name + ' for JSON output')
+        console.warn('NamedBuiltinType does not support ' + this.name + ' for JSON output')
+        return { type: 'unknown', name: this.name }
     }
   }
 }

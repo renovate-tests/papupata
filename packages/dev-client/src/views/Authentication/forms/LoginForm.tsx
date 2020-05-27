@@ -2,8 +2,9 @@ import React, { useCallback } from 'react'
 import { mutateStore } from '../../../utils/store'
 import UsernamePasswordForm from './UsernamePasswordForm'
 import useLatest from '../../../utils/useLatest'
-import { useConfig, ResponseHandling } from '../../../config'
+import { useConfig, ResponseHandling, Config } from '../../../config'
 import { Awaited } from '../../../types'
+import getCSRFHeader from '../../../utils/getCSRFHeader'
 
 interface Props {
   retryAuth(): void
@@ -38,7 +39,14 @@ function useLogin() {
       const login = config.authentication?.loginMechanism
       if (!login || typeof login !== 'object' || login.type !== 'loginForm') throw new Error('Invalid state')
 
-      const response = await makeLoginRequest(login.path, login.usernameField, username, login.passwordField, password)
+      const response = await makeLoginRequest(
+        login.path,
+        login.usernameField,
+        username,
+        login.passwordField,
+        password,
+        config
+      )
       await handleResponse(login.responseHandling, response)
     },
     [config]
@@ -50,20 +58,24 @@ function makeLoginRequest(
   usernameField: string,
   username: string,
   passwordField: string,
-  password: string
+  password: string,
+  config: Config
 ) {
   const body = JSON.stringify({
     [usernameField]: username,
     [passwordField]: password,
   })
-  return fetch(path, {
-    method: 'POST',
-    body,
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-    },
-  })
+  return getCSRFHeader(config).then((csrfHeader) =>
+    fetch(path, {
+      method: 'POST',
+      body,
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        ...(csrfHeader || {}),
+      },
+    })
+  )
 }
 
 async function handleResponse(handling: ResponseHandling, response: Awaited<ReturnType<typeof fetch>>) {

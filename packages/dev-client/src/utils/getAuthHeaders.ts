@@ -6,10 +6,7 @@ const base64Encode = btoa
 export default function getAuthHeaders(config: Config): any {
   const tokenDelivery = config.authentication?.tokenDeliveryMechanism
 
-  if (!tokenDelivery || tokenDelivery === 'cookie')
-    return {
-      Authorization: 'Bearer 123',
-    }
+  if (!tokenDelivery || tokenDelivery === 'cookie') return {}
   if (tokenDelivery === 'bearerAuth') {
     return {
       Authorization: 'Bearer ' + getStore().authentication?.token,

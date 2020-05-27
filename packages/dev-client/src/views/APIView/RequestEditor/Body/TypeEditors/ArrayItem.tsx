@@ -1,6 +1,6 @@
 import { JSONApiType } from 'papudoc/dist/jsonAPI'
 import React, { useCallback, useState } from 'react'
-import { isSimple, Row, Separator } from './common'
+import { isSimple, Row } from './common'
 import { TypeEditor } from '../TypeEditorContext'
 import { NestedLiveEditProvider, useBodyLiveEdit } from '../../LiveEditContext'
 import produce from 'immer'
@@ -14,8 +14,7 @@ interface Props {
 }
 const TD = styled.td`
   vertical-align: top;
- `
-
+`
 
 export default function ArrayItem({ index, type }: Props) {
   const { value, setValue } = useBodyLiveEdit<any[]>()

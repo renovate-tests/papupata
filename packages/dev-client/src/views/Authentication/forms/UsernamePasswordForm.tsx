@@ -36,7 +36,7 @@ export default function UsernamePasswordForm({ onSubmit }: Props) {
         </form.Entry>
         <form.Entry>
           <form.FormLabel>Password</form.FormLabel>
-          <form.FormInput onChange={updatePassword} value={password} />
+          <form.FormInput type={'password'} onChange={updatePassword} value={password} />
         </form.Entry>
         <form.Submit>Log in</form.Submit>
       </form>

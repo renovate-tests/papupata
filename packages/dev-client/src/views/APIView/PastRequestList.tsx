@@ -7,7 +7,7 @@ interface Props {
 }
 
 export default function PastRequestList({ apiName }: Props) {
-  const pastRequests = useMemo(() => getStore().apis?.[apiName].pastRequests, [apiName])
+  const pastRequests = useMemo(() => getStore().apis?.[apiName]?.pastRequests, [apiName])
 
   return (
     <div>

@@ -4,6 +4,7 @@ import getAuthHeaders from './utils/getAuthHeaders'
 import { API } from './typedAPI'
 import qs from 'qs'
 import pick from 'lodash/pick'
+import getCSRFHeader from './utils/getCSRFHeader'
 
 export default async function makeRequest(config: Config, api: API, requestName: string) {
   const request = getStore().apis?.[api.name]?.pastRequests?.[requestName].request
@@ -21,13 +22,16 @@ export default async function makeRequest(config: Config, api: API, requestName:
       store.apis![api.name]!.pastRequests![requestName]!.sent = new Date().valueOf()
     })
 
+    const csrfHeader = await getCSRFHeader(config)
+    let method = api.method.toUpperCase()
     const fetched = await fetch(url, {
-      method: api.method,
+      method,
       headers: {
         ...(request.sendAuthHeader ? getAuthHeaders(config) : {}),
         ...Object.fromEntries((request.headers || []).filter((h) => h.name && h.value).map((h) => [h.name, h.value])),
+        ...(csrfHeader || {}),
       },
-      body: api.method === 'POST' || api.method === 'PUT' || api.method === 'PATCH' ? body : undefined,
+      body: method === 'POST' || method === 'PUT' || method === 'PATCH' ? body : undefined,
     })
     const text = await fetched.text()
     const responseHeaders: PPHeader[] = []

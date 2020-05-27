@@ -7,7 +7,7 @@ import beautifyHTML from '../../../utils/beautifyHTML'
 const Unspecified = styled.div`
   font-family: Consolas, 'Liberation Mono', Menlo, Courier, monospace;
   color: yellowgreen;
-  white-space: pre-line;
+  white-space: pre;
   border: 1px solid black;
   padding: 8px;
   font-size: 0.8em;
@@ -20,6 +20,7 @@ interface Props {
   children: string
   heading: ReactNode
 }
+
 
 export default function BodyView({ children, heading }: Props) {
   const [raw, setRaw] = useState(false)
@@ -52,7 +53,7 @@ function renderBody(body: string) {
     return {
       raw: false,
       elem: (
-        <SyntaxHighlighter language="html" style={docco}>
+        <SyntaxHighlighter language="html" style={docco} customStyle={{whiteSpace:'pre-wrap'}}>
           {beautifyHTML(body)}
         </SyntaxHighlighter>
       ),
@@ -61,7 +62,7 @@ function renderBody(body: string) {
     return {
       raw: false,
       elem: (
-        <SyntaxHighlighter language="json" style={docco}>
+        <SyntaxHighlighter language="json" style={docco} customStyle={{whiteSpace:'pre-wrap'}}>
           {JSON.stringify(JSON.parse(body), null, 2)}
         </SyntaxHighlighter>
       ),

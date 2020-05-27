@@ -7,6 +7,7 @@ const defaultConfig: Config = {
     { name: 'Content-Type', value: 'application/json' },
     { name: 'Accept', value: 'application/json' },
   ],
+  apiURL: '/',
 }
 
 export default defaultConfig

@@ -18,13 +18,13 @@ const BigCol = styled.div`
   }
 `
 
-const Textarea = styled.textarea`height: 150px;`
+const Textarea = styled.textarea`
+  height: 150px;
+`
 
 export default function StringEditor() {
   const liveEdit = useBodyLiveEdit()
   const optionsEdit = useTypeEditOptions<Options>({})
-
-  console.log(optionsEdit.value)
 
   const effectiveValue = typeof liveEdit.value !== 'string' ? '' : liveEdit.value || ''
 

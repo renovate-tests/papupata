@@ -2,7 +2,7 @@ import { useBodyLiveEdit } from '../../LiveEditContext'
 import React, { useCallback } from 'react'
 import { ArrayApiType } from 'papudoc/dist/jsonAPI'
 import ArrayItem from './ArrayItem'
-import { Row, Separator, Table } from './common'
+import { Separator, Table } from './common'
 import styled from 'styled-components'
 
 interface Props {

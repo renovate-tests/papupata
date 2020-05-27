@@ -2,8 +2,8 @@ import { JSONApiType, ObjectApiType } from 'papudoc/dist/jsonAPI'
 import { TypeEditor } from '../TypeEditorContext'
 import React from 'react'
 import styled from 'styled-components'
-import OptionalFieldWrapper from '../OptionalFieldWrapper'
 import { NestedLiveEditProvider } from '../../LiveEditContext'
+import OptionalWrapper from '../../OptionalWrapper'
 
 interface Props {
   type: ObjectApiType
@@ -26,12 +26,13 @@ export default function ObjectEditor({ type }: Props) {
       <tbody>
         {type.properties.map((property) => {
           const UnwrappedEditor = <TypeEditor type={property.type} />
-          const NonLiveEditor = property.required ? (
-            UnwrappedEditor
-          ) : (
-            <OptionalFieldWrapper>{UnwrappedEditor}</OptionalFieldWrapper>
+          const Editor = (
+            <NestedLiveEditProvider addToPath={property.name}>
+              <OptionalWrapper isRequired={property.required} liveEditPath={[]}>
+                {UnwrappedEditor}
+              </OptionalWrapper>
+            </NestedLiveEditProvider>
           )
-          const Editor = <NestedLiveEditProvider addToPath={property.name}>{NonLiveEditor}</NestedLiveEditProvider>
           if (isSimple(property.type)) {
             return (
               <tr>

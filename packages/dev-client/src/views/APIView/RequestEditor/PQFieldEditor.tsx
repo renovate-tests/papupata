@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { API } from '../../../typedAPI'
 import OptionalWrapper from './OptionalWrapper'
 import StringEditor from './StringEditor'
@@ -15,14 +15,16 @@ const editors: { [key: string]: React.FC<Props> } = {
 
 export default function PQFieldEditor({ field }: Props) {
   const Editor = editors[field.type]
+  const liveEditPath = useMemo(() => ['request', 'pq', field.name], [field.name])
   if (!Editor) return <div>No editor for {field.type}</div>
   return (
     <div>
       {field.name}
 
-      <OptionalWrapper field={field}>
+      <OptionalWrapper isRequired={!field.optional} liveEditPath={liveEditPath}>
         <Editor field={field} />
       </OptionalWrapper>
     </div>
   )
 }
+

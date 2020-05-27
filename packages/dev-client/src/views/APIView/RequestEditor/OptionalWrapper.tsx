@@ -5,7 +5,8 @@ import { useLiveEdit } from './LiveEditContext'
 import styled, { css } from 'styled-components'
 
 interface Props {
-  field: API['query'][0]
+  isRequired: boolean
+  liveEditPath: string[]
   children: ReactNode
 }
 
@@ -33,15 +34,15 @@ const NoValueLabel = styled.div`
   margin-right: 20px;
 `
 
-export default function OptionalWrapper({ children, field }: Props) {
-  const cp = useMemo(() => ['request', 'pq', field.name], [field.name])
-  const liveEdit = useLiveEdit(cp)
+export default function OptionalWrapper({ children, isRequired, liveEditPath }: Props) {
+
+  const liveEdit = useLiveEdit(liveEditPath)
 
   const unset = useCallback(() => {
     liveEdit.setValue(undefined)
   }, [liveEdit])
 
-  if (!field.optional) {
+  if (isRequired) {
     return <div>{children}</div>
   } else {
     const active = liveEdit.value !== undefined

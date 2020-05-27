@@ -5,6 +5,7 @@ import ts from 'typescript'
 import MemberTable from '../../front/ApiView/MemberTable'
 import TsType, { Complexity, RenderContext } from '../TsType'
 import { AnalyserContext } from '../typeAnalyzer'
+import { JSONApiType } from '../../jsonAPI'
 
 interface Property {
   name: string
@@ -92,6 +93,19 @@ export default class ObjectType extends TsType {
       return `"${plainName.replace(/"/g, '\\"')}"`
     }
   }
+
+  toJSON(ctx: RenderContext): JSONApiType {
+    return {
+      type: 'object',
+      properties: this.properties.map((property) => ({
+        name: property.name,
+        description: property.description,
+        required: property.required,
+        type: ctx.renderNestedJSON!(property.type),
+      })),
+      name: this.name,
+    }
+  }
 }
 
 function getTypeParameterIndex(type: ts.Type, name: string) {
@@ -108,7 +122,6 @@ export function findResolvedTypeAutonest(ctx: AnalyserContext, referenceType: ts
   if (!found) return found
 
   if (found.flags & ts.SymbolFlags.TypeParameter) {
-    console.log('AAUTONEST')
     return findResolvedTypeAutonest(ctx, found, debug)
   }
   return found

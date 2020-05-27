@@ -1,13 +1,12 @@
-import TsType, {Complexity} from '../TsType'
+import TsType, { Complexity } from '../TsType'
 import ts from 'typescript'
 import React from 'react'
+import { JSONApiType } from '../../jsonAPI'
 
 export default class StringLiteral extends TsType {
   constructor(type: ts.Type) {
-    super([], type);
-
+    super([], type)
   }
-
 
   private get literalValue() {
     return (this.type as ts.LiteralType).value
@@ -21,7 +20,15 @@ export default class StringLiteral extends TsType {
     return `"${this.literalValue}"`
   }
 
+  toJSON(): JSONApiType {
+    return {
+      type: 'stringLiteral',
+      value: this.literalValue as string,
+      name: this.name,
+    }
+  }
+
   get complexity(): Complexity {
-    return Complexity.Trivial;
+    return Complexity.Trivial
   }
 }

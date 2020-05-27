@@ -68,7 +68,7 @@ export function analyzeTypeInternal(outerCtx: AnalyserContext, contextualName: s
     [ts.TypeFlags.Never, 'never'],
     [ts.TypeFlags.BigInt, 'bigint'],
     [ts.TypeFlags.StringLiteral, () => new StringLiteral(type)],
-    [ts.TypeFlags.NumberLiteral, (type as ts.LiteralType).value?.toString()],
+    [ts.TypeFlags.NumberLiteral, (type as ts.LiteralType).value?.toString()], // probably should have a number literal type
     [ts.TypeFlags.BooleanLiteral, () => new BooleanLiteral(type, ctx)],
     [
       ts.TypeFlags.Object,

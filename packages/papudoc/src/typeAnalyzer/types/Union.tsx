@@ -2,6 +2,7 @@ import TsType, { Complexity, RenderContext } from '../TsType'
 import React from 'react'
 import ts from 'typescript'
 import { AnalyserContext } from '../typeAnalyzer'
+import { JSONApiType } from '../../jsonAPI'
 
 export default class Union extends TsType {
   private innerTypes: TsType[]
@@ -41,4 +42,14 @@ export default class Union extends TsType {
       })
       .join(' | ')
   }
+
+
+  toJSON(ctx: RenderContext): JSONApiType {
+    return {
+      type: 'union',
+      unionOf: this.innerTypes.map(inner => ctx.renderNestedJSON!(inner)),
+      name: this.name
+    }
+  }
+
 }

@@ -1,5 +1,6 @@
 import ts = require('typescript')
 import { ReactNode } from 'react'
+import { JSONApiType } from '../jsonAPI'
 
 export type RenderLink = (toType: TSType, context: string[]) => ReactNode
 export type CreateReference = (toType: TSType, context: string[]) => void
@@ -21,6 +22,7 @@ export interface RenderContext {
   useCanonicalNames: boolean
   renderNestedTypeReact: (type: TSType) => ReactNode
   renderNestedTypeString: (type: TSType) => string
+  renderNestedJSON?: (type: TSType) => JSONApiType
   types: TSType[]
 }
 
@@ -53,4 +55,5 @@ export default abstract class TSType {
 
   public abstract toTypeString(ctx: RenderContext): string
   public abstract toReact(ctx: RenderContext): ReactNode
+  public abstract toJSON(ctx: RenderContext): JSONApiType
 }

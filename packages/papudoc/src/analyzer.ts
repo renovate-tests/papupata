@@ -179,7 +179,6 @@ interface API {
 
 function* findAPIs(api: any, currentPath: string[] = []): IterableIterator<API> {
   for (const [key, value] of Object.entries(api) as any[]) {
-    console.log(key, currentPath)
     if (value?.apiUrlParameters) {
       yield {
         path: [...currentPath, key],

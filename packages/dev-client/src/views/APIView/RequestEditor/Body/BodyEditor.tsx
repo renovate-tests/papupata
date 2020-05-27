@@ -18,11 +18,15 @@ export default function BodyEditor() {
   return (
     <Section>
       <SectionHeader>Body</SectionHeader>
-      <typePathContext.Provider value={[]}>
-        <TypeEditorProvider>
-          <TypeEditor type={api.body} />
-        </TypeEditorProvider>
-      </typePathContext.Provider>
+      {api.body ? (
+        <typePathContext.Provider value={[]}>
+          <TypeEditorProvider>
+            <TypeEditor type={api.body} />
+          </TypeEditorProvider>
+        </typePathContext.Provider>
+      ) : (
+        <p>This API has no body.</p>
+      )}
     </Section>
   )
 }

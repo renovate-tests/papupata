@@ -1,9 +1,8 @@
-import { createContext, useContext } from 'react'
-import React from 'react'
-import { AnyType } from '../../../../typedAPI'
+import React, { createContext, useContext } from 'react'
+import { JSONApiType } from 'papudoc/dist/jsonAPI'
 
 export interface TypeEditorProps {
-  type: AnyType
+  type: JSONApiType
 }
 /*
 interface Ctx {

@@ -25,8 +25,8 @@ const api = {
    * @param id This is the id for the thing
    *  @param gamma is also kinda cool
    * */
-  testGet3: decl
-    .declareGetAPI('/test-get/:id')
+  testPost3: decl
+    .declarePostAPI('/test-get/:id')
     .params(['id', 'alsodesc', 'nodesc'] as const)
     .query(['alpha'] as const)
     .optionalQuery(['gamma'] as const)

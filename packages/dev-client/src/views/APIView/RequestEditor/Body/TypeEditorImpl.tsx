@@ -4,6 +4,7 @@ import StringEditor from './TypeEditors/StringEditor'
 import TypeNamingWrapper from './TypeEditors/TypeNamingWrapper'
 import ObjectEditor from './TypeEditors/ObjectEditor'
 import DefaultValueInserter from './DefaultValueInserter'
+import NumberEditor from './TypeEditors/NumberEditor'
 
 export default function TypeEditorImpl({ type, setupDefaultValue }: TypeEditorProps) {
   switch (type.type) {
@@ -11,6 +12,8 @@ export default function TypeEditorImpl({ type, setupDefaultValue }: TypeEditorPr
       return <TypeNamingWrapper type={type} setupDefaultValue={setupDefaultValue} />
     case 'string':
       return defaultValueWrapper(<StringEditor />,  '')
+    case 'number':
+      return defaultValueWrapper(<NumberEditor />,  0)
     case 'object':
       return defaultValueWrapper(<ObjectEditor type={type} />,  {})
     default:

@@ -1,3 +1,6 @@
+  1.7.0
+- Added explicit types to greatly improve tsc performance on code bases that use papupata
+
   1.6.0
 - Typescript build now targets ES5; it still expected promises at least to be available, so on es5 targets polyfilling will be needed.
   

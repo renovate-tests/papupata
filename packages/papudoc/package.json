@@ -1,6 +1,6 @@
 {
   "name": "papudoc",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "API documentation generator for papupata",
   "license": "MIT",
   "author": {
@@ -40,7 +40,7 @@
     "@types/react": "16.9.19",
     "@types/react-dom": "16.9.5",
     "@types/styled-components": "5.1.0",
-    "papupata": "^1.7.0-alpha.0",
+    "papupata": "^1.7.0",
     "prettier": "2.0.2",
     "serve": "11.3.1",
     "typescript": "3.9.3"

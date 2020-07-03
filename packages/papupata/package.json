@@ -42,7 +42,7 @@
     "build": "npx tsc --project tsconfig.json",
     "clean": "rm -rf ./dist",
     "test": "jest",
-    "prepare": "npm run build",
+    "prepare": "if [ -e node_modules ]; then npm run build; fi",
     "prepublishOnly": "npm run clean && npm run build",
     "release": "npm test && npm-release"
   },

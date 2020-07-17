@@ -52,7 +52,7 @@
     "react-helmet": "5.2.1",
     "react-syntax-highlighter": "12.2.1",
     "styled-components": "5.1.1",
-    "typescript": "3.9.6"
+    "typescript": "3.9.7"
   },
   "devDependencies": {
     "@types/classnames": "2.2.10",

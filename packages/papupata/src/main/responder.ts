@@ -16,6 +16,12 @@ import {
 } from './responderTypes'
 import runExpressMiddleware from './runExpressMiddleware'
 import { ActualOptionalTypeMap, ActualTypeMap, Method, StringTupleElementTypes } from './types'
+import {
+  extractHardCodedParameters,
+  getQueryWithHardCodedParameters,
+  matchesHardCodedParameters,
+  verifyHardCodedQueryParameterDeclarationLegality,
+} from './utils/hardCodedParameterSupport'
 import { paramMatchers } from './utils/paramMatchers'
 import { runHandlerChain } from './utils/runHandlerChain'
 
@@ -37,7 +43,7 @@ export function responder<
   _bodyPlaceholder: BodyType,
   _bodyPlaceholder2: BodyInputType,
   method: Method,
-  path: string,
+  pathWithHardCodedParameters: string,
   parent: IAPIDeclaration<RequestType, RouteOptions, RequestOptions>,
   routeOptions: RouteOptions
 ) {
@@ -82,6 +88,9 @@ export function responder<
         mockFn: MockFn
       }
 
+      const { path, hardCodedParameters } = extractHardCodedParameters(pathWithHardCodedParameters)
+      verifyHardCodedQueryParameterDeclarationLegality(hardCodedParameters, [...query, ...boolQuery], optionalQuery)
+
       let mockImpl: ActiveMock | null = null
 
       function call(
@@ -103,11 +112,11 @@ export function responder<
         const requestOptions = separateBody && hasOtherArgs ? argsArr[2] : (argsArr[1] as any)
 
         const reqParams = pick(args, params),
-          reqQuery = {
+          reqQuery = getQueryWithHardCodedParameters(hardCodedParameters, {
             ...pick(args, query),
             ...pick(args, optionalQuery),
             ...fromPairs(boolQuery.map((key) => [key, (!!(args as any)[key]).toString()])),
-          },
+          }),
           reqBody = separateBody ? argsArr[0] : omit(args, [...params, ...query, ...boolQuery, ...optionalQuery])
 
         if (mockImpl) {
@@ -213,6 +222,10 @@ export function responder<
       }
 
       async function expressImplementation(req: ExpressRequest, res: Response, next: any) {
+        if (!matchesHardCodedParameters(req, hardCodedParameters)) {
+          return next()
+        }
+
         const impl = call.implementation
 
         try {

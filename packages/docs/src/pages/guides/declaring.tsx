@@ -138,7 +138,11 @@ const IndexPage = () => (
                       Path parameters must be present in the url passed to the declaration function; they are indicated by a colon before
                       the parameter name.
                     </p>
-                    <p>Query parameters are NOT included in the url, however.</p>
+                    <p>
+                      Query parameters are generally speaking NOT included in the url, however you can include query-based rules in the path
+                      when APIs only differ from each other by their query parameters. See{' '}
+                      <Link to="/guides/declaring/query-based-variants">Query-based variants</Link> for more information.
+                    </p>
                   </LineIndent>
                   <LineIndent>
                     <Example>, routeOptions)</Example>

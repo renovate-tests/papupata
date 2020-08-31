@@ -3,19 +3,11 @@ import { ucFirst } from '../utils'
 import IndexLayout from '../layouts'
 import Page from './Page'
 import Container from './Container'
-import {
-  Purpose,
-  Usage,
-  Parameters,
-  MethodReturnType,
-  Parameter,
-  Examples,
-  Example,
-  AvailableFrom,
-} from './api-components'
+import { Purpose, Usage, Parameters, MethodReturnType, Parameter, Examples, Example, AvailableFrom } from './api-components'
 import { IncompleteApiDeclarationLink } from './links'
+import { Link } from 'gatsby'
 
-type Props = { method: string, availableFrom?: '1.5.0' }
+type Props = { method: string; availableFrom?: '1.5.0' }
 export default function DeclareAPIPage({ method, availableFrom }: Props) {
   return (
     <IndexLayout>
@@ -25,17 +17,20 @@ export default function DeclareAPIPage({ method, availableFrom }: Props) {
           <h2>class APIDeclaration</h2>
           <h3>method declare{ucFirst(method)}API</h3>
         </Container>
-        {availableFrom && <AvailableFrom version={availableFrom}/>}
+        {availableFrom && <AvailableFrom version={availableFrom} />}
         <Purpose>Used for declaring an API using the HTTP {method.toUpperCase()} method</Purpose>
         <Usage>APIs can be declared at any time.</Usage>
         <Parameters>
           <Parameter name="path" dataType="string">
             Path to the API under the base URL of the APIDeclaration.
+            <p>
+              Version 1.8.0 onwards: If you wish to declare different APIs on the same path but different query parameters, see{' '}
+              <Link to="/guides/declaring/query-based-variants">Query-based variants</Link> for more information.
+            </p>
           </Parameter>
-          <Parameter name='routeOptions' dataType='varies'>
-            Options to the route. Type type is specified by the RouteOptions type parameter of the API declaration.
-
-            They have no inherent meaning in papupata, they are simply stored to be used by the application.
+          <Parameter name="routeOptions" dataType="varies">
+            Options to the route. Type type is specified by the RouteOptions type parameter of the API declaration. They have no inherent
+            meaning in papupata, they are simply stored to be used by the application.
           </Parameter>
         </Parameters>
         <MethodReturnType>

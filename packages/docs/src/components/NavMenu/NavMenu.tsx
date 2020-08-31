@@ -30,8 +30,17 @@ const Property = styled.span``
 export const guides: NavEntries = {
   '/guides/declaring': {
     label: 'Declaring APIs',
-    description:
-      'This guide will help you declare APIs whether to model the APIs your application is going to implement them, call them or both.'
+    children: {
+      '/guides/declaring': {
+        label: 'Basics',
+        description:
+          'This guide will help you declare APIs whether to model the APIs your application is going to implement them, call them or both.'
+      },
+      '/guides/declaring/query-based-variants': {
+        label: 'Query-based variants',
+        description: 'Sometimes APIs differ from each other just by their query parameters. This can be presented in papupata, as well.'
+      }
+    }
   },
   '/guides/metadata': {
     label: 'Accessing metadata',

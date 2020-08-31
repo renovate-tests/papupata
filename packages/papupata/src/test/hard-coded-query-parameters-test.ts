@@ -1,3 +1,4 @@
+import requestPromise from 'request-promise'
 import { v4 as uuid } from 'uuid'
 import { APIDeclaration } from '../main'
 import middleware204 from '../main/middleware204'
@@ -169,6 +170,20 @@ describe('hard-coded-query-parameters-test', function () {
         expect(() => api({ hardCoded: 'somethingElse' })).toThrowError(
           `The parameter hardCoded, if present, is required to have the value "hcValue" (given: "somethingElse").`
         )
+      })
+
+      it('multiple causes one to be picked', async function () {
+        const path = uniquePath()
+        const api = API.declareGetAPI(path + '?hardCoded=val1&hardCoded=val2&hardCoded=val3').response<any>()
+        testServer.getApp().get(path, (req, res) => {
+          res.send(req.query)
+        })
+
+        // When
+        const response = await api()
+
+        // Then
+        expect(response).toEqual({ hardCoded: 'val3' }) // always the last one with the current implementation
       })
     })
     describe('any but required value parameters', function () {
@@ -380,6 +395,19 @@ describe('hard-coded-query-parameters-test', function () {
           expect(matchImpl).toHaveBeenCalled()
           expect(nonMatch2Impl).not.toHaveBeenCalled()
         })
+
+        it('multiple', async function () {
+          const path = uniquePath()
+          const api = API.declareGetAPI(path + '?hc=a&hc=b&hc=c').response<void>()
+
+          const impl = jest.fn()
+          api.implement(impl)
+
+          await requestPromise(api.getURL({}).split('?')[0] + '?hc=a')
+          await requestPromise(api.getURL({}).split('?')[0] + '?hc=b')
+          await requestPromise(api.getURL({}).split('?')[0] + '?hc=c')
+          await expect(() => requestPromise(api.getURL({}).split('?')[0] + '?hc=d')).rejects.toBeDefined()
+        })
       })
 
       describe('forbidden', function () {
@@ -408,6 +436,44 @@ describe('hard-coded-query-parameters-test', function () {
 
           // When
           await withParamAPI({ param: 'abc' })
+
+          // Then
+          expect(forbiddenImpl).not.toHaveBeenCalled()
+          expect(withParamImpl).toHaveBeenCalled()
+        })
+
+        it('negative: presence as empty string prevents routing to the API', async function () {
+          const path = uniquePath()
+          const forbiddenAPI = API.declareGetAPI(path + '?!param').response<void>()
+          const withParamAPI = API.declareGetAPI(path)
+            .query(['param'] as const)
+            .response<void>()
+          const forbiddenImpl = jest.fn()
+          const withParamImpl = jest.fn()
+          forbiddenAPI.implement(forbiddenImpl)
+          withParamAPI.implement(withParamImpl)
+
+          // When
+          await withParamAPI({ param: '' })
+
+          // Then
+          expect(forbiddenImpl).not.toHaveBeenCalled()
+          expect(withParamImpl).toHaveBeenCalled()
+        })
+
+        it('negative: presence as valueless prevents routing to the API', async function () {
+          const path = uniquePath()
+          const forbiddenAPI = API.declareGetAPI(path + '?!param').response<void>()
+          const withParamAPI = API.declareGetAPI(path)
+            .query(['param'] as const)
+            .response<void>()
+          const forbiddenImpl = jest.fn()
+          const withParamImpl = jest.fn()
+          forbiddenAPI.implement(forbiddenImpl)
+          withParamAPI.implement(withParamImpl)
+          const url = forbiddenAPI.getURL({})
+          // When
+          await requestPromise.get(url + '?param') // there is no way to have papupata invoke it like this
 
           // Then
           expect(forbiddenImpl).not.toHaveBeenCalled()
@@ -445,6 +511,22 @@ describe('hard-coded-query-parameters-test', function () {
           // Then
           expect(impl).toHaveBeenCalled()
         })
+        it('positive: works with valueless', async function () {
+          const path = uniquePath()
+          const anyValueAPI = API.declareGetAPI(path + '?param')
+            .query(['param'] as const)
+            .response<void>()
+          const impl = jest.fn()
+          anyValueAPI.implement(impl)
+          const url = anyValueAPI.getURL({})
+
+          // When
+          await requestPromise.get(url + '?param') // papupata cannot make calls like this at this time
+
+          // Then
+          expect(impl).toHaveBeenCalled()
+        })
+
         it('negative: lack of prevents routing to the API', async function () {
           const path = uniquePath()
 
@@ -589,7 +671,97 @@ describe('hard-coded-query-parameters-test', function () {
             expect(hardCodedImpl).toHaveBeenCalled()
           })
         })
+
+        describe('forbidden and hard coded', function () {
+          it('positive: matches non-present', async function () {
+            const path = uniquePath()
+            const comboAPI = API.declareGetAPI(path + '?!param&param=a').response<void>()
+            const impl = jest.fn()
+            comboAPI.implement(impl)
+
+            // When
+            await comboAPI({ param: 'beta' })
+
+            // Then
+            expect(impl).toHaveBeenCalled()
+          })
+
+          it('positive: matches hard-coded value', async function () {
+            const path = uniquePath()
+            const comboAPI = API.declareGetAPI(path + '?!param&param=a')
+              .optionalQuery(['param'] as const)
+              .response<void>()
+            const impl = jest.fn()
+            comboAPI.implement(impl)
+
+            // When
+            await comboAPI({ param: 'a' })
+
+            // Then
+            expect(impl).toHaveBeenCalled()
+          })
+
+          it('negative: does not match other values', async function () {
+            const path = uniquePath()
+            const comboAPI = API.declareGetAPI(path + '?!param&param=a')
+              .optionalQuery(['param'] as const)
+              .response<void>()
+            const fallbackAPI = API.declareGetAPI(path).response<void>()
+            const comboImpl = jest.fn(),
+              fallbackImpl = jest.fn()
+            comboAPI.implement(comboImpl)
+            fallbackAPI.implement(fallbackImpl)
+
+            // When
+            await requestPromise.get(comboAPI.getURL({}).split('?')[0] + '?param=c')
+
+            // Then
+            expect(comboImpl).not.toHaveBeenCalled()
+            expect(fallbackImpl).toHaveBeenCalled()
+          })
+        })
+
+        describe('any and excluded', function () {
+          it('allows any non-excluded values', async function () {
+            const path = uniquePath()
+            const comboAPI = API.declareGetAPI(path + '?param&param!=alpha&param!=beta')
+              .query(['param'] as const)
+              .response<void>()
+            comboAPI.implement(jest.fn())
+
+            await requestPromise.get(comboAPI.getURL({}).split('?')[0] + '?param=abc')
+            await requestPromise.get(comboAPI.getURL({}).split('?')[0] + '?param=def')
+          })
+          it('disallow the excluded values', async function () {
+            const path = uniquePath()
+            const comboAPI = API.declareGetAPI(path + '?param&param!=alpha&param!=beta')
+              .query(['param'] as const)
+              .response<void>()
+            comboAPI.implement(jest.fn())
+
+            await expect(() =>
+              requestPromise.get(comboAPI.getURL({}).split('?')[0] + '?param=alpha')
+            ).rejects.toBeDefined()
+            await expect(() =>
+              requestPromise.get(comboAPI.getURL({}).split('?')[0] + '?param=beta')
+            ).rejects.toBeDefined()
+          })
+        })
       })
+    })
+  })
+
+  describe('getURL', function () {
+    it('includes query parameters with hard coded values', function () {
+      const api = API.declareGetAPI(uniquePath() + '/api?specific=abc&!excluded&omnipresent&nomatch!=abc')
+        .query(['omnipresent', 'nomatch'] as const)
+        .response<void>()
+
+      // When
+      const url = api.getURL({})
+
+      // Then
+      expect(url).toMatch(/\/api\?specific=abc$/)
     })
   })
 })

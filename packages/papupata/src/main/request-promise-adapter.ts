@@ -5,20 +5,18 @@ export default function createRequestAdapter(bodyType: 'json' | 'form'): MakeReq
   return async (method: string, url: string, query: any, body: any) => {
     const isPlainBody = typeof body !== 'object'
     const actualBodyType = isPlainBody ? 'body' : bodyType
-    const response = await (
-      requestPromise({
-        method,
-        url,
-        qs: query,
-        json: !isPlainBody,
-        [actualBodyType]: body,
-        resolveWithFullResponse: true,
-        headers: {
-          'Content-Type': isPlainBody ? 'text/plain' : 'application/json'
-        }
-      })
-    )
-    if (response.headers['content-type'].includes('application/json')) {
+    const response = await requestPromise({
+      method,
+      url,
+      qs: query,
+      json: !isPlainBody,
+      [actualBodyType]: body,
+      resolveWithFullResponse: true,
+      headers: {
+        'Content-Type': isPlainBody ? 'text/plain' : 'application/json',
+      },
+    })
+    if (response.headers['content-type']?.includes('application/json') && typeof response.body === 'string') {
       return JSON.parse(response.body)
     } else {
       return response.body

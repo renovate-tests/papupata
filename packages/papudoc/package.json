@@ -22,7 +22,7 @@
     "enzyme": "3.11.0",
     "enzyme-adapter-react-16": "1.15.4",
     "express": "4.17.1",
-    "jsdom": "16.3.0",
+    "jsdom": "16.4.0",
     "lodash": "4.17.20",
     "mkdirp": "1.0.4",
     "react": "16.13.1",

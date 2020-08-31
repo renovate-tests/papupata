@@ -23,6 +23,7 @@ export function prepareTestServerFor(api: APIDeclaration<any>) {
   return {
     getPort: () => serverInstance.port,
     stop: () => serverInstance.stop(),
+    getApp: () => serverInstance.app,
   }
 }
 
@@ -49,13 +50,13 @@ export async function expect404(requestPromise: RequestPromise) {
 
 export async function expectFailure(promise: Promise<any>): Promise<any> {
   return promise.then(
-    res => {
+    (res) => {
       throw new Error('Expected rejection; got ' + JSON.stringify(res))
     },
-    err => err
+    (err) => err
   )
 }
 
 export function delay(ms: number) {
-  return new Promise(resolve => setTimeout(resolve, ms))
+  return new Promise((resolve) => setTimeout(resolve, ms))
 }

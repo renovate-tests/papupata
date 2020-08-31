@@ -328,7 +328,7 @@ export function responder<
           })
         }, path)
 
-        const queryParams = omit(reqParams, [...params])
+        const queryParams = getQueryWithHardCodedParameters(hardCodedParameters, omit(reqParams, [...params]) as any)
         if (Object.keys(queryParams).length) {
           return pathWithParams + '?' + qs.stringify(queryParams)
         } else {

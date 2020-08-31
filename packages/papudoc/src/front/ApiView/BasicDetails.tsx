@@ -1,8 +1,8 @@
-import React from "react";
-import { AnalyzedAPI } from "../../analyzer";
+import React from 'react'
+import { AnalyzedAPI } from '../../analyzer'
 
 interface Props {
-  api: AnalyzedAPI;
+  api: AnalyzedAPI
 }
 
 export default function BasicDetails({ api }: Props) {

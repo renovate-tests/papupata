@@ -12,7 +12,7 @@ todoAPIBase.configure({
 
 const database = [] as Item[]
 
-TodoAPI.addItem.implement(req => {
+TodoAPI.addItem.implement((req) => {
   const newItem: Item = {
     id: new Date().valueOf().toString(),
     label: req.body.label,
@@ -26,9 +26,9 @@ TodoAPI.getItems.implement(() => {
   return database
 })
 
-TodoAPI.updateCompleted.implement(req => {
+TodoAPI.updateCompleted.implement((req) => {
   const { id } = req.params
-  const item = database.find(record => record.id === id)
+  const item = database.find((record) => record.id === id)
   if (!item) throw new Error('Not found')
   item.completed = req.query.completed
   return item

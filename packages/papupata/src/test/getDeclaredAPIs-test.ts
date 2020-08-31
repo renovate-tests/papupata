@@ -1,7 +1,7 @@
 import { APIDeclaration } from '../main'
 
-describe('getDeclaredAPIs', function() {
-  it('works', function() {
+describe('getDeclaredAPIs', function () {
+  it('works', function () {
     const API = new APIDeclaration()
 
     expect(API.getDeclaredAPIs()).toEqual([])
@@ -11,7 +11,7 @@ describe('getDeclaredAPIs', function() {
     const lemon = API.declarePostAPI('/lemon').response<string>()
     expect(API.getDeclaredAPIs()).toEqual([banana, lemon])
   })
-  it('partial declarations are not included', function() {
+  it('partial declarations are not included', function () {
     const API = new APIDeclaration()
 
     expect(API.getDeclaredAPIs()).toEqual([])

@@ -1,4 +1,8 @@
-import { Config, MakeRequestAdapter as MakeRequestAdapterImpl, PapupataMiddleware as PapupataMiddlewareType } from './config'
+import {
+  Config,
+  MakeRequestAdapter as MakeRequestAdapterImpl,
+  PapupataMiddleware as PapupataMiddlewareType,
+} from './config'
 import { Request, Handler } from 'express'
 import { declareAPI } from './declareAPI'
 import middleware204 from './middleware204'
@@ -10,7 +14,10 @@ export type TypedRequest<RequestBaseType, Params, Query, Body> = Omit<RequestBas
 }
 
 export type MakeRequestAdapter<RequestOptions = void> = MakeRequestAdapterImpl<RequestOptions>
-export type PapupataMiddleware<RequestType = Request, RouteOptions = void> = PapupataMiddlewareType<RequestType, RouteOptions>
+export type PapupataMiddleware<RequestType = Request, RouteOptions = void> = PapupataMiddlewareType<
+  RequestType,
+  RouteOptions
+>
 
 interface API {
   unmock(): void
@@ -95,7 +102,9 @@ export const skipHandlingRoute = 'papupata-skip-1d7eb033-19f8-47f7-a96c-f07d90d8
 
 export function convertExpressMiddleware(expressMiddleware: Handler): PapupataMiddleware<any, any> {
   return async (req, res, _route, next) => {
-    const error = await new Promise((resolve, reject) => expressMiddleware(req, res, err => (err ? resolve : reject)(err)))
+    const error = await new Promise((resolve, reject) =>
+      expressMiddleware(req, res, (err) => (err ? resolve : reject)(err))
+    )
     if (error) throw error
     return await next()
   }

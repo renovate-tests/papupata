@@ -14,7 +14,7 @@ export default function TodoList() {
   }
   if (items === null) {
     setLoading(true)
-    TodoAPI.getItems({}).then(items => {
+    TodoAPI.getItems({}).then((items) => {
       setItems(items)
       setLoading(false)
     })
@@ -25,12 +25,12 @@ export default function TodoList() {
     <div>
       <table>
         <tbody>
-          {items.map(item => (
+          {items.map((item) => (
             <TodoItem onUpdateItem={updateItem} key={item.id} item={item} />
           ))}
           <tr>
             <td>
-              <AddNewItem onAdd={newItem => setItems([...items, newItem])} />
+              <AddNewItem onAdd={(newItem) => setItems([...items, newItem])} />
             </td>
           </tr>
         </tbody>
@@ -40,7 +40,7 @@ export default function TodoList() {
 
   function updateItem(item: Item) {
     if (!items) throw new Error('Internal error')
-    const match = items.find(i => i.id === item.id)
+    const match = items.find((i) => i.id === item.id)
     if (match) {
       const index = items.indexOf(match)
       setItems([...items.slice(0, index), item, ...items.slice(index + 1)])

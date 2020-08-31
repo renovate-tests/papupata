@@ -8,7 +8,7 @@ import { MethodMember, Members } from '../../components/members-table'
 import { IncompleteApiDeclarationLink } from '../../components/links'
 import { ucFirst } from '../../utils'
 
-const DeclareAPI: React.FC<{ method: string, availableFrom?: '1.5.0' }> = ({ method, availableFrom }) => (
+const DeclareAPI: React.FC<{ method: string; availableFrom?: '1.5.0' }> = ({ method, availableFrom }) => (
   <MethodMember name={`declare${ucFirst(method)}API`} dataType={<IncompleteApiDeclarationLink />} availableFrom={availableFrom}>
     Declares an API using the {method.toUpperCase()} HTTP method.
   </MethodMember>
@@ -52,7 +52,7 @@ export default function APIDeclaration() {
           </MethodMember>
           <DeclareAPI method="delete" />
           <DeclareAPI method="get" />
-          <DeclareAPI method="patch" availableFrom='1.5.0' />
+          <DeclareAPI method="patch" availableFrom="1.5.0" />
           <DeclareAPI method="post" />
           <DeclareAPI method="put" />
           <MethodMember name={'unmockAll'} dataType={'void'} availableFrom={'1.1.0'}>

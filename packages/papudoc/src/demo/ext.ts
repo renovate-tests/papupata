@@ -1,7 +1,6 @@
-interface TT<T>
-{
+interface TT<T> {
   fv: T
-   }
+}
 
 export interface TestType<T> {
   field: {

@@ -10,8 +10,8 @@ interface RespType {
   body: any
 }
 
-describe('supertestInvokerTest', function() {
-  it('works', async function() {
+describe('supertestInvokerTest', function () {
+  it('works', async function () {
     const { api, supertestRequest } = prepare('declareGetAPI')
     await invokeSupertest(supertestRequest, api, { id: '699', qs: '!' }).expect(200, {
       query: { qs: '!' },

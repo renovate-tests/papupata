@@ -1,12 +1,11 @@
-import React from "react";
-import styled from "styled-components";
-import { AnalyzedAPI } from "../../analyzer";
-import pathToAnchor from "../utils/pathToAnchor";
+import React from 'react'
+import styled from 'styled-components'
+import { AnalyzedAPI } from '../../analyzer'
+import pathToAnchor from '../utils/pathToAnchor'
 
 interface Props {
   api: AnalyzedAPI
 }
-
 
 const Container = styled.h2`
   display: flex;
@@ -30,12 +29,11 @@ const Separator = styled.div`
   &::after {
     position: absolute;
     content: '';
-    background: #7610c3;    
+    background: #7610c3;
     height: 100px;
     width: 200px;
     margin-left: 24px;
     transform: skewX(-28deg);
-
   }
 `
 
@@ -49,12 +47,14 @@ const Details = styled.div`
   padding: 30px 15px;
 `
 
-
 export default function Heading({ api }: Props) {
-  return <Container data-anchor={pathToAnchor(api.api.path)}>
-    <Name>{api.api.path.join(' / ')}</Name>
-    <Separator />
-    <Details>{api.method?.toUpperCase()} {api.url}</Details>
-  </Container>
-
+  return (
+    <Container data-anchor={pathToAnchor(api.api.path)}>
+      <Name>{api.api.path.join(' / ')}</Name>
+      <Separator />
+      <Details>
+        {api.method?.toUpperCase()} {api.url}
+      </Details>
+    </Container>
+  )
 }

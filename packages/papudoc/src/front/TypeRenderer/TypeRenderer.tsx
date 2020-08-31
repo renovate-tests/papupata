@@ -8,5 +8,5 @@ interface Props {
 
 export default function TypeRenderer(props: Props) {
   const trc = useTypeRenderer()
-  return <div>{trc.renderType( props.type)}</div>
+  return <div>{trc.renderType(props.type)}</div>
 }

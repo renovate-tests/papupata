@@ -19,7 +19,7 @@ interface GuidePart {
 }
 
 const Level0 = styled.h4``
-const Level1= styled.h5`
+const Level1 = styled.h5`
   font-size: 1.1em;
 `
 
@@ -29,14 +29,14 @@ export function GuideContent({ content }: { content: GuidePart[] }) {
       <Section>
         <SectionHeading>Table of contents</SectionHeading>
         <ul>
-          {content.map(child => (
+          {content.map((child) => (
             <li style={{ marginLeft: 18 * (child.level || 0) }} key={child.anchor}>
               <a href={`#${child.anchor}`}>{child.heading}</a>
             </li>
           ))}
         </ul>
       </Section>
-      {content.map(child => {
+      {content.map((child) => {
         const Heading = !child.level ? Level0 : Level1
         return (
           <Section id={child.anchor} key={child.anchor}>
@@ -50,5 +50,5 @@ export function GuideContent({ content }: { content: GuidePart[] }) {
 }
 
 export const FixedFont = styled.span`
-  font-family: "Consolas", "Bitstream Vera Sans Mono", "Courier New", Courier, monospace
+  font-family: 'Consolas', 'Bitstream Vera Sans Mono', 'Courier New', Courier, monospace;
 `

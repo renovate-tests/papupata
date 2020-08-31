@@ -10,9 +10,9 @@ interface RespType {
   body: any
 }
 
-describe('supertestAdapterTest', function() {
-  describe('bodyless methods work', function() {
-    it('get', async function() {
+describe('supertestAdapterTest', function () {
+  describe('bodyless methods work', function () {
+    it('get', async function () {
       const api = prepare<{}>('declareGetAPI')
 
       const resp = await api({ id: '123', qs: 'queryVal' })
@@ -20,7 +20,7 @@ describe('supertestAdapterTest', function() {
       expect(resp).toEqual({ params: { id: '123' }, query: { qs: 'queryVal' }, body: {} })
     })
 
-    it('delete', async function() {
+    it('delete', async function () {
       const api = prepare<{}>('declareDeleteAPI')
 
       const resp = await api({ id: '123', qs: 'queryVal' })
@@ -29,8 +29,8 @@ describe('supertestAdapterTest', function() {
     })
   })
 
-  describe('bodied methods work', function() {
-    it('put', async function() {
+  describe('bodied methods work', function () {
+    it('put', async function () {
       const api = prepare<{ greeting: string }>('declarePutAPI')
 
       const resp = await api({ id: '123', qs: 'queryVal', greeting: 'howdy how' })
@@ -38,14 +38,14 @@ describe('supertestAdapterTest', function() {
       expect(resp).toEqual({ params: { id: '123' }, query: { qs: 'queryVal' }, body: { greeting: 'howdy how' } })
     })
 
-    it('post', async function() {
+    it('post', async function () {
       const api = prepare<{ greeting: string }>('declarePostAPI')
 
       const resp = await api({ id: '123', qs: 'queryVal', greeting: 'howdy how' })
 
       expect(resp).toEqual({ params: { id: '123' }, query: { qs: 'queryVal' }, body: { greeting: 'howdy how' } })
     })
-    it('patch', async function() {
+    it('patch', async function () {
       const api = prepare<{ greeting: string }>('declarePatchAPI')
 
       const resp = await api({ id: '123', qs: 'queryVal', greeting: 'howdy how' })

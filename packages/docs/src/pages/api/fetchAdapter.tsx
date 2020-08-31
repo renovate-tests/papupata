@@ -30,7 +30,6 @@ export default function FetchAdapter() {
           })
         `}</Example>
         </Examples>
-
       </Page>
     </IndexLayout>
   )

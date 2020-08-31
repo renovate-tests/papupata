@@ -2,16 +2,16 @@ import { APIDeclaration } from '../main'
 import { prepareTestServerFor } from './test-utils'
 import requestPromise from 'request-promise'
 
-describe('declaration-parameters-test', function() {
+describe('declaration-parameters-test', function () {
   const API = new APIDeclaration()
 
   prepareTestServerFor(API)
 
-  it('query parameters', async function() {
+  it('query parameters', async function () {
     const api = API.declareGetAPI('/query')
       .query(['name', 'job'] as const)
       .response<string>()
-    api.implement(req => `Hello, ${req.query.name}, I see you are a ${req.query.job}`)
+    api.implement((req) => `Hello, ${req.query.name}, I see you are a ${req.query.job}`)
 
     const url = api.getURL({})
     expect(url).toMatch(/http:\/\/localhost:\d+\/query/)
@@ -19,7 +19,7 @@ describe('declaration-parameters-test', function() {
     expect(resp).toBe('Hello, Bob, I see you are a Doctor')
   })
 
-  it('boolean query parameters', async function() {
+  it('boolean query parameters', async function () {
     const api = API.declareGetAPI('/boolquery')
       .queryBool(['a', 'b', 'c'] as const)
       .response<string>()
@@ -31,7 +31,7 @@ describe('declaration-parameters-test', function() {
     expect(resp).toBe('Values true, false, false')
   })
 
-  it('optional query parameters', async function() {
+  it('optional query parameters', async function () {
     const api = API.declareGetAPI('/optquery')
       .optionalQuery(['a', 'b'] as const)
       .response<string>()
@@ -43,11 +43,11 @@ describe('declaration-parameters-test', function() {
     expect(resp).toBe('Values exists, undefined')
   })
 
-  it('path parameters', async function() {
+  it('path parameters', async function () {
     const api = API.declareGetAPI('/path/:name/is/:job')
       .params(['name', 'job'] as const)
       .response<string>()
-    api.implement(req => `Hello, ${req.params.name}, I see you are a ${req.params.job}`)
+    api.implement((req) => `Hello, ${req.params.name}, I see you are a ${req.params.job}`)
 
     const url = api.getURL({ name: 'Bob', job: 'Doctor' })
     expect(url).toMatch(/http:\/\/localhost:\d+\/path\/Bob\/is\/Doctor/)
@@ -55,22 +55,18 @@ describe('declaration-parameters-test', function() {
     expect(resp).toBe('Hello, Bob, I see you are a Doctor')
   })
 
-  it('body', async function() {
-    const api = API.declarePostAPI('/body')
-      .body<{ name: string; age: number }>()
-      .response<string>()
-    api.implement(req => `Hello, ${req.body.name}, age ${req.body.age}`)
+  it('body', async function () {
+    const api = API.declarePostAPI('/body').body<{ name: string; age: number }>().response<string>()
+    api.implement((req) => `Hello, ${req.body.name}, age ${req.body.age}`)
 
     const url = api.getURL({})
     expect(url).toMatch(/http:\/\/localhost:\d+\/body/)
     const resp = await requestPromise.post(url, { json: { name: 'Bob', age: 53 } })
     expect(resp).toBe('Hello, Bob, age 53')
   })
-  it('non-object body', async function() {
-    const api = API.declarePostAPI('/body/non-object')
-      .body<string>()
-      .response<string>()
-    api.implement(req => `[${req.body}]`)
+  it('non-object body', async function () {
+    const api = API.declarePostAPI('/body/non-object').body<string>().response<string>()
+    api.implement((req) => `[${req.body}]`)
 
     const url = api.getURL({})
     expect(url).toMatch(/http:\/\/localhost:\d+\/body/)
@@ -78,7 +74,7 @@ describe('declaration-parameters-test', function() {
     expect(resp).toBe('[kevin]')
   })
 
-  it('combination of all', async function() {
+  it('combination of all', async function () {
     const comboAPI = API.declarePutAPI('/combo/:p1/:p2')
       .params(['p1', 'p2'] as const)
       .query(['q1', 'q2'] as const)

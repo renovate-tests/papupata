@@ -1,9 +1,9 @@
 import { APIDeclaration } from '../main'
 import { Request } from 'express'
 
-describe('options-test', function() {
-  describe('route options', function() {
-    it('routes can have options', function() {
+describe('options-test', function () {
+  describe('route options', function () {
+    it('routes can have options', function () {
       interface RouteOptions {
         isCool: boolean
       }
@@ -15,7 +15,7 @@ describe('options-test', function() {
     })
   })
 
-  describe('request options', function() {
+  describe('request options', function () {
     interface RequestOptions {
       specialValue: string
     }
@@ -34,17 +34,14 @@ describe('options-test', function() {
     })
 
     const noParamsAPI = apiDeclaration.declareGetAPI('/noparams').response<any>(),
-      bodyAPI = apiDeclaration
-        .declarePostAPI('/body')
-        .body<string>()
-        .response<any>(),
+      bodyAPI = apiDeclaration.declarePostAPI('/body').body<string>().response<any>(),
       traditional = apiDeclaration
         .declarePostAPI('/traditional')
         .query(['q'] as const)
         .body<{ b: string }>()
         .response<any>()
 
-    it('traditional single object requests can have options', async function() {
+    it('traditional single object requests can have options', async function () {
       const response = await traditional({ q: '1', b: '2' }, { specialValue: '00' })
       expect(response).toEqual({
         body: {
@@ -58,7 +55,7 @@ describe('options-test', function() {
       })
     })
 
-    it('body and others spread supports options', async function() {
+    it('body and others spread supports options', async function () {
       const response = await traditional({ b: '3' }, { q: '4' }, { specialValue: '01' })
       expect(response).toEqual({
         body: {
@@ -71,7 +68,7 @@ describe('options-test', function() {
         url: '/traditional',
       })
     })
-    it('works with non-object bodies', async function() {
+    it('works with non-object bodies', async function () {
       const response = await bodyAPI('sweet', { specialValue: '03' })
       expect(response).toEqual({
         body: 'sweet',
@@ -82,7 +79,7 @@ describe('options-test', function() {
         url: '/body',
       })
     })
-    it('works with no parameter requests, albeit requiring a parameter object', async function() {
+    it('works with no parameter requests, albeit requiring a parameter object', async function () {
       const response = await noParamsAPI({}, { specialValue: '04' })
       expect(response).toEqual({
         body: {},

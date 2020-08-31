@@ -4,10 +4,7 @@ import { Item } from './Item'
 export const todoAPIBase = new APIDeclaration()
 
 export const TodoAPI = {
-  addItem: todoAPIBase
-    .declarePutAPI('/item')
-    .body<{ label: string }>()
-    .response<Item>(),
+  addItem: todoAPIBase.declarePutAPI('/item').body<{ label: string }>().response<Item>(),
   getItems: todoAPIBase.declareGetAPI('/items').response<Item[]>(),
   updateCompleted: todoAPIBase
     .declarePutAPI('/item/:id/completed')

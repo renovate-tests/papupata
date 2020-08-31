@@ -1,15 +1,15 @@
-import { ReactNode } from "react";
-import React from "react";
-import styled from "styled-components";
+import { ReactNode } from 'react'
+import React from 'react'
+import styled from 'styled-components'
 
 interface Props {
-  children: ReactNode;
-  heading: ReactNode;
+  children: ReactNode
+  heading: ReactNode
 }
 
 const Head = styled.h4`
   font-size: 16px;
-  background-color: #EEE;
+  background-color: #eee;
 `
 
 export default function SubSection({ heading, children }: Props) {
@@ -18,5 +18,5 @@ export default function SubSection({ heading, children }: Props) {
       <Head>{heading}</Head>
       <div>{children}</div>
     </div>
-  );
+  )
 }

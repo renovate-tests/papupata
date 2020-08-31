@@ -5,7 +5,7 @@ import { Request, Response } from 'express'
 
 // As new papupata implements express middleware running on its own, it needs to be tested
 let apiId = 1000
-describe('express-middleware-test', function() {
+describe('express-middleware-test', function () {
   const API = new APIDeclaration()
 
   const callsNext: MWHandler = (_req, _res, next) => next()
@@ -26,13 +26,13 @@ describe('express-middleware-test', function() {
     })
   })
 
-  it('having no middleware is fine', async function() {
+  it('having no middleware is fine', async function () {
     const api = declareUniqueAPI()
     api.implementWithMiddleware([], () => 'token1')
     const resp = await api()
     expect(resp).toEqual('token1')
   })
-  it('having a single middleware that passes is fine', async function() {
+  it('having a single middleware that passes is fine', async function () {
     const api = declareUniqueAPI()
     const mw = createMiddleware('mw1', callsNext)
     api.implementWithMiddleware([mw], createImplementation('token'))
@@ -41,7 +41,7 @@ describe('express-middleware-test', function() {
 
     expect(events).toEqual(['mw11', 'mw12', 'token'])
   })
-  it('having many middleware that pass is fine', async function() {
+  it('having many middleware that pass is fine', async function () {
     const api = declareUniqueAPI()
     const mws = [
       createMiddleware('mw1', callsNext),
@@ -53,8 +53,8 @@ describe('express-middleware-test', function() {
     expect(resp).toEqual('token')
     expect(events).toEqual(['mw11', 'mw12', 'mw21', 'mw22', 'mw31', 'mw32', 'token'])
   })
-  describe('having middleware that interrupts the chain by responding is fine ', function() {
-    it('as sole middleware', async function() {
+  describe('having middleware that interrupts the chain by responding is fine ', function () {
+    it('as sole middleware', async function () {
       const api = declareUniqueAPI()
       const mws = [createMiddleware('mw1', respondsWithAborted)]
       api.implementWithMiddleware(mws, createImplementation('token'))
@@ -62,7 +62,7 @@ describe('express-middleware-test', function() {
       expect(resp).toEqual('aborted')
       expect(events).toEqual(['mw11', 'mw12'])
     })
-    it('having middleware that interrupts the chain by responding is fine as the 1st middleware', async function() {
+    it('having middleware that interrupts the chain by responding is fine as the 1st middleware', async function () {
       const api = declareUniqueAPI()
       const mws = [createMiddleware('mw1', respondsWithAborted), createMiddleware('irrelevant', callsNext)]
       api.implementWithMiddleware(mws, createImplementation('token'))
@@ -70,7 +70,7 @@ describe('express-middleware-test', function() {
       expect(resp).toEqual('aborted')
       expect(events).toEqual(['mw11', 'mw12'])
     })
-    it('having middleware that interrupts the chain by responding is fine in the middle', async function() {
+    it('having middleware that interrupts the chain by responding is fine in the middle', async function () {
       const api = declareUniqueAPI()
       const mws = [
         createMiddleware('mw1', callsNext),
@@ -82,7 +82,7 @@ describe('express-middleware-test', function() {
       expect(resp).toEqual('aborted')
       expect(events).toEqual(['mw11', 'mw12', 'mw21', 'mw22'])
     })
-    it('having middleware that interrupts the chain by responding is fine as the last middleware', async function() {
+    it('having middleware that interrupts the chain by responding is fine as the last middleware', async function () {
       const api = declareUniqueAPI()
       const mws = [createMiddleware('mw1', callsNext), createMiddleware('mw2', respondsWithAborted)]
       api.implementWithMiddleware(mws, createImplementation('token'))
@@ -92,7 +92,7 @@ describe('express-middleware-test', function() {
     })
   })
 
-  it('having middleware that rejects skips the rest of the chain', async function() {
+  it('having middleware that rejects skips the rest of the chain', async function () {
     const api = declareUniqueAPI()
     const mws = [
       createMiddleware('mw1', callsNext),
@@ -114,7 +114,7 @@ describe('express-middleware-test', function() {
   function createMiddleware(token: string, handler: MWHandler) {
     return (req: Request, res: Response, next: any) => {
       events.push(token + '1')
-      setTimeout(function() {
+      setTimeout(function () {
         events.push(token + '2')
         handler(req, res, next)
       }, 100)

@@ -10,7 +10,7 @@ export default async function runExpressMiddleware(
     return
   }
 
-  const handlerError = await new Promise(next => handler(req, res, next))
+  const handlerError = await new Promise((next) => handler(req, res, next))
   if (handlerError) throw handlerError
 
   return runExpressMiddleware(middleware.slice(1), req, res)

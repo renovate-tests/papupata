@@ -1,9 +1,9 @@
-import { ReactNode } from "react";
-import React from "react";
+import { ReactNode } from 'react'
+import React from 'react'
 
 interface Props {
-  children: ReactNode;
-  heading: ReactNode;
+  children: ReactNode
+  heading: ReactNode
 }
 
 export default function Section({ heading, children }: Props) {
@@ -12,5 +12,5 @@ export default function Section({ heading, children }: Props) {
       <h3>{heading}</h3>
       <div>{children}</div>
     </div>
-  );
+  )
 }

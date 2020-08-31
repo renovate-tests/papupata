@@ -1,6 +1,4 @@
 if (document.location.search.includes('refresh')) {
-
-
   let last = ''
   setInterval(async function () {
     const res = await fetch(document.location.href)
@@ -10,7 +8,6 @@ if (document.location.search.includes('refresh')) {
       document.body.innerHTML = text
       highlightNavPosition()
     }
-
   }, 500)
 }
 
@@ -20,10 +17,12 @@ window.addEventListener('domcontentloaded', highlightNavPosition)
 function highlightNavPosition() {
   const scrollTop = document.body.scrollTop
   const headings = document.querySelectorAll('h2')
-  const headingsAboveWatershed = [...headings].filter(heading =>
-    heading.offsetTop < window.innerHeight / 2 + scrollTop
+  const headingsAboveWatershed = [...headings].filter(
+    (heading) => heading.offsetTop < window.innerHeight / 2 + scrollTop
   )
-  const heading = headingsAboveWatershed.length ? headingsAboveWatershed[headingsAboveWatershed.length - 1] : headings[0]
+  const heading = headingsAboveWatershed.length
+    ? headingsAboveWatershed[headingsAboveWatershed.length - 1]
+    : headings[0]
 
   const links = document.querySelectorAll('#navbar a')
   links.forEach(function (link) {

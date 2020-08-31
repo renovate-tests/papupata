@@ -2,7 +2,7 @@ import { APIDeclaration } from '../main'
 import { runTestServer } from './test-utils'
 import createRequestAdapter from '../main/request-promise-adapter'
 
-describe('mapper-test', function() {
+describe('mapper-test', function () {
   const API = new APIDeclaration()
   const responseMapperAPI = API.declareGetAPI('/rm').response((input: { value: number }) => ({
     value: (input.value * 2).toString(),
@@ -26,8 +26,8 @@ describe('mapper-test', function() {
     testServer.stop()
   })
 
-  describe('response mapper', function() {
-    it('allows mapping responses', async function() {
+  describe('response mapper', function () {
+    it('allows mapping responses', async function () {
       responseMapperAPI.implement(() => ({ value: 100 }))
 
       const response = await responseMapperAPI()
@@ -35,7 +35,7 @@ describe('mapper-test', function() {
       expect(response.value).toBe('200')
     })
 
-    it('mapper can be async', async function() {
+    it('mapper can be async', async function () {
       asyncResponseMapperAPI.implement(() => ({ value: 100 }))
 
       const response = await asyncResponseMapperAPI()

@@ -24,8 +24,8 @@ const IndexPage = () => (
               content: (
                 <>
                   <p>
-                    Before starting this guide, you need to have an API declaration. For information on how
-                    to get there, see <Link to={'/guides/declaring'}>Declaring APIs</Link>.
+                    Before starting this guide, you need to have an API declaration. For information on how to get there, see{' '}
+                    <Link to={'/guides/declaring'}>Declaring APIs</Link>.
                   </p>
                 </>
               )
@@ -181,7 +181,9 @@ const IndexPage = () => (
                     As has probably become evident, you'll likely want to create a custom adapter of your own. The easiest option is
                     probably to take one of the existing adapters to use it as a template.
                   </p>
-                  <p>See <Link to={'/guides/client/customRequestAdapters'}>custom request adapters</Link> for more information.</p>
+                  <p>
+                    See <Link to={'/guides/client/customRequestAdapters'}>custom request adapters</Link> for more information.
+                  </p>
                 </>
               )
             },
@@ -191,11 +193,12 @@ const IndexPage = () => (
               content: (
                 <>
                   <p>Now that papupata is set up to make requests, it should be a good time to make that happen!</p>
-                  <p>See <Link to="/guides/client/calling">calling APIs</Link> for how to do exactly that.</p>
+                  <p>
+                    See <Link to="/guides/client/calling">calling APIs</Link> for how to do exactly that.
+                  </p>
                 </>
               )
             }
-
           ]}
         />
       </Container>

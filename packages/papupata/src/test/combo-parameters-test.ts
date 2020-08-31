@@ -2,7 +2,7 @@ import { APIDeclaration } from '../main'
 import { prepareTestServerFor } from './test-utils'
 import createRequestAdapter from '../main/request-promise-adapter'
 
-describe('combo-parameters-test', function() {
+describe('combo-parameters-test', function () {
   const API = new APIDeclaration()
 
   prepareTestServerFor(API)
@@ -10,18 +10,17 @@ describe('combo-parameters-test', function() {
     API.configure({ ...API.getConfig(), makeRequest: createRequestAdapter('json') })
   })
 
-
-  it('query parameters', async function() {
+  it('query parameters', async function () {
     const api = API.declareGetAPI('/query')
       .query(['name', 'job'] as const)
       .response<string>()
-    api.implement(req => `Hello, ${req.query.name}, I see you are a ${req.query.job}`)
+    api.implement((req) => `Hello, ${req.query.name}, I see you are a ${req.query.job}`)
 
     const resp = await api({ name: 'Bob', job: 'Doctor' })
     expect(resp).toBe('Hello, Bob, I see you are a Doctor')
   })
 
-  it('boolean query parameters', async function() {
+  it('boolean query parameters', async function () {
     const api = API.declareGetAPI('/boolquery')
       .queryBool(['a', 'b'] as const)
       .response<string>()
@@ -31,7 +30,7 @@ describe('combo-parameters-test', function() {
     expect(resp).toBe('Values true, false')
   })
 
-  it('optional query parameters', async function() {
+  it('optional query parameters', async function () {
     const api = API.declareGetAPI('/optquery')
       .optionalQuery(['a', 'b'] as const)
       .response<string>()
@@ -41,27 +40,25 @@ describe('combo-parameters-test', function() {
     expect(resp).toBe('Values exists, undefined')
   })
 
-  it('path parameters', async function() {
+  it('path parameters', async function () {
     const api = API.declareGetAPI('/path/:name/is/:job')
       .params(['name', 'job'] as const)
       .response<string>()
-    api.implement(req => `Hello, ${req.params.name}, I see you are a ${req.params.job}`)
+    api.implement((req) => `Hello, ${req.params.name}, I see you are a ${req.params.job}`)
 
     const resp = await api({ name: 'Bob', job: 'Doctor' })
     expect(resp).toBe('Hello, Bob, I see you are a Doctor')
   })
 
-  it('body', async function() {
-    const api = API.declarePostAPI('/body')
-      .body<{ name: string; age: number }>()
-      .response<string>()
-    api.implement(req => `Hello, ${req.body.name}, age ${req.body.age}`)
+  it('body', async function () {
+    const api = API.declarePostAPI('/body').body<{ name: string; age: number }>().response<string>()
+    api.implement((req) => `Hello, ${req.body.name}, age ${req.body.age}`)
 
     const resp = await api({ name: 'Bob', age: 53 })
     expect(resp).toBe('Hello, Bob, age 53')
   })
 
-  it('combination of all', async function() {
+  it('combination of all', async function () {
     const comboAPI = API.declarePutAPI('/combo/:p1/:p2')
       .params(['p1', 'p2'] as const)
       .query(['q1', 'q2'] as const)

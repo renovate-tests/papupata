@@ -34,7 +34,7 @@ export default function createInvokeImplementationAdapter<T = any>(options: Opti
       let nextCalled = false
       let error: any = null
       let resolveNextCalled: () => void
-      const nextCalledPromise = new Promise(resolve => {
+      const nextCalledPromise = new Promise((resolve) => {
         resolveNextCalled = resolve
       })
 

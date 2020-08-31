@@ -27,5 +27,5 @@ function fixIndent(code: string) {
   }
   const [indent] = lines[0].match(/^\s+/) || ['']
 
-  return lines.map(line => (line.startsWith(indent) ? line.substring(indent.length) : line)).join('\n')
+  return lines.map((line) => (line.startsWith(indent) ? line.substring(indent.length) : line)).join('\n')
 }

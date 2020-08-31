@@ -9,7 +9,7 @@ import {
   MethodReturnType,
   Examples,
   Example,
-  AvailableFrom,
+  AvailableFrom
 } from '../../../components/api-components'
 import { Link } from 'gatsby'
 import * as React from 'react'
@@ -28,10 +28,10 @@ export default function Mock() {
         <Usage>
           <p>
             This function is meant to help with testing components that use papupata. When using this function instead of{' '}
-            <Link to="/api/DeclaredAPI/mock">mock</Link> you do not need to call <Link to="/api/DeclaredAPI/unmock">unmock</Link> afterwards, assuming the API was invoked,
-            as it is automatically called upon the invocation.
+            <Link to="/api/DeclaredAPI/mock">mock</Link> you do not need to call <Link to="/api/DeclaredAPI/unmock">unmock</Link>{' '}
+            afterwards, assuming the API was invoked, as it is automatically called upon the invocation.
           </p>
-          </Usage>
+        </Usage>
         <Parameters>
           <Parameter name="mockValue" dataType="Function or value">
             <p>

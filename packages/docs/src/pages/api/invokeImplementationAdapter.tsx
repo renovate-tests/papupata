@@ -28,7 +28,9 @@ export default function Mock() {
           </p>
         </Usage>
         <Parameters>
-          <Parameter name="options" dataType="Object?"><OptionsTable /></Parameter>
+          <Parameter name="options" dataType="Object?">
+            <OptionsTable />
+          </Parameter>
         </Parameters>
         <MethodReturnType>Papupata MakeRequestAdapter</MethodReturnType>
         <Examples>

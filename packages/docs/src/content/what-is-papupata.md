@@ -14,4 +14,3 @@ When both the client and server utilize papupata declarations, you can be certai
 is going to match the data expected by the server, and that the server responds with what the client expects.
 
 Implementing is only directly supported with express at this time.
-

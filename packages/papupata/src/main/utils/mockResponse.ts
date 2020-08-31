@@ -11,7 +11,7 @@ export default function createMockResponse(): ExtendedResponse {
     headers: any = {},
     resolveSent: () => void
 
-  const sentPromise = new Promise<void>(resolve => {
+  const sentPromise = new Promise<void>((resolve) => {
     resolveSent = resolve
   })
 

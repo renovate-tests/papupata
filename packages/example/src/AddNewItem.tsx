@@ -9,9 +9,11 @@ interface Props {
 export default function AddNewItem({ onAdd }: Props) {
   const [value, setValue] = useState('')
   return (
-    <form onSubmit={e => e.preventDefault()}>
-      <input type="text" placeholder="Label for new item" value={value} onChange={e => setValue(e.target.value)} />
-      <button disabled={!value.trim()} onClick={add}>Add</button>
+    <form onSubmit={(e) => e.preventDefault()}>
+      <input type="text" placeholder="Label for new item" value={value} onChange={(e) => setValue(e.target.value)} />
+      <button disabled={!value.trim()} onClick={add}>
+        Add
+      </button>
     </form>
   )
 

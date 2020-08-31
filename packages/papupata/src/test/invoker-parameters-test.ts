@@ -2,7 +2,7 @@ import { APIDeclaration } from '../main'
 import { runTestServer } from './test-utils'
 import createRequestAdapter from '../main/request-promise-adapter'
 
-describe('invoker-parameters-test', function() {
+describe('invoker-parameters-test', function () {
   const API = new APIDeclaration()
 
   let testServer: ReturnType<typeof runTestServer>
@@ -19,7 +19,7 @@ describe('invoker-parameters-test', function() {
     testServer.stop()
   })
 
-  it('no parameters -- can be called with no args', async function() {
+  it('no parameters -- can be called with no args', async function () {
     const api = API.declareGetAPI('/void').response<string>()
 
     testServer.app.get('/void', (_req, res) => res.send('Test'))
@@ -27,14 +27,14 @@ describe('invoker-parameters-test', function() {
     expect(resp).toBe('Test')
   })
 
-  it('no parameters -- can be called with empty object', async function() {
+  it('no parameters -- can be called with empty object', async function () {
     const api = API.declareGetAPI('/void').response<string>()
 
     testServer.app.get('/void', (req, res) => res.send('Test' + req.body.abc))
     const resp = await api({})
     expect(resp).toBe('Test')
   })
-  it('query parameters', async function() {
+  it('query parameters', async function () {
     const api = API.declareGetAPI('/query')
       .query(['name', 'job'] as const)
       .response<string>()
@@ -44,7 +44,7 @@ describe('invoker-parameters-test', function() {
     expect(resp).toBe('Hello, Bob, I see you are a Doctor')
   })
 
-  it('boolean query parameters (will be just strings without the server side code)', async function() {
+  it('boolean query parameters (will be just strings without the server side code)', async function () {
     const api = API.declareGetAPI('/boolquery')
       .queryBool(['a', 'b'] as const)
       .response<string>()
@@ -55,7 +55,7 @@ describe('invoker-parameters-test', function() {
     expect(resp).toBe('Values true, false')
   })
 
-  it('optional query parameters', async function() {
+  it('optional query parameters', async function () {
     const api = API.declareGetAPI('/optquery')
       .optionalQuery(['a', 'b'] as const)
       .response<string>()
@@ -67,7 +67,7 @@ describe('invoker-parameters-test', function() {
     expect(resp).toBe('Values exists, undefined')
   })
 
-  it('path parameters', async function() {
+  it('path parameters', async function () {
     const api = API.declareGetAPI('/path/:name/is/:job')
       .params(['name', 'job'] as const)
       .response<string>()
@@ -79,10 +79,8 @@ describe('invoker-parameters-test', function() {
     expect(resp).toBe('Hello, Bob, I see you are a Doctor')
   })
 
-  it('body', async function() {
-    const api = API.declarePostAPI('/body')
-      .body<{ name: string; age: number }>()
-      .response<string>()
+  it('body', async function () {
+    const api = API.declarePostAPI('/body').body<{ name: string; age: number }>().response<string>()
 
     testServer.app.post('/body', (req, res) => res.send(`Hello, ${req.body.name}, age ${req.body.age}`))
 
@@ -90,10 +88,8 @@ describe('invoker-parameters-test', function() {
     expect(resp).toBe('Hello, Bob, age 53')
   })
 
-  it('non-object body, sole arg', async function() {
-    const api = API.declarePostAPI('/nonobjbody')
-      .body<string>()
-      .response<string>()
+  it('non-object body, sole arg', async function () {
+    const api = API.declarePostAPI('/nonobjbody').body<string>().response<string>()
 
     testServer.app.post('/nonobjbody', (req, res) => {
       res.send(`Hello, ${req.body}`)
@@ -103,7 +99,7 @@ describe('invoker-parameters-test', function() {
     expect(resp).toBe('Hello, my love!')
   })
 
-  it('non-object body, other args', async function() {
+  it('non-object body, other args', async function () {
     const api = API.declarePostAPI('/nonobjbody2')
       .query(['q'] as const)
       .body<string>()
@@ -117,7 +113,7 @@ describe('invoker-parameters-test', function() {
     expect(resp).toBe('Hello, my love!')
   })
 
-  it('combination of all', async function() {
+  it('combination of all', async function () {
     const comboAPI = API.declarePutAPI('/combo/:p1/:p2')
       .params(['p1', 'p2'] as const)
       .query(['q1', 'q2'] as const)

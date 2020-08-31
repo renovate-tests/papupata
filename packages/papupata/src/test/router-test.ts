@@ -3,7 +3,7 @@ import { runTestServer } from './test-utils'
 import createRequestAdapter from '../main/request-promise-adapter'
 import { Router } from 'express'
 
-describe('router-test', function() {
+describe('router-test', function () {
   let testServer: ReturnType<typeof runTestServer>
 
   beforeAll(() => {
@@ -14,7 +14,7 @@ describe('router-test', function() {
     testServer.stop()
   })
 
-  it('routes can be implemented and called via routers', async function() {
+  it('routes can be implemented and called via routers', async function () {
     const router = Router()
     testServer.app.use(router)
     const API = new APIDeclaration()
@@ -31,7 +31,7 @@ describe('router-test', function() {
     expect(resp).toEqual('hello')
   })
 
-  it('routes can be implemented and called via routers in paths', async function() {
+  it('routes can be implemented and called via routers in paths', async function () {
     const routerPath = '/subdir'
     const router = Router()
     testServer.app.use(routerPath, router)
@@ -50,7 +50,7 @@ describe('router-test', function() {
     expect(resp).toEqual('hello')
   })
 
-  it('when routerAt is used, routes being implemented must be within its context', function() {
+  it('when routerAt is used, routes being implemented must be within its context', function () {
     const routerPath = '/another'
     const router = Router()
     testServer.app.use(routerPath, router)

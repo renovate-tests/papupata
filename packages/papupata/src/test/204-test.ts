@@ -3,7 +3,7 @@ import { prepareTestServerFor, expectFailure } from './test-utils'
 import requestPromise from 'request-promise'
 
 let routeId = 2000
-describe('204-test', function() {
+describe('204-test', function () {
   const API = new APIDeclaration()
   prepareTestServerFor(API)
 
@@ -14,8 +14,8 @@ describe('204-test', function() {
     })
   })
 
-  describe('with treat undefined as 204 enabled', function() {
-    it('simply returning undefined results in a 204', async function() {
+  describe('with treat undefined as 204 enabled', function () {
+    it('simply returning undefined results in a 204', async function () {
       const api = API.declareGetAPI(getUniquePath()).response<void>()
       api.implement(() => {})
       const resp = await requestPromise.get(api.getURL({}), {
@@ -23,7 +23,7 @@ describe('204-test', function() {
       })
       expect(resp.statusCode).toEqual(204)
     })
-    it('does not fail if headers were already sent', async function() {
+    it('does not fail if headers were already sent', async function () {
       const api = API.declareGetAPI(getUniquePath()).response<void>()
       api.implement((_req, res) => {
         res.end('')
@@ -34,7 +34,7 @@ describe('204-test', function() {
       expect(resp.statusCode).toEqual(200)
     })
 
-    it('explicitly setting response code overrides this behavior', async function() {
+    it('explicitly setting response code overrides this behavior', async function () {
       const api = API.declareGetAPI(getUniquePath()).response<void>()
       api.implement((_req, res) => {
         res.status(400)
@@ -46,7 +46,7 @@ describe('204-test', function() {
       )
       expect(err.statusCode).toEqual(400)
     })
-    it('explicitly setting response code even to 200 overrides this behavior', async function() {
+    it('explicitly setting response code even to 200 overrides this behavior', async function () {
       const api = API.declareGetAPI(getUniquePath()).response<void>()
       api.implement((_req, res) => {
         res.status(200)
@@ -57,7 +57,7 @@ describe('204-test', function() {
       expect(resp.statusCode).toEqual(200)
     })
 
-    it('using res.redirect overrides this behavior', async function() {
+    it('using res.redirect overrides this behavior', async function () {
       const api = API.declareGetAPI(getUniquePath()).response<void>()
       api.implement((_req, res) => {
         res.redirect('https://www.example.com')

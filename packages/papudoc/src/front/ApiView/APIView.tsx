@@ -1,5 +1,5 @@
 import React from 'react'
-import {AnalyzedAPI} from '../../analyzer'
+import { AnalyzedAPI } from '../../analyzer'
 import BasicDetails from './BasicDetails'
 import PathParameters from './PathParameters'
 import QueryParameters from './QueryParameters'

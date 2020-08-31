@@ -5,7 +5,6 @@ import { FixedFont, GuideContent, Overview } from '../../../components/guides'
 import Page from '../../../components/Page'
 import IndexLayout from '../../../layouts'
 
-
 const IndexPage = () => (
   <IndexLayout>
     <Page>

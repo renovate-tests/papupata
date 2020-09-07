@@ -1,0 +1,27 @@
+{
+  "name": "common-types",
+  "version": "1.0.0",
+  "description": "> TODO: description",
+  "author": "Tapani Haka <tapani.haka@barona.fi>",
+  "homepage": "https://baronagroup.github.io/papupata/tree/master/packages/common-types#readme",
+  "license": "ISC",
+  "main": "lib/common-types.js",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "types": "./lib/common-types.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BaronaGroup/papupata.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "bugs": {
+    "url": "https://github.com/BaronaGroup/papupata/issues"
+  }
+}

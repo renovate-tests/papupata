@@ -25,8 +25,8 @@ const api = {
    * @param id This is the id for the thing
    *  @param gamma is also kinda cool
    * */
-  testGet3: decl
-    .declareGetAPI('/test-get/:id')
+  testPost3: decl
+    .declarePostAPI('/test-get/:id')
     .params(['id', 'alsodesc', 'nodesc'] as const)
     .query(['alpha'] as const)
     .optionalQuery(['gamma'] as const)
@@ -45,6 +45,8 @@ const api = {
       union: string | number
       inlineinterface: { key: string }
       stringarray: string[]
+      nestedArray: string[][][]
+
       enumref: MyEnum
       namedinterface: InterfaceHere
       optionalstring?: string
@@ -58,6 +60,10 @@ const api = {
           a: {
             field: string
           }
+        }
+        also: {
+          another: string
+          anda: boolean
         }
       }
     }>()

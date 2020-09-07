@@ -4,6 +4,7 @@ import { AnalyserContext } from '../typeAnalyzer'
 import React from 'react'
 import styled from 'styled-components'
 import { findResolvedTypeAutonest } from './ObjectType'
+import { JSONApiType } from '../../jsonAPI'
 
 const ArrayContent = styled.div`
   border-left: 4px solid #cce;
@@ -63,6 +64,14 @@ export default class ArrayType extends TsType {
         return `${inner}[]`
       default:
         return `Array<${inner}>`
+    }
+  }
+
+  toJSON(ctx: RenderContext): JSONApiType {
+    return {
+      type: 'array',
+      itemType: ctx.renderNestedJSON!(this.elementType),
+      name: this.name,
     }
   }
 }

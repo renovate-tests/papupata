@@ -25,6 +25,7 @@
     "jsdom": "16.4.0",
     "lodash": "4.17.20",
     "mkdirp": "1.0.4",
+    "papupata-extractor": "^1.0.0",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-test-renderer": "16.13.1",

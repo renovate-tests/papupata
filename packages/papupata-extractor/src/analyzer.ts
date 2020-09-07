@@ -1,10 +1,8 @@
-import { setPapudocHandler } from './papudoc'
 import * as ts from 'typescript'
-import formatType, { ExposeTypesAs } from './typeFormatter'
-import TsType from './typeAnalyzer/TsType'
-import { prepareTsTypeConverter } from './typeAnalyzer/typeAnalyzer'
-import { PapudocConfig } from './config'
-import getRequireableFilename from './util/getRequirableFilename'
+import { generateTypeJSON, generateTypeString } from 'papupata-type-analyser'
+import { ExtractorConfig } from './config'
+import getRequireableFilename from 'common-utils/lib/getRequirableFilename'
+import { JSONApiType } from 'common-types'
 
 export type Analysis = ReturnType<typeof analyze>
 
@@ -18,19 +16,19 @@ export interface AnalyzedAPI {
   body: string
   response: string
   responseType: ts.Type | null
-  responseTsType: TsType | null
+  responseJSONType: JSONApiType | null
 
   bodyType: ts.Type | null
-  bodyTsType: TsType | null
+  bodyJSONType: JSONApiType | null
   method: string
   checker: ts.TypeChecker
   parameterDescriptions: Map<string, string | undefined>
   description?: string
 }
 
-export function analyze(config: PapudocConfig, filename: string) {
+export function analyze(config: ExtractorConfig, apiObjects: any[]) {
+  const filename = config.moduleFilename
   let papudocIndex = -1
-  setPapudocHandler(handleAPI)
   const tsconfig = getTsConfigFilename(config)
   const compilerOptions: ts.CompilerOptions = ts.convertCompilerOptionsFromJson(require(tsconfig), __dirname + '/..')
     .options
@@ -40,8 +38,7 @@ export function analyze(config: PapudocConfig, filename: string) {
   if (!file) throw new Error('Could not get file: ' + filename)
 
   let APIs: AnalyzedAPI[] = []
-
-  require(filename)
+  handleAPI(apiObjects)
 
   return APIs
 
@@ -51,7 +48,6 @@ export function analyze(config: PapudocConfig, filename: string) {
     if (!call) throw new Error('Failed to find papudoc call')
 
     const checker = program.getTypeChecker()
-    const typeConverter = prepareTsTypeConverter(checker)
 
     const apiData: Array<AnalyzedAPI> = [...findAPIs(api)].map(
       (singleAPI): AnalyzedAPI => {
@@ -74,11 +70,11 @@ export function analyze(config: PapudocConfig, filename: string) {
           url: getURL(singleAPI.route),
           ...singleAPI.route.apiUrlParameters,
           responseType,
-          responseTsType: responseType && typeConverter(responseName, responseType),
+          responseJSONType: responseType && generateTypeJSON(responseType, checker, responseName),
           bodyType,
-          bodyTsType: bodyType && typeConverter(bodyName, bodyType),
-          response: responseType ? formatType(responseName, checker, responseType, ExposeTypesAs.Inline) : 'unknown',
-          body: bodyType ? formatType(bodyName, checker, bodyType, ExposeTypesAs.Inline) : 'unknown',
+          bodyJSONType: bodyType && generateTypeJSON(bodyType, checker, bodyName),
+          response: responseType ? generateTypeString(responseType, checker, responseName, 'Inline') : 'unknown',
+          body: bodyType ? generateTypeString(bodyType, checker, bodyName, 'Inline') : 'unknown',
           method: singleAPI.route.method,
           checker,
           parameterDescriptions: getParameterDescriptions(v),
@@ -191,9 +187,9 @@ function* findAPIs(api: any, currentPath: string[] = []): IterableIterator<API> 
   }
 }
 
-function getTsConfigFilename(config: PapudocConfig) {
+function getTsConfigFilename(config: ExtractorConfig) {
   if (config.tsConfigFilename) {
-    return getRequireableFilename(config.baseDir!, config.tsConfigFilename)
+    return getRequireableFilename(config.baseDir, config.tsConfigFilename)
   }
-  return getRequireableFilename(config.baseDir!, 'tsconfig.json')
+  return getRequireableFilename(config.baseDir, 'tsconfig.json')
 }

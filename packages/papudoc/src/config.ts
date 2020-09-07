@@ -9,6 +9,7 @@ export interface PapudocConfig {
   sourceFiles: string[]
   baseDir?: string
   tsConfigFilename?: string
+  JSONOutput?: string
 }
 
 const standaloneConfigFilenames = [

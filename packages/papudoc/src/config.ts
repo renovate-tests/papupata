@@ -1,6 +1,6 @@
 import * as fs from 'fs'
 import * as path from 'path'
-import getRequireableFilename from './util/getRequirableFilename'
+import getRequireableFilename from '../../common-utils/src/getRequirableFilename'
 
 const MAX_DEPTH = 100
 

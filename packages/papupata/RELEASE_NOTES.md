@@ -1,4 +1,9 @@
-1.8.0
+  1.8.1
+- Fixed convertExpressMiddleware which treated errors as success and vice versa
+- PapupataMiddleware type now has method and path
+- PapupataMiddleware type now its options be optional, as that matches reality; breaking change for types, but there are no functional differences
+
+  1.8.0
 
 - Added support for query-based variant routes, see https://baronagroup.github.io/papupata/guides/declaring/query-based-variants for details
 - Request promise adapter is ever so slightly better

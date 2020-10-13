@@ -1,9 +1,10 @@
 import { Application, Router, Response } from 'express'
+import { Method } from './types'
 
 export type PapupataMiddleware<RequestType, RouteOptions> = (
   req: RequestType,
   res: Response,
-  route: { options: RouteOptions },
+  route: { options?: RouteOptions, method: Method, path: string },
   next: () => Promise<any>
 ) => Promise<any>
 

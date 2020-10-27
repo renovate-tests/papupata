@@ -1,4 +1,4 @@
-type SimpleJSONApiType = {
+export type SimpleJSONApiType = {
   type: 'string' | 'number' | 'boolean' | 'undefined' | 'null' | 'void' | 'unknown' | 'never' | 'enumliteral' | 'any'
 }
 

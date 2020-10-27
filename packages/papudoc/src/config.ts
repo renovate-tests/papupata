@@ -10,6 +10,7 @@ export interface PapudocConfig {
   baseDir?: string
   tsConfigFilename?: string
   JSONOutput?: string
+  apidocOutput?: string
 }
 
 const standaloneConfigFilenames = [

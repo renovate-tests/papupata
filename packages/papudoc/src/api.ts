@@ -18,7 +18,7 @@ export function generatePapudoc(configOrConfigFile?: string | PapudocConfig) {
       {
         moduleFilename,
         tsConfigFilename: config.tsConfigFilename,
-        baseDir: config.baseDir!
+        baseDir: config.baseDir!,
       },
       locator(moduleFilename)
     )
@@ -30,6 +30,10 @@ export function generatePapudoc(configOrConfigFile?: string | PapudocConfig) {
   if (config.JSONOutput) {
     const jsonFile = (process.cwd(), config.baseDir || '', config.JSONOutput)
     fs.writeFileSync(jsonFile, JSON.stringify(analysis, null, 2), 'utf8')
+  }
+
+  if (config.apidocOutput) {
+    generateAPIDoc(config.apidocOutput, analysis)
   }
 }
 

@@ -1,0 +1,20 @@
+{
+  "name": "papupata-openapi-generator",
+  "version": "0.1.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc --project tsconfig.json",
+    "prepare": "npm run build"
+  },
+  "dependencies": {
+    "common-types": "*",
+    "papupata-json-to-schema": "*"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "4.1.3"
+  }
+}

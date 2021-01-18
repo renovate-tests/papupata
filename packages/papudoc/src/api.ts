@@ -1,12 +1,13 @@
 import { loadConfig, PapudocConfig } from './config'
-import generateFront from './generateFront'
-import getRequireableFilename from '../../common-utils/src/getRequirableFilename'
+//import generateFront from './generateFront'
+import getRequireableFilename from 'common-utils/lib/getRequirableFilename'
 import { papudoc as handlePapudoc } from './papudoc'
 import * as path from 'path'
 import * as fs from 'fs'
 import { generateAPISetJSON } from 'papupata-extractor'
 import { JSONAPISet } from '../../common-types'
 import { locator } from './locator'
+import { generateOpenApi } from 'papupata-openapi-generator'
 
 export function generatePapudoc(configOrConfigFile?: string | PapudocConfig) {
   const config: PapudocConfig =
@@ -25,15 +26,22 @@ export function generatePapudoc(configOrConfigFile?: string | PapudocConfig) {
   })
 
   const analysis = combineAnalysis(analysisSet)
-  generateFront(path.resolve(process.cwd(), config.baseDir || '', config.outDir || './papudoc'), analysis)
+  if (config.htmlOutput) {
+    // generateFront(path.resolve(process.cwd(), config.baseDir || '', config.outDir || './papudoc'), analysis)
+  }
 
   if (config.JSONOutput) {
-    const jsonFile = (process.cwd(), config.baseDir || '', config.JSONOutput)
+    const jsonFile = path.join(process.cwd(), config.baseDir || '', config.JSONOutput)
     fs.writeFileSync(jsonFile, JSON.stringify(analysis, null, 2), 'utf8')
   }
 
   if (config.apidocOutput) {
-    generateAPIDoc(config.apidocOutput, analysis)
+    //generateAPIDoc(config.apidocOutput, analysis)
+    throw new Error('APIDoc not supported')
+  }
+
+  if (config.openApiOutput) {
+    generateOpenApi(config.openApiOutput, analysis)
   }
 }
 

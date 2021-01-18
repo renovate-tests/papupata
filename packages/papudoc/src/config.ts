@@ -1,6 +1,7 @@
 import * as fs from 'fs'
 import * as path from 'path'
-import getRequireableFilename from '../../common-utils/src/getRequirableFilename'
+import getRequireableFilename from 'common-utils/lib/getRequirableFilename'
+import { OpenApiConfig } from 'common-types/lib/OpenApiConfig'
 
 const MAX_DEPTH = 100
 
@@ -10,7 +11,9 @@ export interface PapudocConfig {
   baseDir?: string
   tsConfigFilename?: string
   JSONOutput?: string
+  htmlOutput?: boolean
   apidocOutput?: string
+  openApiOutput?: OpenApiConfig
 }
 
 const standaloneConfigFilenames = [

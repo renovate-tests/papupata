@@ -38,7 +38,9 @@ export function analyze(config: ExtractorConfig, apiObjects: any[]) {
   if (!file) throw new Error('Could not get file: ' + filename)
 
   let APIs: AnalyzedAPI[] = []
-  handleAPI(apiObjects)
+  for (const singleAPI of apiObjects) {
+    handleAPI(singleAPI)
+  }
 
   return APIs
 
@@ -174,14 +176,16 @@ interface API {
 }
 
 function* findAPIs(api: any, currentPath: string[] = []): IterableIterator<API> {
+  if (api.__papudocIgnore) return
   for (const [key, value] of Object.entries(api) as any[]) {
-    console.log(key, currentPath)
     if (value?.apiUrlParameters) {
       yield {
         path: [...currentPath, key],
         route: value,
       }
-    } else if (typeof value === 'object') {
+    } else if (value?.__apis) {
+      continue
+    } else if (typeof value === 'object' && value) {
       yield* findAPIs(value, [...currentPath, key])
     }
   }

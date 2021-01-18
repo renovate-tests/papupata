@@ -7,6 +7,7 @@ import Union from './types/Union'
 import ObjectType from './types/ObjectType'
 import ArrayType from './types/ArrayType'
 import TypeCache from './TypeCache'
+import EnumLiteralType from './types/EnumLiteralType'
 
 export interface AnalyserContext {
   analyse(this: AnalyserContext, contextualName: string[], type: ts.Type): TsType
@@ -61,7 +62,7 @@ export function analyzeTypeInternal(outerCtx: AnalyserContext, contextualName: s
     [ts.TypeFlags.Boolean, 'boolean'],
     [ts.TypeFlags.Boolean | ts.TypeFlags.Union, 'boolean'],
     [ts.TypeFlags.Enum | ts.TypeFlags.Union, 'enum'],
-    [ts.TypeFlags.EnumLiteral | ts.TypeFlags.Union, 'enumliteral'],
+    [ts.TypeFlags.EnumLiteral | ts.TypeFlags.Union, () => new EnumLiteralType(type)],
     [ts.TypeFlags.Void, 'void'],
     [ts.TypeFlags.Undefined, 'undefined'],
     [ts.TypeFlags.Null, 'null'],
@@ -73,6 +74,7 @@ export function analyzeTypeInternal(outerCtx: AnalyserContext, contextualName: s
     [
       ts.TypeFlags.Object,
       () => {
+        if (type.getSymbol()?.name === 'Date') return new NamedBuiltinType(type, 'Date')
         if (type.getSymbol()?.name === 'Array') return new ArrayType(type, contextualName, ctx)
         return new ObjectType(type, contextualName, ctx)
       },

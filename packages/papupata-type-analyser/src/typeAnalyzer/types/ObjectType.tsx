@@ -49,7 +49,7 @@ export default class ObjectType extends TsType {
             //console.log(ctx.typeStack[ctx.typeStack.length - 3].resolvedProperties)
             findResolvedTypeAutonest(memberContext, valueType, true)
             //console.log(member.name, ctx.typeStack[0].types[0])
-            throw new Error('stopping at ' + contextualName.join('.') + type.getSymbol()?.name)
+            throw new Error('stopping at d' + contextualName.join('.') + type.getSymbol()?.name)
           }
           memberType = foundResolvedType || valueType
         }

@@ -20,6 +20,7 @@ export function generatePapudoc(configOrConfigFile?: string | PapudocConfig) {
         moduleFilename,
         tsConfigFilename: config.tsConfigFilename,
         baseDir: config.baseDir!,
+        globalTags: config.globalTags,
       },
       locator(moduleFilename)
     )

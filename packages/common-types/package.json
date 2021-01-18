@@ -5,6 +5,7 @@
   "author": "Tapani Haka <tapani.haka@barona.fi>",
   "homepage": "https://baronagroup.github.io/papupata/tree/master/packages/common-types#readme",
   "license": "ISC",
+  "private": true,
   "main": "lib/common-types.js",
   "directories": {
     "lib": "lib",
@@ -24,7 +25,5 @@
   "bugs": {
     "url": "https://github.com/BaronaGroup/papupata/issues"
   },
-  "dependencies": {
-
-  }
+  "dependencies": {}
 }

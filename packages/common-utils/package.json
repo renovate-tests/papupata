@@ -10,6 +10,7 @@
     "lib": "lib",
     "test": "__tests__"
   },
+  "private": true,
   "files": [
     "lib"
   ],
@@ -26,9 +27,5 @@
   },
   "bugs": {
     "url": "https://github.com/BaronaGroup/papupata/issues"
-  },
-  "devDependencies": {
-    "prettier": "2.1.1",
-    "typescript": "4.0.2"
   }
 }

@@ -1,5 +1,4 @@
 import { JSONApiType } from 'common-types'
-import fromPairs from 'lodash/fromPairs'
 
 export type JsonSchemaVariant = 'OpenAPI' | 'JSONSchemaDraft07'
 
@@ -64,4 +63,12 @@ function convertType(apiType: JSONApiType): any {
     default:
       throw new Error('Unhandled type: ' + apiType.type)
   }
+}
+
+function fromPairs<T>(pairs: Array<[string, T]>): { [key: string]: T } {
+  const out: { [key: string]: T } = {}
+  for (const pair of pairs) {
+    out[pair[0]] = pair[1]
+  }
+  return out
 }

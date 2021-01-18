@@ -1,5 +1,6 @@
 import { Analysis, AnalyzedAPI } from './analyzer'
 import { JSONAPISet } from 'common-types'
+import { getAlternativeResponses } from './tags'
 
 export default function generateJsonOutput(analysis: Analysis): JSONAPISet {
   return analysis.map((api) => {
@@ -12,6 +13,7 @@ export default function generateJsonOutput(analysis: Analysis): JSONAPISet {
       pathParams: api.params.map((name) => ({ name })),
       body: api.bodyJSONType,
       response: api.responseJSONType,
+      alternativeResponses: getAlternativeResponses(api.tags),
     }
   })
 }

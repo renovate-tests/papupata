@@ -24,6 +24,7 @@ export function generateOpenApi(config: OpenApiConfig, apis: JSONAPI[]) {
             },
           },
         },
+        ...getAlternativeResponses(api),
       },
       parameters: [
         ...api.pathParams.map((param) => ({
@@ -70,4 +71,13 @@ function asSchema(type: JSONApiType | null | undefined) {
 
 function fixPath(path: string) {
   return path.replace(/(?<=\/):([^/]+)/, '{$1}')
+}
+
+function getAlternativeResponses(api: JSONAPI) {
+  const sorted = api.alternativeResponses.sort((a, b) => b.code - a.code)
+  const responses: any = {}
+  for (const entry of sorted) {
+    responses[entry.code] = { description: entry.description ?? 'No description.' }
+  }
+  return responses
 }

@@ -14,6 +14,7 @@ export interface PapudocConfig {
   htmlOutput?: boolean
   apidocOutput?: string
   openApiOutput?: OpenApiConfig
+  globalTags?: { name: string; value?: string }[]
 }
 
 const standaloneConfigFilenames = [

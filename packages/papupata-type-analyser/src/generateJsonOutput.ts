@@ -1,6 +1,6 @@
 import { JSONApiType } from 'common-types'
 import TSType, { RenderContext } from './typeAnalyzer/TsType'
-import { v4 as uuid } from 'uuid'
+import uniqueId from './util/uniqueId'
 
 export default function generateJsonOutput(type: TSType): JSONApiType {
   const renderContext: RenderContext = {
@@ -29,6 +29,6 @@ export default function generateJsonOutput(type: TSType): JSONApiType {
     type: 'typeNamingWrapper',
     mainType: topLevelTypes[0],
     namedTypes: topLevelTypes.slice(1),
-    name: uuid(),
+    name: uniqueId(),
   }
 }

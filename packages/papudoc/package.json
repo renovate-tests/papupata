@@ -1,6 +1,6 @@
 {
   "name": "papupata-papudoc",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "API documentation generator for papupata",
   "license": "MIT",
   "author": {
@@ -11,6 +11,10 @@
   "bin": {
     "papudoc": "./bin.sh"
   },
+  "browser": "./browser-polyfill.js",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "start": "ts-node -T src/poc",
     "tsc": "tsc --project tsconfig.json",

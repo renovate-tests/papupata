@@ -16,5 +16,8 @@
   },
   "bundledDependencies": [
     "common-types"
+  ],
+  "files": [
+    "dist"
   ]
 }

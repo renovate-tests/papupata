@@ -21,5 +21,8 @@
   "bundledDependencies": [
     "common-types",
     "papupata-json-to-schema"
+  ],
+  "files": [
+    "dist"
   ]
 }

@@ -28,15 +28,7 @@
   "bugs": {
     "url": "https://github.com/BaronaGroup/papupata/issues"
   },
-  "devDependencies": {
-    "@types/lodash": "4.14.161",
-    "@types/uuid": "8.3.0",
-    "prettier": "2.1.1"
-  },
   "dependencies": {
-    "common-types": "^1.0.0",
-    "lodash": "4.17.20",
-    "typescript": "4.0.2",
-    "uuid": "8.3.0"
+    "common-types": "*"
   }
 }

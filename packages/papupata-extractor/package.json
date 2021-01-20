@@ -31,10 +31,6 @@
   "dependencies": {
     "common-types": "^1.0.0",
     "common-utils": "^1.0.0",
-    "papupata-type-analyser": "^1.0.0",
-    "typescript": "4.0.2"
-  },
-  "devDependencies": {
-    "prettier": "2.1.1"
+    "papupata-type-analyser": "^1.0.0"
   }
 }

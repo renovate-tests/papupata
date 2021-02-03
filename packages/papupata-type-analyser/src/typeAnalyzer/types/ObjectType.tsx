@@ -36,7 +36,10 @@ export default class ObjectType extends TsType {
             },
           ],
         }
-        const description = member.getJsDocTags().find((tag) => tag.name === 'description')?.text
+        const description =
+          member.getJsDocTags().find((tag) => tag.name === 'description')?.text ??
+          member.getDocumentationComment(ctx.checker).find((x) => x.kind === 'text')?.text
+
         if (member.flags & ts.SymbolFlags.Method) return null
         let memberType = valueType
 

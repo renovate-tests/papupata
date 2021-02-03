@@ -160,8 +160,17 @@ export function analyze(config: ExtractorConfig, apiObjects: any[]) {
       const member = members.find((member) => member.escapedName === path[0])
       if (!member) return null
       const memberTags = member.getJsDocTags()
+      member.getJsDocTags()
 
-      if (path.length === 1) return { symbol: member, tags: [...memberTags, ...docTags] }
+      if (path.length === 1)
+        return {
+          symbol: member,
+          tags: [
+            ...memberTags,
+            ...docTags,
+            ...member.getDocumentationComment(checker).map((comment) => ({ name: 'description', text: comment.text })),
+          ],
+        }
       return findValueAtPath(member.valueDeclaration, memberTags, path.slice(1))
     }
 

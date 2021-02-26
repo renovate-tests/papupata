@@ -19,7 +19,6 @@
     "url": "git+https://github.com/BaronaGroup/papupata.git"
   },
   "scripts": {
-    "test": "echo \"Error: run tests from root\" && exit 1",
     "prepare": "npm run build",
     "build": "npm run tsc",
     "tsc": "tsc --project tsconfig.json",

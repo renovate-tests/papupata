@@ -1,5 +1,4 @@
 import { loadConfig, PapudocConfig } from './config'
-//import generateFront from './generateFront'
 import getRequireableFilename from 'common-utils/lib/getRequirableFilename'
 import { papudoc as handlePapudoc } from './papudoc'
 import * as path from 'path'

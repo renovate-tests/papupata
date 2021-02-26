@@ -11,7 +11,7 @@ export default class ArrayType extends TsType {
     super(contextualName, type)
     const rawElementType = (type as any).resolvedTypeArguments[0]
     if (rawElementType.flags & ts.SymbolFlags.TypeParameter) {
-      const foundResolvedType = findResolvedTypeAutonest(ctx, rawElementType, false)
+      const foundResolvedType = findResolvedTypeAutonest(ctx, rawElementType, true)
 
       if (!foundResolvedType) {
         //console.log('CON2', contextualName)
@@ -19,7 +19,7 @@ export default class ArrayType extends TsType {
         //console.log(ctx.typeStack[ctx.typeStack.length - 3].resolvedProperties)
         //findResolvedTypeAutonest(memberContext, valueType, true)
         //console.log(member.name, ctx.typeStack[ctx.typeStack.length - 1].mapper)
-        throw new Error('stopping at ' + contextualName.join('.') + type.getSymbol()?.name)
+        throw new Error('stopping at (#a) ' + contextualName.join('.') + type.getSymbol()?.name)
       }
       this.elementType = ctx.analyse([...contextualName, 'Elem'], foundResolvedType || rawElementType)
     } else {

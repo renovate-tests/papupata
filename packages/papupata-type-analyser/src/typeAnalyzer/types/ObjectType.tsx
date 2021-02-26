@@ -1,9 +1,9 @@
-import compact from 'lodash/compact'
-import last from 'lodash/last'
 import ts from 'typescript'
 import TsType, { Complexity, RenderContext } from '../TsType'
 import { AnalyserContext } from '../typeAnalyzer'
 import { JSONApiType } from 'common-types'
+import last from '../../util/last'
+import compact from '../../util/compact'
 
 interface Property {
   name: string
@@ -36,7 +36,10 @@ export default class ObjectType extends TsType {
             },
           ],
         }
-        const description = member.getJsDocTags().find((tag) => tag.name === 'description')?.text
+        const description =
+          member.getJsDocTags().find((tag) => tag.name === 'description')?.text ??
+          member.getDocumentationComment(ctx.checker).find((x) => x.kind === 'text')?.text
+
         if (member.flags & ts.SymbolFlags.Method) return null
         let memberType = valueType
 
@@ -49,7 +52,7 @@ export default class ObjectType extends TsType {
             //console.log(ctx.typeStack[ctx.typeStack.length - 3].resolvedProperties)
             findResolvedTypeAutonest(memberContext, valueType, true)
             //console.log(member.name, ctx.typeStack[0].types[0])
-            throw new Error('stopping at ' + contextualName.join('.') + type.getSymbol()?.name)
+            throw new Error('stopping at d' + contextualName.join('.') + type.getSymbol()?.name)
           }
           memberType = foundResolvedType || valueType
         }

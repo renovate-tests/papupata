@@ -1,5 +1,5 @@
-type SimpleJSONApiType = {
-  type: 'string' | 'number' | 'boolean' | 'undefined' | 'null' | 'void' | 'unknown' | 'never' | 'enumliteral' | 'any'
+export type SimpleJSONApiType = {
+  type: 'string' | 'number' | 'boolean' | 'undefined' | 'null' | 'void' | 'unknown' | 'never' | 'any' | 'date'
 }
 
 export interface StringLiteralApiType {
@@ -42,6 +42,18 @@ export interface ObjectApiType {
   }>
 }
 
+export interface StringEnumType {
+  type: 'stringEnum'
+  options: { label: string; value: string }[]
+}
+
+export interface NumberEnumType {
+  type: 'numberEnum'
+  options: { label: string; value: number }[]
+}
+
+export type EnumType = StringEnumType | NumberEnumType
+
 export type JSONApiType = (
   | SimpleJSONApiType
   | TypeNamingWrapper
@@ -51,4 +63,5 @@ export type JSONApiType = (
   | UnionApiType
   | ArrayApiType
   | ObjectApiType
+  | EnumType
 ) & { name: string }

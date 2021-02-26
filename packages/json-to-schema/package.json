@@ -1,0 +1,23 @@
+{
+  "name": "papupata-json-to-schema",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc --project tsconfig.json",
+    "prepare": "npm run build"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "common-types": "*"
+  },
+  "bundledDependencies": [
+    "common-types"
+  ],
+  "files": [
+    "dist"
+  ]
+}

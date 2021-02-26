@@ -1,29 +1,31 @@
 {
-  "name": "common-types",
+  "name": "common-utils",
   "version": "1.0.0",
   "description": "> TODO: description",
   "author": "Tapani Haka <tapani.haka@barona.fi>",
-  "homepage": "https://baronagroup.github.io/papupata/tree/master/packages/common-types#readme",
+  "homepage": "https://baronagroup.github.io/papupata/tree/master/packages/common-utils#readme",
   "license": "ISC",
-  "private": true,
-  "main": "lib/common-types.js",
+  "main": "lib/common-utils.js",
   "directories": {
     "lib": "lib",
     "test": "__tests__"
   },
+  "private": true,
   "files": [
     "lib"
   ],
-  "types": "./lib/common-types.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/BaronaGroup/papupata.git"
   },
   "scripts": {
-    "test": "echo \"Error: run tests from root\" && exit 1"
+    "test": "echo \"Error: run tests from root\" && exit 1",
+    "prepare": "npm run build",
+    "build": "npm run tsc",
+    "tsc": "tsc --project tsconfig.json",
+    "prettier": "find src -type f | xargs npx prettier --write"
   },
   "bugs": {
     "url": "https://github.com/BaronaGroup/papupata/issues"
-  },
-  "dependencies": {}
+  }
 }

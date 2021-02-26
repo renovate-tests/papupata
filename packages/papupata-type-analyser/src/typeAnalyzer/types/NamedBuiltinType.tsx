@@ -44,8 +44,8 @@ export default class NamedBuiltinType extends TsType {
         return { type: 'any', name: this.name }
       case 'never':
         return { type: 'never', name: this.name }
-      case 'enumliteral':
-        return { type: 'enumliteral', name: this.name } // evidently not supported properly
+      case 'Date':
+        return { type: 'date', name: this.name }
       default:
         console.warn('NamedBuiltinType does not support ' + this.name + ' for JSON output')
         return { type: 'unknown', name: this.name }

@@ -1,9 +1,9 @@
 {
-  "name": "papupata-type-analyser",
+  "name": "papupata-extractor",
   "version": "1.0.0",
   "description": "> TODO: description",
   "author": "Tapani Haka <tapani.haka@barona.fi>",
-  "homepage": "https://baronagroup.github.io/papupata/tree/master/packages/papupata-type-analyser#readme",
+  "homepage": "https://baronagroup.github.io/papupata/tree/master/packages/papupata-extractor#readme",
   "license": "ISC",
   "main": "lib/api.js",
   "types": "lib/api.d.ts",
@@ -29,6 +29,8 @@
     "url": "https://github.com/BaronaGroup/papupata/issues"
   },
   "dependencies": {
-    "common-types": "*"
+    "common-types": "^1.0.0",
+    "common-utils": "^1.0.0",
+    "papupata-type-analyser": "^1.0.0"
   }
 }

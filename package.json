@@ -8,6 +8,11 @@
     "type": "git",
     "url": "BaronaGroup/papupata"
   },
+  "scripts": {
+    "build": "npx lerna run build",
+    "lint": "npx lerna run lint",
+    "test": "npx lerna run test"
+  },
   "license": "MIT",
   "author": {
     "name": "Tapani Haka"

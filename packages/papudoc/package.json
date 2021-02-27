@@ -35,9 +35,9 @@
     "mkdirp": "1.0.4",
     "papupata-extractor": "*",
     "papupata-openapi-generator": "*",
-    "react": "16.13.1",
-    "react-dom": "16.13.1",
-    "react-test-renderer": "16.13.1",
+    "react": "16.14.0",
+    "react-dom": "16.14.0",
+    "react-test-renderer": "16.14.0",
     "styled-components": "5.2.1",
     "ts-node": "9.1.1"
   },
